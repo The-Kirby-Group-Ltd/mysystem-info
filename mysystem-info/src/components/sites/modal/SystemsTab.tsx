@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
+
 import type { Site } from "../../../data/types/siteTypes";
 import type {
 	SiteSystem,
 	SiteSystemsFilters,
 } from "../../../data/types/systemsTypes";
+import type { SystemTypeReference } from "../../../data/types/referenceTypes";
+
 import { systemsApi } from "../../../data/api/systemsApi";
+import { referenceApi } from "../../../data/api/referenceApi";
 
 type SystemsTabProps = {
 	site: Site;
@@ -21,18 +25,26 @@ const SystemsTab = ({
 	const [selectedSystemNo, setSelectedSystemNo] =
 		useState<number>(1);
 
+	const [systemTypes, setSystemTypes] = useState<
+		SystemTypeReference[]
+	>([]);
+
 	const [showDecommissioned, setShowDecommissioned] =
 		useState(false);
 
 	const [isLoadingSystems, setIsLoadingSystems] =
 		useState(false);
 
+	const [isLoadingReferences, setIsLoadingReferences] =
+		useState(false);
+
 	const [systemsError, setSystemsError] = useState("");
+	const [referencesError, setReferencesError] = useState("");
 
 	const [systemsListFilters, setSystemsListFilters] =
 		useState<SiteSystemsFilters>({
 			systemNo: 0,
-			siteId: siteId,
+			siteId,
 			systemCode: "",
 			status: "L",
 		});
@@ -42,20 +54,91 @@ const SystemsTab = ({
 			(system) => system.systemNo === selectedSystemNo
 		) ?? null;
 
+	const getSystemDescription = (
+		systemCode: string
+	): string => {
+		const cleanCode = systemCode.trim().toUpperCase();
+
+		const matchingSystemType = systemTypes.find(
+			(systemType) =>
+				systemType.code.trim().toUpperCase() === cleanCode
+		);
+
+		return (
+			matchingSystemType?.description ||
+			systemCode ||
+			"Unknown system"
+		);
+	};
+
 	useEffect(() => {
 		setSystemsListFilters((currentFilters) => ({
 			...currentFilters,
-			SiteId: siteId,
-			Status: showDecommissioned ? "" : "L",
+			siteId,
+			status: showDecommissioned ? "" : "L",
 		}));
 	}, [siteId, showDecommissioned]);
 
 	useEffect(() => {
 		let isCancelled = false;
 
+		const loadSystemTypes = async () => {
+			setIsLoadingReferences(true);
+			setReferencesError("");
+
+			try {
+				const allSystemTypes: SystemTypeReference[] = [];
+
+				let page = 1;
+				let hasMore = true;
+
+				while (hasMore) {
+					const response =
+						await referenceApi.getSystemTypes({
+							page,
+							pageSize: 100,
+						});
+
+					allSystemTypes.push(...response.items);
+					hasMore = response.hasMore;
+					page++;
+				}
+
+				if (!isCancelled) {
+					setSystemTypes(allSystemTypes);
+				}
+			} catch (error) {
+				if (!isCancelled) {
+					setSystemTypes([]);
+
+					setReferencesError(
+						error instanceof Error
+							? error.message
+							: "Failed to load system descriptions."
+					);
+				}
+			} finally {
+				if (!isCancelled) {
+					setIsLoadingReferences(false);
+				}
+			}
+		};
+
+		loadSystemTypes();
+
+		return () => {
+			isCancelled = true;
+		};
+	}, []);
+
+	useEffect(() => {
+		let isCancelled = false;
+
 		const loadSystems = async () => {
 			if (!siteId) {
-				setSystemsError("Site ID could not be retrieved.");
+				setSystemsError(
+					"Site ID could not be retrieved."
+				);
 				return;
 			}
 
@@ -86,7 +169,9 @@ const SystemsTab = ({
 				if (systemOneExists) {
 					setSelectedSystemNo(1);
 				} else if (result.items.length > 0) {
-					setSelectedSystemNo(result.items[0].systemNo);
+					setSelectedSystemNo(
+						result.items[0].systemNo
+					);
 				} else {
 					setSelectedSystemNo(0);
 				}
@@ -132,7 +217,9 @@ const SystemsTab = ({
 		return `${day}/${month}/${year}`;
 	};
 
-	const getSystemStatusLabel = (status: string): string => {
+	const getSystemStatusLabel = (
+		status: string
+	): string => {
 		switch (status.trim().toUpperCase()) {
 			case "L":
 				return "Live";
@@ -162,15 +249,32 @@ const SystemsTab = ({
 
 	return (
 		<div className="site-systems-tab">
-			{(isSiteLoading || isLoadingSystems) && (
+			{(isSiteLoading ||
+				isLoadingSystems ||
+				isLoadingReferences) && (
 				<p className="site-modal-loading">
 					Loading systems details...
 				</p>
 			)}
 
 			{systemsError && (
-				<div className="site-modal-error" role="alert">
+				<div
+					className="site-modal-error"
+					role="alert"
+				>
 					<p>{systemsError}</p>
+				</div>
+			)}
+
+			{referencesError && (
+				<div
+					className="site-modal-error"
+					role="alert"
+				>
+					<p>{referencesError}</p>
+					<p>
+						System codes will be displayed instead.
+					</p>
 				</div>
 			)}
 
@@ -205,7 +309,12 @@ const SystemsTab = ({
 									value={system.systemNo}
 								>
 									System {system.systemNo} —{" "}
-									{system.systemCode || "Unknown code"}
+									{getSystemDescription(
+										system.systemCode
+									)}
+									{system.systemCode
+										? ` (${system.systemCode})`
+										: ""}
 									{system.status === "D"
 										? " (Decommissioned)"
 										: ""}
@@ -225,7 +334,9 @@ const SystemsTab = ({
 							}
 						/>
 
-						<span>Show decommissioned systems</span>
+						<span>
+							Show decommissioned systems
+						</span>
 					</label>
 				</div>
 			</section>
@@ -245,38 +356,56 @@ const SystemsTab = ({
 						<div className="site-detail-field">
 							<span>System Code</span>
 							<strong>
-								{selectedSystem.systemCode || "—"}
+								{selectedSystem.systemCode ||
+									"—"}
+							</strong>
+						</div>
+
+						<div className="site-detail-field site-detail-field-wide">
+							<span>System Type</span>
+							<strong>
+								{getSystemDescription(
+									selectedSystem.systemCode
+								)}
 							</strong>
 						</div>
 
 						<div className="site-detail-field">
 							<span>Status</span>
+
 							<strong>
-                                <span
-                                    className={
-                                        selectedSystem.status === "L"
-                                            ? "system-status system-status-live"
-                                            : "system-status system-status-dead"
-                                    }
-                                >
-                                    {getSystemStatusLabel(selectedSystem.status)}
-                                </span>
-                            </strong>
+								<span
+									className={
+										selectedSystem.status ===
+										"L"
+											? "system-status system-status-live"
+											: "system-status system-status-dead"
+									}
+								>
+									{getSystemStatusLabel(
+										selectedSystem.status
+									)}
+								</span>
+							</strong>
 						</div>
 
 						<div className="site-detail-field">
 							<span>Maintained</span>
+
 							<strong>
-                                <span
-                                    className={
-                                        selectedSystem.maintained_YN === "Y"
-                                            ? "system-maintained system-maintained-yes"
-                                            : "system-maintained system-maintained-no"
-                                    }
-                                >
-                                    {getMaintainedLabel(selectedSystem.maintained_YN)}
-                                </span>
-                            </strong>
+								<span
+									className={
+										selectedSystem.maintained_YN ===
+										"Y"
+											? "system-maintained system-maintained-yes"
+											: "system-maintained system-maintained-no"
+									}
+								>
+									{getMaintainedLabel(
+										selectedSystem.maintained_YN
+									)}
+								</span>
+							</strong>
 						</div>
 
 						<div className="site-detail-field">
