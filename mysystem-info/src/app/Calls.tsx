@@ -61,9 +61,8 @@ const Calls = () => {
 
 		try {
 			setIsLoading(true);
-			setSearchedCustomerNo(cleanCustomerNo);
 
-			const result = await callsApi.getCallsForTable(
+			const result = await callsApi.getCalls(
 				cleanCustomerNo,
 				filters.siteId,
 				0,

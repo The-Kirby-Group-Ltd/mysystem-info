@@ -29,21 +29,10 @@ export const sitesApi = {
 			throw new Error("Either Customer No or Site ID is required.");
 		}
 
-		if (cleanCustomerNo) {
-			params.set("customerNo", cleanCustomerNo);
-		}
-
-		if (cleanSiteId) {
-			params.set("siteId", cleanSiteId);
-		}
-
-		if (cleanPostCode) {
-			params.set("postCode", cleanPostCode);
-		}
-
-		if (cleanStatus) {
-			params.set("status", cleanStatus);
-		}
+		if (cleanCustomerNo) { params.set("customerNo", cleanCustomerNo); }
+		if (cleanSiteId) { params.set("siteId", cleanSiteId); }
+		if (cleanPostCode) { params.set("postCode", cleanPostCode); }
+		if (cleanStatus) { params.set("status", cleanStatus); }
 
 		params.set("page", Math.max(page, 1).toString());
 		params.set(

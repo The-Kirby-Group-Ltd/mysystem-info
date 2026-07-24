@@ -1,37 +1,9 @@
-import type {
-	Call,
-} from "../types/callTypes";
+import type { Call } from "../types/callTypes";
 import { httpClient } from "./httpClient";
-import { getCallStatusLabel, getCallTypeLabel } from "../types/callMappings";
-
-const mmapi_baseurl = import.meta.env.VITE_MMAPI_BASE_URL;
-
-type MiddlewareCall = {
-	callNumber: number;
-	callType: string;
-	callStatus: string;
-	siteID: string;
-	loggedDate: string;
-	loggingOperator: string;
-	engineer: string;
-	systemType: string;
-
-	completedDate: string | null;
-	customerReference: string;
-	invoiceNo: string;
-	loggedRemarks: string;
-	completedRemarks: string;
-	previousMaintenanceDate: string | null;
-	nextMaintenanceDate: string | null;
-};
-
-type MiddlewareCallsResponse = {
-	items: MiddlewareCall[];
-	page: number;
-	pageSize: number;
-	total: number;
-	hasMore: boolean;
-};
+import {
+    getCallStatusLabel,
+    getCallTypeLabel 
+} from "../types/callMappings";
 
 type CallsResponse = {
 	items: Call[];
@@ -41,133 +13,83 @@ type CallsResponse = {
 	hasMore: boolean;
 };
 
-const mapMiddlewareCallToCall = (
-	call: MiddlewareCall
-): Call => {
-	return {
-		callNumber: call.callNumber,
-		callType: getCallTypeLabel(call.callType),
-		callStatus: getCallStatusLabel(call.callStatus),
-		siteId: call.siteID ?? "",
-		loggedDate: call.loggedDate ?? "",
-		loggingOperator: call.loggingOperator ?? "",
-		engineer: call.engineer ?? "",
-		systemType: call.systemType ?? "",
-
-		completedDate: call.completedDate ?? "",
-		customerReference: call.customerReference ?? "",
-		invoiceNo: call.invoiceNo ?? "",
-		loggedRemarks: call.loggedRemarks ?? "",
-		completedRemarks: call.completedRemarks ?? "",
-		previousMaintenanceDate:
-			call.previousMaintenanceDate ?? null,
-		nextMaintenanceDate:
-			call.nextMaintenanceDate ?? null,
-	};
-};
-
-type MiddlewareTokenResponse = {
-	accessToken: string;
+// map call type and call status strings
+const mapTypeStrings = (call: Call): Call => {
+    return {
+        ...call,
+		callStatus: getCallStatusLabel(call.callStatus ?? ""),
+		callType: getCallTypeLabel(call.callType ?? ""),
+    }
 }
 
 export const callsApi = {
-	getMiddlewareToken: async (): Promise<string> => {
-        const response = await httpClient<MiddlewareTokenResponse>(
-            "/api/middleware/token", 
-            { method: "POST", }
-        );
-
-        return response.accessToken;
-    },
-
-    middlewareGet: async <T>(path: string): Promise<T> => {
-        const middlewareToken = await callsApi.getMiddlewareToken();
-
-        const response = await fetch(`${mmapi_baseurl}${path}`, {
-            headers: {
-                Authorization: `Bearer ${middlewareToken}`,
-            }
-        });
-
-        // expired token
-        if (response.status === 401) {
-            localStorage.removeItem("mysystem_token");
-
-            if (window.location.pathname !== "/login") {
-				window.location.href = "/login";
-			}
-
-            throw new Error("Your session has expired. Please log in again.");
-        }
-
-        if (!response.ok) {
-            throw new Error(await response.text());
-        }
-
-        return response.json() as Promise<T>;
-    },
-
-    getCallsForTable: async (
+	getCalls: async (
         customerNo: string,
-        siteId: string,
-        callNumber: number,
-        loggedFrom: string,
-        loggedTo: string,
-        engineer: string,
-        systemType: string,
-        page: number,
-        pageSize: number
+		siteId = "",
+		callNumber = 0,
+		loggedFrom = "",
+		loggedTo = "",
+		engineer = "",
+		systemType = "",
+		page = 1,
+		pageSize = 10
     ): Promise<CallsResponse> => {
+        // set clean parameter strings
         const cleanCustomerNo = customerNo.trim().toUpperCase();
         const cleanSiteId = siteId.trim().toUpperCase();
-        const cleanCallNumber =
-            callNumber > 0
-                ? callNumber.toString()
-                : "";
-        const cleanLoggedFrom = loggedFrom.trim();
-        const cleanLoggedTo = loggedTo.trim();
         const cleanEngineer = engineer.trim().toUpperCase();
         const cleanSystemType = systemType.trim().toUpperCase();
-        
-        if (!cleanCustomerNo) {
-            throw new Error("Customer Number was not passed into the Calls API Request.");
+
+        if (!cleanCustomerNo && !cleanSiteId && callNumber <= 0) {
+            throw new Error(
+                "Customer No, Site ID, or Call Number is required."
+            );
         }
 
-        const cleanPage = page > 0 ? page : 1;
-        const cleanPageSize = Math.min(Math.max(pageSize, 1), 100);
-
+        // add query parameters 
         const params = new URLSearchParams();
-
-        params.set("customerNo", cleanCustomerNo);
         
+        if (cleanCustomerNo) { params.set("customerNo", cleanCustomerNo); }
         if (cleanSiteId) { params.set("siteId", cleanSiteId); }
-        if (cleanCallNumber) { params.set("callNumber", cleanCallNumber); }
-        if (cleanLoggedFrom) { params.set("loggedFrom", cleanLoggedFrom); }
-        if (cleanLoggedTo) { params.set("loggedTo", cleanLoggedTo); }
+        if (callNumber > 0) { params.set("callNumber", callNumber.toString()); }
+        if (loggedFrom.trim()) { params.set("loggedFrom", loggedFrom.trim()); }
+        if (loggedTo.trim()) { params.set("loggedTo", loggedTo.trim()); }
         if (cleanEngineer) { params.set("engineer", cleanEngineer); }
-        if (cleanSystemType) { params.set("systemType", cleanSystemType); }
-        params.set("page", cleanPage.toString());
-        params.set("pageSize", cleanPageSize.toString());
+        if (cleanSystemType) {params.set("systemType", cleanSystemType); }
 
-        const response =
-            await callsApi.middlewareGet<MiddlewareCallsResponse>(
-                `/api/calls?${params.toString()}`
-            );
+        // pagination
+        params.set("page", Math.max(page, 1).toString());
+        params.set("pageSize", Math.min(Math.max(pageSize, 1), 100).toString());
+
+        const response = await httpClient<CallsResponse>(
+            `/api/portal/calls?${params.toString()}`
+        );
 
         return {
-            items: response.items.map(mapMiddlewareCallToCall),
-            page: response.page,
-            pageSize: response.pageSize,
-            total: response.total,
-            hasMore: response.hasMore
+            ...response,
+            items: response.items.map(mapTypeStrings),
         };
     },
 
-    // getCallByNumber: async(
-    //     callNumber: number
-    // ): Promise<Call> => {
-    //     // get details for one call
-    // }
+    getCallByNumber: async (
+		callNumber: number
+	): Promise<Call> => {
+		if (callNumber <= 0) {
+			throw new Error("Call Number is required.");
+		}
+
+		const response = await httpClient<CallsResponse>(
+			`/api/portal/calls?callNumber=${callNumber}`
+		);
+
+		const call = response.items[0];
+
+		if (!call) {
+			throw new Error(`Call ${callNumber} was not found.`);
+		}
+
+		return mapTypeStrings(call);
+	},
 };
 
 export default callsApi;

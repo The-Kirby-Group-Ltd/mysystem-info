@@ -3,6 +3,7 @@ import type { Site } from "../../data/types/siteTypes";
 import { sitesApi } from "../../data/api/sitesApi";
 import "../../styles/app-styles/SiteModal.css";
 import GeneralTab from "./modal/GeneralTab";
+import SystemsTab from "./modal/SystemsTab";
 
 type SiteDetailsModalProps = {
 	site: Site;
@@ -198,14 +199,16 @@ const SiteDetailsModal = ({
 					)}
 
 					{activeTab === "systems" && (
-						<section className="site-detail-section">
-							<h3>Systems</h3>
+						// <section className="site-detail-section">
+						// 	<h3>Systems</h3>
 
-							<p className="site-modal-empty">
-								System information will be loaded from
-								the site-systems endpoint.
-							</p>
-						</section>
+						// 	<p className="site-modal-empty">
+						// 		System information will be loaded from
+						// 		the site-systems endpoint.
+						// 	</p>
+						// </section>
+
+						<SystemsTab site={siteDetails} />
 					)}
 
 					{activeTab === "charges" && (

@@ -35,7 +35,7 @@ const GeneralTab = ({
 		<div className="site-general-tab">
 			{isLoading && (
 				<p className="site-modal-loading">
-					Loading full site details…
+					Loading full site details...
 				</p>
 			)}
 
@@ -100,15 +100,6 @@ const GeneralTab = ({
 						No address is available.
 					</p>
 				)}
-			</section>
-
-			<section className="site-detail-section">
-				<h3>Most recent call</h3>
-
-				<p className="site-modal-empty">
-					Recent call information will be added when the Calls API
-					integration is completed.
-				</p>
 			</section>
 		</div>
 	);

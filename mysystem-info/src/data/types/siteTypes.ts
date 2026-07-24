@@ -12,14 +12,6 @@ export type Site = {
 	propertyReferenceNo: string;
 };
 
-export type SiteSystem = {
-	systemId: string;
-	systemType: string;
-	description?: string;
-	status?: string;
-	nextMaintenanceDate?: string;
-};
-
 export type SiteCall = {
 	callId: string;
 	callNo: string;
