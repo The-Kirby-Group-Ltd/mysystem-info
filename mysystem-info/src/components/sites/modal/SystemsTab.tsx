@@ -19,27 +19,46 @@ const SystemsTab = ({
 	site,
 	isLoading: isSiteLoading = false,
 }: SystemsTabProps) => {
+	// Normalised site ID used by all site-system API requests.
 	const siteId = site.siteId.trim().toUpperCase();
 
+	// =====================================================
+	// Systems list and current selection
+	// =====================================================
+
+	// All systems returned for the selected site.
 	const [systemsList, setSystemsList] = useState<SiteSystem[]>([]);
+
+	// System currently selected in the dropdown.
+	// System 1 is preferred when it exists.
 	const [selectedSystemNo, setSelectedSystemNo] =
 		useState<number>(1);
 
+	// Find the full selected-system object from the loaded list.
+	// Changing selectedSystemNo does not make another systems request.
+	const selectedSystem =
+		systemsList.find(
+			(system) => system.systemNo === selectedSystemNo
+		) ?? null;
+
+	// =====================================================
+	// System-type reference data
+	// =====================================================
+
+	// Reference records used to translate system codes such as F1
+	// into customer-friendly descriptions such as Fire Alarm.
 	const [systemTypes, setSystemTypes] = useState<
 		SystemTypeReference[]
 	>([]);
 
+	// =====================================================
+	// Filters
+	// =====================================================
+
+	// False means only live systems are requested.
+	// True removes the status filter so dead systems are included.
 	const [showDecommissioned, setShowDecommissioned] =
 		useState(false);
-
-	const [isLoadingSystems, setIsLoadingSystems] =
-		useState(false);
-
-	const [isLoadingReferences, setIsLoadingReferences] =
-		useState(false);
-
-	const [systemsError, setSystemsError] = useState("");
-	const [referencesError, setReferencesError] = useState("");
 
 	const [systemsListFilters, setSystemsListFilters] =
 		useState<SiteSystemsFilters>({
@@ -49,11 +68,43 @@ const SystemsTab = ({
 			status: "L",
 		});
 
-	const selectedSystem =
-		systemsList.find(
-			(system) => system.systemNo === selectedSystemNo
-		) ?? null;
+	// =====================================================
+	// Loading state
+	// =====================================================
 
+	const [isLoadingSystems, setIsLoadingSystems] =
+		useState(false);
+
+	const [isLoadingReferences, setIsLoadingReferences] =
+		useState(false);
+
+	const [isLoadingMaintenance, setIsLoadingMaintenance] =
+		useState(false);
+
+	// =====================================================
+	// Error state
+	// =====================================================
+
+	const [systemsError, setSystemsError] = useState("");
+	const [referencesError, setReferencesError] = useState("");
+	const [maintenanceError, setMaintenanceError] = useState("");
+
+	// =====================================================
+	// Maintenance schedule state
+	// =====================================================
+
+	// Populated from the dedicated maintenance-schedule endpoint.
+	// A dash is shown for non-maintained systems or missing schedules.
+	const [nextMaintenanceDate, setNextMaintenanceDate] =
+		useState("");
+
+	// =====================================================
+	// Display helpers
+	// =====================================================
+
+	// Translate a system reference code into its description.
+	// Fall back to the raw code if the reference request failed
+	// or no matching reference exists.
 	const getSystemDescription = (
 		systemCode: string
 	): string => {
@@ -71,6 +122,10 @@ const SystemsTab = ({
 		);
 	};
 
+	// =====================================================
+	// Keep filters synchronised with the current site and checkbox
+	// =====================================================
+
 	useEffect(() => {
 		setSystemsListFilters((currentFilters) => ({
 			...currentFilters,
@@ -78,6 +133,10 @@ const SystemsTab = ({
 			status: showDecommissioned ? "" : "L",
 		}));
 	}, [siteId, showDecommissioned]);
+
+	// =====================================================
+	// Load all system-type reference records
+	// =====================================================
 
 	useEffect(() => {
 		let isCancelled = false;
@@ -92,6 +151,8 @@ const SystemsTab = ({
 				let page = 1;
 				let hasMore = true;
 
+				// The reference endpoint is paginated, so continue
+				// until every page has been retrieved.
 				while (hasMore) {
 					const response =
 						await referenceApi.getSystemTypes({
@@ -126,10 +187,15 @@ const SystemsTab = ({
 
 		loadSystemTypes();
 
+		// Prevent state updates after the component unmounts.
 		return () => {
 			isCancelled = true;
 		};
 	}, []);
+
+	// =====================================================
+	// Load systems for the selected site
+	// =====================================================
 
 	useEffect(() => {
 		let isCancelled = false;
@@ -162,6 +228,7 @@ const SystemsTab = ({
 
 				setSystemsList(result.items);
 
+				// Prefer system 1 as the default selection.
 				const systemOneExists = result.items.some(
 					(system) => system.systemNo === 1
 				);
@@ -169,10 +236,13 @@ const SystemsTab = ({
 				if (systemOneExists) {
 					setSelectedSystemNo(1);
 				} else if (result.items.length > 0) {
+					// If system 1 does not exist, select the
+					// first system returned by the API.
 					setSelectedSystemNo(
 						result.items[0].systemNo
 					);
 				} else {
+					// No systems were returned.
 					setSelectedSystemNo(0);
 				}
 			} catch (error) {
@@ -200,6 +270,82 @@ const SystemsTab = ({
 		};
 	}, [siteId, systemsListFilters]);
 
+	// =====================================================
+	// Load the selected system's next maintenance date
+	// =====================================================
+
+	useEffect(() => {
+		let isCancelled = false;
+
+		const loadMaintenanceSchedule = async () => {
+			// Reset the previous system's date immediately.
+			setNextMaintenanceDate("—")
+			setMaintenanceError("");
+
+			// The systems request may not have completed yet.
+			if (!selectedSystem) {
+				return;
+			}
+
+			// Non-maintained systems do not require a schedule request.
+			if (
+				selectedSystem.maintained_YN
+					.trim()
+					.toUpperCase() !== "Y"
+			) {
+				return;
+			}
+
+			setIsLoadingMaintenance(true);
+
+			try {
+				const response =
+					await systemsApi.getSystemMaintenanceSchedule(
+						selectedSystem
+					);
+
+				if (isCancelled) {
+					return;
+				}
+
+				// The request is for one site/system combination,
+				// so use the first returned schedule.
+				const schedule = response.items[0];
+
+				setNextMaintenanceDate(
+					schedule?.nextMaintenanceDate || "-"
+				);
+			} catch (error) {
+				if (!isCancelled) {
+					setNextMaintenanceDate("-");
+
+					setMaintenanceError(
+						error instanceof Error
+							? error.message
+							: "Failed to load the maintenance schedule."
+					);
+				}
+			} finally {
+				if (!isCancelled) {
+					setIsLoadingMaintenance(false);
+				}
+			}
+		};
+
+		// This call was missing from the previous version.
+		loadMaintenanceSchedule();
+
+		return () => {
+			isCancelled = true;
+		};
+	}, [selectedSystem]);
+
+	// =====================================================
+	// Formatting helpers
+	// =====================================================
+
+	// Convert an API date such as 2026-07-27T00:00:00
+	// into the British display format 27/07/2026.
 	const formatDate = (
 		value: string | null | undefined
 	): string => {
@@ -247,16 +393,24 @@ const SystemsTab = ({
 		}
 	};
 
+	// =====================================================
+	// Render
+	// =====================================================
+
 	return (
 		<div className="site-systems-tab">
+			{/* Shared loading message for site, systems,
+			    reference and maintenance requests. */}
 			{(isSiteLoading ||
 				isLoadingSystems ||
-				isLoadingReferences) && (
+				isLoadingReferences ||
+				isLoadingMaintenance) && (
 				<p className="site-modal-loading">
 					Loading systems details...
 				</p>
 			)}
 
+			{/* Systems request failure. */}
 			{systemsError && (
 				<div
 					className="site-modal-error"
@@ -266,6 +420,8 @@ const SystemsTab = ({
 				</div>
 			)}
 
+			{/* Reference failure does not prevent systems from
+			    displaying; raw system codes are used instead. */}
 			{referencesError && (
 				<div
 					className="site-modal-error"
@@ -278,6 +434,20 @@ const SystemsTab = ({
 				</div>
 			)}
 
+			{/* Maintenance failure affects only the next-date field. */}
+			{maintenanceError && (
+				<div
+					className="site-modal-error"
+					role="alert"
+				>
+					<p>{maintenanceError}</p>
+					<p>
+						The next maintenance date is unavailable.
+					</p>
+				</div>
+			)}
+
+			{/* System selection controls. */}
 			<section className="site-detail-section">
 				<h3>Systems Information</h3>
 
@@ -341,6 +511,7 @@ const SystemsTab = ({
 				</div>
 			</section>
 
+			{/* Details for the system selected in the dropdown. */}
 			<section className="site-detail-section system-detail-section">
 				<h3>System Details</h3>
 
@@ -354,7 +525,7 @@ const SystemsTab = ({
 						</div>
 
 						<div className="site-detail-field">
-							<span>System Code</span>
+							<span>System Type Reference</span>
 							<strong>
 								{selectedSystem.systemCode ||
 									"—"}
@@ -427,11 +598,13 @@ const SystemsTab = ({
 						</div>
 
 						<div className="site-detail-field">
-							<span>Next Maintenance</span>
+							<span>Next Maintenance Due</span>
 							<strong>
-								{formatDate(
-									selectedSystem.nextMaintenanceDate
-								)}
+								{isLoadingMaintenance
+									? "Loading..."
+									: formatDate(
+											nextMaintenanceDate
+										)}
 							</strong>
 						</div>
 					</div>

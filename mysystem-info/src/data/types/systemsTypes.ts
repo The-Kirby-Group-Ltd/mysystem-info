@@ -15,3 +15,11 @@ export type SiteSystemsFilters = {
     systemCode: string;
     status: string;
 }
+
+
+export type SystemMaintenanceSchedule = {
+    siteId: string;
+    systemNo: number;
+    nextMaintenanceDate: string;
+    description: string;
+}

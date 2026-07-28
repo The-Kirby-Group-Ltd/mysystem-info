@@ -1,5 +1,5 @@
 import { httpClient } from "./httpClient";
-import type { SiteSystem } from "../types/systemsTypes";
+import type { SiteSystem, SystemMaintenanceSchedule } from "../types/systemsTypes";
 
 type SiteSystemsResponse = {
     items: SiteSystem[];
@@ -8,6 +8,14 @@ type SiteSystemsResponse = {
     total: number;
     hasMore: boolean;
 };
+
+type SystemMaintenanceScheduleResponse = { 
+    items: SystemMaintenanceSchedule[];
+    page: number;
+    pageSize: number;
+    total: number;
+    hasMore: boolean;
+}
 
 export const systemsApi = {
     getSystems: async (
@@ -49,6 +57,28 @@ export const systemsApi = {
 
         return httpClient<SiteSystemsResponse>(
             `/api/portal/site-systems?${params.toString()}`
+        );
+    },
+
+    getSystemMaintenanceSchedule: async (
+        system: SiteSystem,
+    ): Promise<SystemMaintenanceScheduleResponse> => {
+        const params = new URLSearchParams();
+
+        const cleanSiteId = system.siteId.trim().toUpperCase();
+        const systemNo = (!(system.systemNo > 0))
+            ? ""
+            : system.systemNo.toString().trim();
+
+        if (!cleanSiteId || systemNo === "") {
+            throw new Error("System information is not sufficient to retrieve maintenance info.");
+        }
+
+        params.set("siteId", cleanSiteId);
+        params.set("systemNo", systemNo);
+
+        return httpClient<SystemMaintenanceScheduleResponse>(
+            `/api/portal/system-maint-schedules?${params.toString()}`
         );
     }
 }
