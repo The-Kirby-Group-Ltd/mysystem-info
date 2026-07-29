@@ -6,6 +6,8 @@ type CallsTableProps = {
 	rowsToShow: number;
 	isLoading?: boolean;
 	onCallClick: (call: Call) => void;
+	engineerNames?: Record<string, string>;
+	showSiteId?: boolean;
 };
 
 const CallsTable = ({
@@ -13,18 +15,59 @@ const CallsTable = ({
 	rowsToShow,
 	isLoading = false,
 	onCallClick,
+	engineerNames = {},
+	showSiteId = true,
 }: CallsTableProps) => {
 	const visibleCalls = calls.slice(0, rowsToShow);
 	const skeletonRows = Array.from({
 		length: Math.min(rowsToShow, 8),
 	});
 
+	// ================================
+    // format date strings dd/mm/yyyy
+    // ================================
+
+	const formatDate = (
+		value: string | null | undefined
+	): string => {
+		if (!value) {
+			return "—";
+		}
+
+		const datePart = value.split("T")[0];
+		const [year, month, day] = datePart.split("-");
+
+		if (!year || !month || !day) {
+			return value;
+		}
+
+		return `${day}/${month}/${year}`;
+	};
+
+	// ================================
+    // engineer name assignment helper
+    // ================================
+
+	const getEngineerName = (engineerCode: string): string => {
+		const cleanCode = engineerCode.trim().toUpperCase();
+
+		if (!cleanCode) {
+			return "—";
+		}
+
+		return engineerNames[cleanCode] ?? engineerCode;
+	};
+
+	// ================================
+    // render table
+    // ================================
+
 	return (
 		<table className="calls-table">
 			<thead>
 				<tr>
 					<th>Call Number</th>
-					<th>Site ID</th>
+					{showSiteId && <th>Site ID</th>}
 					<th>Type</th>
 					<th>Status</th>
 					<th>Logged</th>
@@ -75,11 +118,11 @@ const CallsTable = ({
 								</button>
 							</td>
 
-							<td>{call.siteId}</td>
+							{showSiteId && <td>{call.siteId}</td>}
 							<td>{call.callType || "—"}</td>
 							<td>{call.callStatus || "—"}</td>
-							<td>{call.loggedDate || "—"}</td>
-							<td>{call.engineer || "—"}</td>
+							<td>{formatDate(call.loggedDate)}</td>
+							<td>{getEngineerName(call.engineer)}</td>
 						</tr>
 					))}
 

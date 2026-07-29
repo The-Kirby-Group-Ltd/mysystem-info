@@ -42,6 +42,11 @@
 	vertical-align: middle;
 }
 
+.calls-table th:nth-child(6),
+.calls-table td:nth-child(6) {
+	min-width: 150px;
+}
+
 .call-number-button {
 	padding: 0;
 
@@ -132,6 +137,12 @@
 
 .calls-table .skeleton-long {
 	width: min(240px, 85%);
+}
+
+.site-call-history-table .calls-table th:nth-child(6),
+.site-call-history-table .calls-table td:nth-child(6) {
+	min-width: 170px;
+	white-space: nowrap;
 }
 
 @keyframes calls-skeleton-loading {

@@ -4,13 +4,18 @@ import { sitesApi } from "../../data/api/sitesApi";
 import "../../styles/app-styles/SiteModal.css";
 import GeneralTab from "./modal/GeneralTab";
 import SystemsTab from "./modal/SystemsTab";
+import CallHistoryTab from "./modal/CallHistoryTab";
 
 type SiteDetailsModalProps = {
 	site: Site;
 	onClose: () => void;
 };
 
-type SiteModalTab = "general" | "systems" | "charges" | "callHistory";
+type SiteModalTab = 
+	| "general" 
+	| "systems" 
+	| "charges" 
+	| "callHistory";
 
 const SiteDetailsModal = ({
 	site,
@@ -191,6 +196,8 @@ const SiteDetailsModal = ({
 						</div>
 					)}
 
+					{/* tab imports */}
+
 					{activeTab === "general" && (
 						<GeneralTab
 							site={siteDetails}
@@ -199,15 +206,6 @@ const SiteDetailsModal = ({
 					)}
 
 					{activeTab === "systems" && (
-						// <section className="site-detail-section">
-						// 	<h3>Systems</h3>
-
-						// 	<p className="site-modal-empty">
-						// 		System information will be loaded from
-						// 		the site-systems endpoint.
-						// 	</p>
-						// </section>
-
 						<SystemsTab site={siteDetails} />
 					)}
 
@@ -224,14 +222,7 @@ const SiteDetailsModal = ({
 					)}
 
                     {activeTab === "callHistory" && (
-						<section className="site-detail-section">
-							<h3>Call History</h3>
-
-							<p className="site-modal-empty">
-								A table of calls for this site and its systems
-                                will appear here once calls are set up. 
-							</p>
-						</section>
+						<CallHistoryTab site={siteDetails} />
 					)}
 				</div>
 			</section>

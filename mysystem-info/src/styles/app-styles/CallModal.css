@@ -251,6 +251,11 @@
 	font-size: 0.9rem;
 }
 
+.call-modal-backdrop-nested {
+	background: transparent;
+	backdrop-filter: none;
+}
+
 @media screen and (max-width: 700px) {
 	.call-modal-backdrop {
 		padding: 10px;

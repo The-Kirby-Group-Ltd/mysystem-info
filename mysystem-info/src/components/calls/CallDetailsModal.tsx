@@ -5,11 +5,13 @@ import "../../styles/app-styles/CallModal.css";
 type CallDetailsModalProps = {
 	call: Call;
 	onClose: () => void;
+	isNested?: boolean;
 };
 
 const CallDetailsModal = ({
 	call,
 	onClose,
+	isNested = false,
 }: CallDetailsModalProps) => {
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
@@ -31,7 +33,11 @@ const CallDetailsModal = ({
 
 	return (
 		<div
-			className="call-modal-backdrop"
+			className={
+				isNested
+					? "call-modal-backdrop call-modal-backdrop-nested"
+					: "call-modal-backdrop"
+			}
 			onMouseDown={(event) => {
 				if (event.target === event.currentTarget) {
 					onClose();
