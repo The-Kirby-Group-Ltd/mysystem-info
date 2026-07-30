@@ -1,7 +1,7 @@
 .call-modal-backdrop {
 	position: fixed;
 	inset: 0;
-	z-index: 1000;
+	z-index: 1100;
 
 	display: flex;
 	align-items: center;
@@ -11,6 +11,12 @@
 
 	background: rgba(0, 0, 0, 0.58);
 	backdrop-filter: blur(2px);
+}
+
+.call-modal-backdrop-nested {
+	background: transparent;
+	backdrop-filter: none;
+	z-index: 1200;
 }
 
 .call-modal {
@@ -25,9 +31,10 @@
 	background: #fff;
 	border: 1px solid rgba(0, 0, 0, 0.12);
 	border-radius: 14px;
-
 	box-shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
 }
+
+/* ===================== header ===================== */
 
 .call-modal-header {
 	display: flex;
@@ -77,28 +84,30 @@
 
 	width: 38px;
 	height: 38px;
+
 	padding: 0;
 
 	border: none;
 	border-radius: 50%;
-
 	background: rgba(0, 0, 0, 0.06);
-	color: #333;
 
+	color: #333;
 	font-size: 1.7rem;
 	line-height: 1;
 
 	cursor: pointer;
-
 	transition:
 		background 0.3s ease,
-		color 0.3s ease;
+		color 0.3s ease,
+		transform 0.3s ease;
 }
 
 .call-modal-close:hover {
 	background: #db2d2d;
 	color: #fff;
 }
+
+/* ===================== tabs ===================== */
 
 .call-modal-tabs {
 	display: flex;
@@ -117,6 +126,7 @@
 	top: 1px;
 
 	min-width: 120px;
+
 	padding: 12px 18px;
 
 	border: 1px solid transparent;
@@ -143,6 +153,8 @@
 	color: #db2d2d;
 }
 
+/* ===================== content ===================== */
+
 .call-modal-content {
 	flex: 1;
 	overflow-y: auto;
@@ -152,8 +164,16 @@
 	background: #fff;
 }
 
+.call-general-tab,
+.call-actions-tab {
+	display: flex;
+	flex-direction: column;
+	gap: 22px;
+}
+
+/* Supports your current GeneralTab class name. */
+.call-detail-section,
 .call-modal-section {
-	margin-bottom: 22px;
 	padding: 22px;
 
 	border: 1px solid rgba(0, 0, 0, 0.1);
@@ -162,10 +182,7 @@
 	background: rgba(255, 255, 255, 0.96);
 }
 
-.call-modal-section:last-child {
-	margin-bottom: 0;
-}
-
+.call-detail-section h3,
 .call-modal-section h3 {
 	margin: 0 0 18px;
 
@@ -183,6 +200,7 @@
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
+	min-width: 0;
 }
 
 .call-detail-field-wide {
@@ -204,6 +222,73 @@
 	overflow-wrap: anywhere;
 }
 
+/* ===================== status badges ===================== */
+
+.call-modal-status {
+	display: inline-flex;
+	align-items: center;
+
+	width: fit-content;
+
+	padding: 4px 10px;
+
+	border-radius: 999px;
+	font-size: 0.82rem;
+	font-weight: 600;
+}
+
+.call-modal-status-new {
+	background: rgba(44, 104, 190, 0.12);
+	color: #245c9f;
+}
+
+.call-modal-status-assigned,
+.call-modal-status-response {
+	background: rgba(212, 137, 25, 0.13);
+	color: #8a570f;
+}
+
+.call-modal-status-completed {
+	background: rgba(36, 145, 74, 0.12);
+	color: #19713a;
+}
+
+.call-modal-status-further-action {
+	background: rgba(219, 45, 45, 0.1);
+	color: #a51f1f;
+}
+
+.call-modal-status-unknown {
+	background: rgba(0, 0, 0, 0.08);
+	color: #555;
+}
+
+/* ===================== site link ===================== */
+
+.call-site-link {
+	padding: 0;
+
+	border: none;
+	background: transparent;
+
+	color: #222;
+	font: inherit;
+	font-weight: 600;
+	text-align: left;
+
+	cursor: pointer;
+	transition:
+		color 0.2s ease,
+		text-decoration-color 0.2s ease;
+}
+
+.call-site-link:hover {
+	color: #db2d2d;
+	text-decoration: underline;
+}
+
+/* ===================== remarks ===================== */
+
 .call-modal-remarks {
 	margin: 0;
 
@@ -211,23 +296,27 @@
 	font-family: inherit;
 	font-size: 0.95rem;
 	line-height: 1.6;
+
 	white-space: pre-wrap;
 	overflow-wrap: anywhere;
 }
 
 .call-modal-empty {
 	margin: 0;
+
 	color: #777;
 	line-height: 1.55;
 }
+
+/* ===================== loading and errors ===================== */
 
 .call-modal-loading {
 	margin: 0;
 	padding: 12px 16px;
 
 	border-radius: 8px;
-
 	background: rgba(219, 45, 45, 0.07);
+
 	color: #555;
 }
 
@@ -237,8 +326,8 @@
 
 	border: 1px solid rgba(219, 45, 45, 0.3);
 	border-radius: 8px;
-
 	background: rgba(219, 45, 45, 0.07);
+
 	color: #8f1f1f;
 }
 
@@ -251,12 +340,9 @@
 	font-size: 0.9rem;
 }
 
-.call-modal-backdrop-nested {
-	background: transparent;
-	backdrop-filter: none;
-}
+/* ===================== responsive ===================== */
 
-@media screen and (max-width: 700px) {
+@media (max-width: 700px) {
 	.call-modal-backdrop {
 		padding: 10px;
 	}

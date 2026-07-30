@@ -98,5 +98,5 @@ export const callTypeLabels: Record<string, string> = {
 
 export const getCallTypeLabel = (callType: string): string => {
     const cleanCallType = callType.trim();
-    return callTypeLabels[cleanCallType] || "Unknown";
+    return callTypeLabels[cleanCallType] || `Unknown`;
 }

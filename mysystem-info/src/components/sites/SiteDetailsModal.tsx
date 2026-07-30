@@ -9,6 +9,7 @@ import CallHistoryTab from "./modal/CallHistoryTab";
 type SiteDetailsModalProps = {
 	site: Site;
 	onClose: () => void;
+	isNested?: boolean;
 };
 
 type SiteModalTab = 
@@ -20,6 +21,7 @@ type SiteModalTab =
 const SiteDetailsModal = ({
 	site,
 	onClose,
+	isNested = false,
 }: SiteDetailsModalProps) => {
 	const [activeTab, setActiveTab] =
 		useState<SiteModalTab>("general");
@@ -86,7 +88,11 @@ const SiteDetailsModal = ({
 
 	return (
 		<div
-			className="site-modal-backdrop"
+			className={
+				isNested === true 
+					? "site-modal-backdrop site-modal-backdrop-nested"
+					: "site-modal-backdrop"
+			}
 			role="presentation"
 			onMouseDown={(event) => {
 				if (event.target === event.currentTarget) {

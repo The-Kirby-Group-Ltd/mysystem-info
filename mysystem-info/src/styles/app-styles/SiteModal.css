@@ -458,6 +458,12 @@
 	color: #a51f1f;
 }
 
+.site-modal-backdrop-nested {
+	background: transparent;
+	backdrop-filter: none;
+	z-index: 1200;
+}
+
 @media (max-width: 700px) {
 	.system-selection-controls {
 		align-items: stretch;
