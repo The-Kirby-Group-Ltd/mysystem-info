@@ -1,6 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { Call } from "../../data/types/callTypes";
+import { callsApi } from "../../data/api/callsApi";
 import "../../styles/app-styles/CallModal.css";
+import GeneralTab from "./modal/GeneralTab";
+import ActionsTab from "./modal/ActionsTab";
 
 type CallDetailsModalProps = {
 	call: Call;
@@ -8,11 +11,26 @@ type CallDetailsModalProps = {
 	isNested?: boolean;
 };
 
+type CallModalTab = 
+	| "general"
+	| "callActions";
+
 const CallDetailsModal = ({
 	call,
 	onClose,
 	isNested = false,
 }: CallDetailsModalProps) => {
+	const [activeTab, setActiveTab] = 
+		useState<CallModalTab>("general");
+
+	const [callDetails, setCallDetails] = useState<Call>(call);
+	const [isLoadingCall, setIsLoadingCall] = useState(true);
+	const [callError, setCallError] = useState("");
+
+	// =====================================================
+	// Close modal view
+	// =====================================================
+
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
 			if (event.key === "Escape") {
@@ -31,72 +49,155 @@ const CallDetailsModal = ({
 		};
 	}, [onClose]);
 
-	return (
-		<div
-			className={
-				isNested
-					? "call-modal-backdrop call-modal-backdrop-nested"
-					: "call-modal-backdrop"
-			}
-			onMouseDown={(event) => {
-				if (event.target === event.currentTarget) {
-					onClose();
+	// =====================================================
+	// Load call details from API 
+	// =====================================================
+
+	useEffect(() => {
+		let isCancelled = false;
+
+
+		const loadCallDetails = async () => {
+			setIsLoadingCall(true);
+			setCallError("");
+
+			try { // fetch this call 
+				const fullCall = await callsApi.getCallByNumber(call.callNumber);
+
+				if (!isCancelled) {
+					setCallDetails(fullCall);
 				}
-			}}
-		>
-			<section
-				className="call-modal"
-				role="dialog"
-				aria-modal="true"
-				aria-labelledby="call-modal-title"
+			} catch (error) { // failed to load
+				if (!isCancelled) {
+					setCallError(
+						error instanceof Error
+							? error.message
+							: "Failed to load the full call details."
+					);
+				}
+			} finally { // set isLoading false 
+				if (!isCancelled) {
+					setIsLoadingCall(false);
+				}
+			}
+		};
+
+		setCallDetails(call);
+		setActiveTab("general");
+		loadCallDetails();
+
+		return () => {
+			isCancelled = true;
+		};
+	}, [call]);
+
+	// =====================================================
+	// Render call modal
+	// =====================================================
+
+	return (
+			<div 
+				className={
+					isNested === true
+						? "call-modal-backdrop call-modal-backdrop-nested"
+						: "call-modal-backdrop"
+				}
+
+				// className="call-modal-backdrop"
+				role="presentation"
+				onMouseDown={(event) => {
+					if (event.target === event.currentTarget) {
+						onClose();
+					}
+				}}
 			>
-				<header className="call-modal-header">
-					<div>
-						<p>Call Details</p>
+				<section
+					className="call-modal"
+					role="dialog"
+					aria-modal="true"
+					aria-labelledby="call-modal-title"
+					onMouseDown={(event) => event.stopPropagation()}
+				>
+					<header className="call-modal-header">
+						<div>
+							<p className="call-modal-eyebrow">
+								Call Details
+							</p>
 
-						<h2 id="call-modal-title">
-							{call.callNumber}
-						</h2>
-					</div>
+							<h2 id="call-modal-title">
+								Call No. {callDetails.callNumber}
+							</h2>
+						</div>
 
-					<button
-						type="button"
-						onClick={onClose}
-						aria-label="Close call"
+						<button
+							type="button"
+							className="call-modal-close"
+							onClick={onClose}
+							aria-label="Close site"
+						>
+							×
+						</button>
+					</header>
+
+					<nav
+						className="call-modal-tabs"
+						aria-label="Call details sections"
 					>
-						×
-					</button>
-				</header>
+						<button
+							type="button"
+							className={
+								activeTab === "general"
+									? "call-modal-tab call-modal-tab-active"
+									: "call-modal-tab"
+							}
+							onClick={() => setActiveTab("general")}
+						>
+							General
+						</button>
 
-				<div className="call-modal-content">
-					<p>
-						<strong>Site:</strong>{" "}
-						{call.siteId || "—"}
-					</p>
+						<button
+							type="button"
+							className={
+								activeTab === "callActions"
+									? "call-modal-tab call-modal-tab-active"
+									: "call-modal-tab"
+							}
+							onClick={() => setActiveTab("callActions")}
+						>
+							Call Actions
+						</button>
+					</nav>
 
-					<p>
-						<strong>Status:</strong>{" "}
-						{call.callStatus || "—"}
-					</p>
+					<div className="call-modal-content">
+						{/* error */}
 
-					<p>
-						<strong>Type:</strong>{" "}
-						{call.callType || "—"}
-					</p>
+						{callError && (
+							<div
+								className="call-modal-error"
+								role="alert"
+							>
+								<p>{callError}</p>
 
-					<p>
-						<strong>Logged:</strong>{" "}
-						{call.loggedDate || "—"}
-					</p>
+								<p>
+									The summary information from the calls
+									list is being shown instead. 
+								</p>
+							</div>
+						)}
 
-					<p>
-						<strong>Engineer:</strong>{" "}
-						{call.engineer || "—"}
-					</p>
-				</div>
-			</section>
-		</div>
-	);
+						{/* tab imports */}
+
+						{activeTab === "general" && (
+							<GeneralTab />
+						)}
+
+						{activeTab === "callActions" && (
+							<ActionsTab />
+						)}
+					</div>
+				</section>
+			</div>
+	)
 };
 
 export default CallDetailsModal;
