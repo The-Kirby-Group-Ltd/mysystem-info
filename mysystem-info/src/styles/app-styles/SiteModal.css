@@ -519,7 +519,7 @@
 }
 
 .site-call-history-table .calls-table tbody tr:nth-child(odd) {
-	background: rgba(219, 45, 45, 0.15);
+	background: rgba(219, 45, 45, 0.1);
 }
 
 .site-call-history-table .calls-table tbody tr:nth-child(even) {

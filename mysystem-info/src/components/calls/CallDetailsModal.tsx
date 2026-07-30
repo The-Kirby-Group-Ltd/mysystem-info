@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
+
 import type { Call } from "../../data/types/callTypes";
+import type { Site } from "../../data/types/siteTypes";
+
 import { callsApi } from "../../data/api/callsApi";
-import "../../styles/app-styles/CallModal.css";
+import sitesApi from "../../data/api/sitesApi";
+
 import GeneralTab from "./modal/GeneralTab";
 import ActionsTab from "./modal/ActionsTab";
-import type { Site } from "../../data/types/siteTypes";
-import sitesApi from "../../data/api/sitesApi";
 import SiteDetailsModal from "../sites/SiteDetailsModal";
+
+import "../../styles/app-styles/CallModal.css";
 
 type CallDetailsModalProps = {
 	call: Call;
@@ -14,7 +18,7 @@ type CallDetailsModalProps = {
 	isNested?: boolean;
 };
 
-type CallModalTab = 
+type CallModalTab =
 	| "general"
 	| "callActions";
 
@@ -23,66 +27,93 @@ const CallDetailsModal = ({
 	onClose,
 	isNested = false,
 }: CallDetailsModalProps) => {
-	const [activeTab, setActiveTab] = 
+	const [activeTab, setActiveTab] =
 		useState<CallModalTab>("general");
 
+	// Full call record loaded from the single-call endpoint.
 	const [callDetails, setCallDetails] = useState<Call>(call);
 	const [isLoadingCall, setIsLoadingCall] = useState(true);
 	const [callError, setCallError] = useState("");
 
-	const [selectedSite, setSelectedSite] = useState<Site | null>(null);
-	const [isLoadingSite, setIsLoadingSite] = useState(false);
+	// Site modal opened from the Site ID link in GeneralTab.
+	const [selectedSite, setSelectedSite] =
+		useState<Site | null>(null);
+
+	const [isLoadingSite, setIsLoadingSite] =
+		useState(false);
+
 	const [siteError, setSiteError] = useState("");
 
 	// =====================================================
-	// Close modal view
+	// Modal keyboard and document behaviour
 	// =====================================================
 
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
 			if (event.key === "Escape") {
+				// Close the nested site modal first, if it is open.
+				if (selectedSite) {
+					setSelectedSite(null);
+					return;
+				}
+
 				onClose();
 			}
 		};
 
-		const previousOverflow = document.body.style.overflow;
+		const previousOverflow =
+			document.body.style.overflow;
 
 		document.body.style.overflow = "hidden";
-		window.addEventListener("keydown", handleKeyDown);
+
+		window.addEventListener(
+			"keydown",
+			handleKeyDown
+		);
 
 		return () => {
-			document.body.style.overflow = previousOverflow;
-			window.removeEventListener("keydown", handleKeyDown);
+			document.body.style.overflow =
+				previousOverflow;
+
+			window.removeEventListener(
+				"keydown",
+				handleKeyDown
+			);
 		};
-	}, [onClose]);
+	}, [onClose, selectedSite]);
 
 	// =====================================================
-	// Load call details from API 
+	// Load full call details
 	// =====================================================
 
 	useEffect(() => {
 		let isCancelled = false;
 
-
 		const loadCallDetails = async () => {
 			setIsLoadingCall(true);
 			setCallError("");
 
-			try { // fetch this call 
-				const fullCall = await callsApi.getCallByNumber(call.callNumber);
+			try {
+				const fullCall =
+					await callsApi.getCallByNumber(
+						call.callNumber
+					);
 
 				if (!isCancelled) {
 					setCallDetails(fullCall);
 				}
-			} catch (error) { // failed to load
+			} catch (error) {
 				if (!isCancelled) {
+					// Retain the summary record supplied by the table.
+					setCallDetails(call);
+
 					setCallError(
 						error instanceof Error
 							? error.message
 							: "Failed to load the full call details."
 					);
 				}
-			} finally { // set isLoading false 
+			} finally {
 				if (!isCancelled) {
 					setIsLoadingCall(false);
 				}
@@ -91,6 +122,8 @@ const CallDetailsModal = ({
 
 		setCallDetails(call);
 		setActiveTab("general");
+		setSelectedSite(null);
+
 		loadCallDetails();
 
 		return () => {
@@ -99,11 +132,14 @@ const CallDetailsModal = ({
 	}, [call]);
 
 	// =====================================================
-	// Handle a click on site id in general tab
+	// Open the associated site modal
 	// =====================================================
 
-	const handleSiteClick = async (siteId: string) => {
-		const cleanSiteId = siteId.trim().toUpperCase();
+	const handleSiteClick = async (
+		siteId: string
+	) => {
+		const cleanSiteId =
+			siteId.trim().toUpperCase();
 
 		if (!cleanSiteId) {
 			return;
@@ -113,7 +149,11 @@ const CallDetailsModal = ({
 		setSiteError("");
 
 		try {
-			const site = await sitesApi.getSiteById(cleanSiteId);
+			const site =
+				await sitesApi.getSiteById(
+					cleanSiteId
+				);
+
 			setSelectedSite(site);
 		} catch (error) {
 			setSiteError(
@@ -127,21 +167,22 @@ const CallDetailsModal = ({
 	};
 
 	// =====================================================
-	// Render call modal
+	// Render
 	// =====================================================
 
 	return (
-		<div 
+		<div
 			className={
-				isNested === true
+				isNested
 					? "call-modal-backdrop call-modal-backdrop-nested"
 					: "call-modal-backdrop"
 			}
-
-			// className="call-modal-backdrop"
 			role="presentation"
 			onMouseDown={(event) => {
-				if (event.target === event.currentTarget) {
+				if (
+					event.target ===
+					event.currentTarget
+				) {
 					onClose();
 				}
 			}}
@@ -151,7 +192,9 @@ const CallDetailsModal = ({
 				role="dialog"
 				aria-modal="true"
 				aria-labelledby="call-modal-title"
-				onMouseDown={(event) => event.stopPropagation()}
+				onMouseDown={(event) =>
+					event.stopPropagation()
+				}
 			>
 				<header className="call-modal-header">
 					<div>
@@ -160,15 +203,22 @@ const CallDetailsModal = ({
 						</p>
 
 						<h2 id="call-modal-title">
-							Call No. {callDetails.callNumber}
+							Call No.{" "}
+							{callDetails.callNumber}
 						</h2>
+
+						<p className="call-modal-subtitle">
+							{callDetails.siteId
+								? `Site ${callDetails.siteId}`
+								: "Site unavailable"}
+						</p>
 					</div>
 
 					<button
 						type="button"
 						className="call-modal-close"
 						onClick={onClose}
-						aria-label="Close site"
+						aria-label="Close call"
 					>
 						×
 					</button>
@@ -185,7 +235,9 @@ const CallDetailsModal = ({
 								? "call-modal-tab call-modal-tab-active"
 								: "call-modal-tab"
 						}
-						onClick={() => setActiveTab("general")}
+						onClick={() =>
+							setActiveTab("general")
+						}
 					>
 						General
 					</button>
@@ -197,40 +249,60 @@ const CallDetailsModal = ({
 								? "call-modal-tab call-modal-tab-active"
 								: "call-modal-tab"
 						}
-						onClick={() => setActiveTab("callActions")}
+						onClick={() =>
+							setActiveTab(
+								"callActions"
+							)
+						}
 					>
 						Call Actions
 					</button>
 				</nav>
 
 				<div className="call-modal-content">
-					{/* error */}
-
 					{callError && (
 						<div
 							className="call-modal-error"
 							role="alert"
 						>
 							<p>{callError}</p>
-
 							<p>
-								The summary information from the calls
-								list is being shown instead. 
+								The summary information
+								from the calls list is
+								being shown instead.
 							</p>
 						</div>
 					)}
 
-					{/* tab imports */}
+					{siteError && (
+						<div
+							className="call-modal-error"
+							role="alert"
+						>
+							<p>{siteError}</p>
+						</div>
+					)}
+
+					{isLoadingSite && (
+						<p className="call-modal-loading">
+							Loading site details...
+						</p>
+					)}
 
 					{activeTab === "general" && (
-						<GeneralTab 
+						<GeneralTab
 							call={callDetails}
-							isLoadingCall={isLoadingCall}
-							onSiteClick={handleSiteClick}
+							isLoadingCall={
+								isLoadingCall
+							}
+							onSiteClick={
+								handleSiteClick
+							}
 						/>
 					)}
 
-					{activeTab === "callActions" && (
+					{activeTab ===
+						"callActions" && (
 						<ActionsTab />
 					)}
 				</div>
@@ -239,12 +311,14 @@ const CallDetailsModal = ({
 			{selectedSite && (
 				<SiteDetailsModal
 					site={selectedSite}
-					onClose={() => setSelectedSite(null)}
-					isNested={true}
+					onClose={() =>
+						setSelectedSite(null)
+					}
+					isNested
 				/>
 			)}
 		</div>
-	)
+	);
 };
 
 export default CallDetailsModal;

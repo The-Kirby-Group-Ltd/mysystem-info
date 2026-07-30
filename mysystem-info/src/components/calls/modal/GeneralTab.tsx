@@ -1,99 +1,144 @@
 import { useEffect, useState } from "react";
+
 import type { Call } from "../../../data/types/callTypes";
-import type { Site } from "../../../data/types/siteTypes";
+
 import referenceApi from "../../../data/api/referenceApi";
 import sitesApi from "../../../data/api/sitesApi";
 
 type GeneralTabProps = {
 	call: Call;
 	isLoadingCall?: boolean;
-    onSiteClick: (siteId: string) => void;
+	onSiteClick: (siteId: string) => void;
 };
 
 const GeneralTab = ({
 	call,
 	isLoadingCall = false,
-    onSiteClick,
+	onSiteClick,
 }: GeneralTabProps) => {
+	// Customer number is retrieved through the call's site.
 	const [associatedCustomerNo, setAssociatedCustomerNo] =
 		useState("");
 
-	const [callTypeLabel, setCallTypeLabel] = useState("");
-	const [callStatusLabel, setCallStatusLabel] = useState("");
-	const [systemTypeLabel, setSystemTypeLabel] = useState("");
-	const [engineerName, setEngineerName] = useState("");
+	// Customer-friendly descriptions for MMAPI reference codes.
+	const [systemTypeLabel, setSystemTypeLabel] =
+		useState("");
 
-    const [selectedSite, setSelectedSite] = useState<Site | null>(null);
+	const [engineerName, setEngineerName] =
+		useState("");
 
-	const [isLoadingReferenceData, setIsLoadingReferenceData] =
-		useState(false);
+	// Loading state for the additional requests made by this tab.
+	const [
+		isLoadingReferenceData,
+		setIsLoadingReferenceData,
+	] = useState(false);
 
-	const [isLoadingCustomerNo, setIsLoadingCustomerNo] =
-		useState(false);
+	const [
+		isLoadingCustomerNo,
+		setIsLoadingCustomerNo,
+	] = useState(false);
 
-	const [error, setError] = useState("");
+	// Separate lookup errors so the main call details remain usable.
+	const [referenceError, setReferenceError] =
+		useState("");
+
+	const [customerError, setCustomerError] =
+		useState("");
 
 	// =====================================================
-	// Load call reference descriptions
+	// Date formatting
+	// =====================================================
+
+	const formatDate = (
+		value: string | null | undefined
+	): string => {
+		if (!value) {
+			return "—";
+		}
+
+		const datePart = value.split("T")[0];
+		const [year, month, day] =
+			datePart.split("-");
+
+		if (!year || !month || !day) {
+			return value;
+		}
+
+		return `${day}/${month}/${year}`;
+	};
+
+	// =====================================================
+	// Load system-type and engineer descriptions
 	// =====================================================
 
 	useEffect(() => {
 		let isCancelled = false;
 
-		const getCallReferenceData = async () => {
+		const loadReferenceData = async () => {
 			setIsLoadingReferenceData(true);
-			setError("");
+			setReferenceError("");
 
-			// local mappings
-			setCallTypeLabel(call.callType || "Unknown");
-            setCallStatusLabel(call.callStatus || "Unknown");
+			const cleanSystemType =
+				call.systemType
+					?.trim()
+					.toUpperCase() ?? "";
+
+			const cleanEngineer =
+				call.engineer
+					?.trim()
+					.toUpperCase() ?? "";
+
+			// Raw codes remain useful fallbacks.
+			setSystemTypeLabel(
+				cleanSystemType ||
+					"System Type Unknown"
+			);
+
+			setEngineerName(
+				cleanEngineer || "—"
+			);
 
 			try {
-				const cleanSystemType =
-					call.systemType?.trim().toUpperCase() ?? "";
-
-				const cleanEngineer =
-					call.engineer?.trim().toUpperCase() ?? "";
-
 				if (cleanSystemType) {
-					const systemTypeResponse =
-						await referenceApi.getSystemTypes({
-							code: cleanSystemType,
-							pageSize: 1,
-						});
+					const response =
+						await referenceApi.getSystemTypes(
+							{
+								code: cleanSystemType,
+								pageSize: 1,
+							}
+						);
 
 					if (!isCancelled) {
 						setSystemTypeLabel(
-							systemTypeResponse.items[0]?.description?.trim() ||
+							response.items[0]
+								?.description
+								?.trim() ||
 								cleanSystemType
 						);
 					}
-				} else if (!isCancelled) {
-					setSystemTypeLabel("System Type Unknown");
 				}
 
 				if (cleanEngineer) {
-					const engineerResponse =
-						await referenceApi.getEngineers({
-							code: cleanEngineer,
-							pageSize: 1,
-						});
+					const response =
+						await referenceApi.getEngineers(
+							{
+								code: cleanEngineer,
+								pageSize: 1,
+							}
+						);
 
 					if (!isCancelled) {
 						setEngineerName(
-							engineerResponse.items[0]?.description?.trim() ||
+							response.items[0]
+								?.description
+								?.trim() ||
 								cleanEngineer
 						);
 					}
-				} else if (!isCancelled) {
-					setEngineerName("—");
 				}
 			} catch (error) {
 				if (!isCancelled) {
-					setSystemTypeLabel(call.systemType || `Unknown`);
-					setEngineerName(call.engineer || "—");
-
-					setError(
+					setReferenceError(
 						error instanceof Error
 							? `Unable to load reference data: ${error.message}`
 							: "Unable to load reference data."
@@ -101,73 +146,81 @@ const GeneralTab = ({
 				}
 			} finally {
 				if (!isCancelled) {
-					setIsLoadingReferenceData(false);
+					setIsLoadingReferenceData(
+						false
+					);
 				}
 			}
 		};
 
-		getCallReferenceData();
+		loadReferenceData();
 
 		return () => {
 			isCancelled = true;
 		};
-	}, [
-		call.callType,
-		call.callStatus,
-		call.systemType,
-		call.engineer,
-	]);
+	}, [call.systemType, call.engineer]);
 
 	// =====================================================
-	// Load customer number from the call's site
+	// Resolve the call's customer number from its site
 	// =====================================================
 
 	useEffect(() => {
 		let isCancelled = false;
 
-		const getAssociatedCustomerNo = async () => {
+		const loadCustomerNo = async () => {
 			const cleanSiteId =
-				call.siteId?.trim().toUpperCase() ?? "";
+				call.siteId
+					?.trim()
+					.toUpperCase() ?? "";
+
+			setAssociatedCustomerNo("");
+			setCustomerError("");
 
 			if (!cleanSiteId) {
-				setAssociatedCustomerNo("");
 				return;
 			}
 
 			setIsLoadingCustomerNo(true);
 
 			try {
-				const associatedSite =
-					await sitesApi.getSiteById(cleanSiteId);
+				const site =
+					await sitesApi.getSiteById(
+						cleanSiteId
+					);
 
 				if (!isCancelled) {
 					setAssociatedCustomerNo(
-						associatedSite.customerNo?.trim() ?? ""
+						site.customerNo?.trim() ??
+							""
 					);
 				}
 			} catch (error) {
 				if (!isCancelled) {
-					setAssociatedCustomerNo("");
-
-					setError(
+					setCustomerError(
 						error instanceof Error
-							? error.message
-							: "Customer No could not be retrieved."
+							? `Unable to load customer information: ${error.message}`
+							: "Unable to load customer information."
 					);
 				}
 			} finally {
 				if (!isCancelled) {
-					setIsLoadingCustomerNo(false);
+					setIsLoadingCustomerNo(
+						false
+					);
 				}
 			}
 		};
 
-		getAssociatedCustomerNo();
+		loadCustomerNo();
 
 		return () => {
 			isCancelled = true;
 		};
 	}, [call.siteId]);
+
+	// =====================================================
+	// Render
+	// =====================================================
 
 	return (
 		<div className="call-general-tab">
@@ -179,54 +232,174 @@ const GeneralTab = ({
 				</p>
 			)}
 
-			<section className="call-detail-section">
-				<h3>Call Information</h3>
+			{referenceError && (
+				<div
+					className="call-modal-error"
+					role="alert"
+				>
+					<p>{referenceError}</p>
+					<p>
+						Reference codes are being
+						displayed instead.
+					</p>
+				</div>
+			)}
 
-				{error && (
-					<div className="call-modal-error" role="alert">
-						<p>{error}</p>
-					</div>
-				)}
+			{customerError && (
+				<div
+					className="call-modal-error"
+					role="alert"
+				>
+					<p>{customerError}</p>
+				</div>
+			)}
+
+			<section className="call-detail-section">
+				<h3>General Information</h3>
 
 				<div className="call-detail-grid">
 					<div className="call-detail-field">
 						<span>Customer No</span>
 						<strong>
-							{associatedCustomerNo || "—"}
+							{associatedCustomerNo ||
+								"—"}
 						</strong>
 					</div>
 
-                    <div className="call-detail-field">
-                        <span>Site ID</span>
-                        <strong>
-                            <button
-                                type="button"
-                                className="call-site-link"
-                                onClick={() => onSiteClick(call.siteId)}
-                            >
-                                {call.siteId}
-                            </button>
-                        </strong>
-                    </div>
+					<div className="call-detail-field">
+						<span>Site ID</span>
+
+						<strong>
+							{call.siteId ? (
+								<button
+									type="button"
+									className="call-site-link"
+									onClick={() =>
+										onSiteClick(
+											call.siteId
+										)
+									}
+								>
+									{call.siteId}
+								</button>
+							) : (
+								"—"
+							)}
+						</strong>
+					</div>
 
 					<div className="call-detail-field">
 						<span>Call Type</span>
-						<strong>{callTypeLabel || "—"}</strong>
+						<strong>
+							{call.callType ||
+								"Unknown"}
+						</strong>
 					</div>
 
 					<div className="call-detail-field">
 						<span>Call Status</span>
-						<strong>{callStatusLabel || "—"}</strong>
+						<strong>
+							{call.callStatus ||
+								"Unknown"}
+						</strong>
 					</div>
 
 					<div className="call-detail-field">
 						<span>System Type</span>
-						<strong>{systemTypeLabel || "—"}</strong>
+						<strong>
+							{systemTypeLabel || "—"}
+						</strong>
 					</div>
 
 					<div className="call-detail-field">
 						<span>Engineer</span>
-						<strong>{engineerName || "—"}</strong>
+						<strong>
+							{engineerName || "—"}
+						</strong>
+					</div>
+
+					<div className="call-detail-field">
+						<span>Logged Date</span>
+						<strong>
+							{formatDate(
+								call.loggedDate
+							)}
+						</strong>
+					</div>
+
+					<div className="call-detail-field">
+						<span>
+							Logging Operator
+						</span>
+						<strong>
+							{call.loggingOperator ||
+								"—"}
+						</strong>
+					</div>
+				</div>
+			</section>
+
+			<section className="call-detail-section">
+				<h3>Call Details</h3>
+
+				<div className="call-detail-field">
+					<span>Logged Remarks</span>
+
+					<p className="call-modal-remarks">
+						{call.loggedRemarks ||
+							"No logged remarks are available."}
+					</p>
+				</div>
+			</section>
+
+			<section className="call-detail-section">
+				<h3>Completion and Billing</h3>
+
+				<div className="call-detail-grid">
+					<div className="call-detail-field">
+						<span>Completed Date</span>
+						<strong>
+							{formatDate(
+								call.completedDate
+							)}
+						</strong>
+					</div>
+
+					<div className="call-detail-field">
+						<span>Invoice No.</span>
+						<strong>
+							{call.invoiceNo || "—"}
+						</strong>
+					</div>
+
+					<div className="call-detail-field call-detail-field-wide">
+						<span>
+							Customer Reference
+						</span>
+						<strong>
+							{call.customerReference ||
+								"—"}
+						</strong>
+					</div>
+
+					<div className="call-detail-field">
+						<span>
+							Previous Maintenance
+						</span>
+						<strong>
+							{formatDate(
+								call.previousMaintenanceDate
+							)}
+						</strong>
+					</div>
+
+					<div className="call-detail-field">
+						<span>Next Maintenance</span>
+						<strong>
+							{formatDate(
+								call.nextMaintenanceDate
+							)}
+						</strong>
 					</div>
 				</div>
 			</section>

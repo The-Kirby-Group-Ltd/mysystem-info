@@ -7,12 +7,10 @@ export type Call = {
 	loggingOperator: string;
 	engineer: string;
 	systemType: string;
-
 	completedDate: string;
 	customerReference: string;
 	invoiceNo: string;
 	loggedRemarks: string;
-	completedRemarks: string;
 	previousMaintenanceDate: string | null;
 	nextMaintenanceDate: string | null;
 };
