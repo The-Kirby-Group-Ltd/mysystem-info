@@ -23,19 +23,6 @@
 	background: rgba(219, 45, 45, 0.18);
 }
 
-.calls-table tbody tr::after {
-	content: "";
-	position: absolute;
-	right: 0;
-	bottom: 0;
-	left: 0;
-
-	height: 1px;
-
-	background: rgba(0, 0, 0, 0.12);
-	pointer-events: none;
-}
-
 .calls-table td {
 	padding: 14px 16px;
 	color: #222;

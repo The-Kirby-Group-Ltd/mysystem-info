@@ -344,6 +344,235 @@
 	margin-top: 22px;
 }
 
+/* ===================== call actions tab ===================== */
+
+.call-actions-tab {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+	min-height: 0;
+}
+
+.call-actions-layout {
+	display: grid;
+	grid-template-columns: minmax(190px, 240px) minmax(0, 1fr);
+	gap: 18px;
+	align-items: stretch;
+	min-height: 0;
+}
+
+/* ===================== action selector ===================== */
+
+.call-actions-selection {
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+
+	padding: 18px;
+
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	border-radius: 10px;
+
+	background: rgba(255, 255, 255, 0.96);
+}
+
+.call-actions-selection h3 {
+	margin: 0 0 14px;
+
+	color: #222;
+	font-size: 1.05rem;
+}
+
+.call-actions-list {
+	display: flex;
+	flex-direction: column;
+	gap: 7px;
+
+	max-height: 520px;
+	overflow-y: auto;
+	padding-right: 4px;
+}
+
+.call-action-row {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 4px;
+
+	width: 100%;
+	padding: 11px 12px;
+
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	border-radius: 8px;
+
+	background: #fff;
+	color: #333;
+
+	font: inherit;
+	text-align: left;
+
+	cursor: pointer;
+	transition:
+		background 0.2s ease,
+		border-color 0.2s ease,
+		transform 0.2s ease,
+		box-shadow 0.2s ease;
+}
+
+.call-action-row:hover {
+	border-color: rgba(219, 45, 45, 0.32);
+	background: rgba(219, 45, 45, 0.04);
+	transform: translateY(-1px);
+}
+
+.call-action-row-active {
+	border-color: rgba(219, 45, 45, 0.55);
+	background: rgba(219, 45, 45, 0.09);
+	box-shadow: 0 0 0 2px rgba(219, 45, 45, 0.07);
+}
+
+.call-action-number {
+	color: #222;
+	font-size: 0.9rem;
+	font-weight: 700;
+}
+
+.call-action-date,
+.call-action-engineer {
+	color: #666;
+	font-size: 0.78rem;
+	line-height: 1.25;
+}
+
+.call-action-row-active .call-action-number {
+	color: #a51f1f;
+}
+
+/* ===================== selected action details ===================== */
+
+.call-action-details {
+	min-width: 0;
+}
+
+.action-data-section {
+	display: flex;
+	flex-direction: column;
+	gap: 22px;
+}
+
+.action-data-section > h3 {
+	margin: 0;
+
+	color: #222;
+	font-size: 1.05rem;
+}
+
+.call-action-details .call-detail-grid {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* ===================== action remarks ===================== */
+
+.call-action-remarks {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+
+	padding-top: 4px;
+}
+
+.call-action-remarks-block {
+	padding: 16px;
+
+	border: 1px solid rgba(0, 0, 0, 0.08);
+	border-radius: 8px;
+
+	background: rgba(0, 0, 0, 0.018);
+}
+
+.call-action-remarks-label {
+	display: block;
+	margin-bottom: 8px;
+
+	color: #777;
+	font-size: 0.78rem;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.call-action-remarks-block .call-modal-remarks {
+	max-height: 220px;
+	overflow-y: auto;
+	padding-right: 6px;
+}
+
+/* ===================== scrollbars ===================== */
+
+.call-actions-list,
+.call-action-remarks-block .call-modal-remarks {
+	scrollbar-width: thin;
+	scrollbar-color:
+		rgba(219, 45, 45, 0.35)
+		rgba(0, 0, 0, 0.05);
+}
+
+.call-actions-list::-webkit-scrollbar,
+.call-action-remarks-block .call-modal-remarks::-webkit-scrollbar {
+	width: 7px;
+}
+
+.call-actions-list::-webkit-scrollbar-track,
+.call-action-remarks-block .call-modal-remarks::-webkit-scrollbar-track {
+	background: rgba(0, 0, 0, 0.04);
+	border-radius: 999px;
+}
+
+.call-actions-list::-webkit-scrollbar-thumb,
+.call-action-remarks-block .call-modal-remarks::-webkit-scrollbar-thumb {
+	background: rgba(219, 45, 45, 0.32);
+	border-radius: 999px;
+}
+
+/* ===================== responsive ===================== */
+
+@media (max-width: 820px) {
+	.call-actions-layout {
+		grid-template-columns: 1fr;
+	}
+
+	.call-actions-list {
+		display: grid;
+		grid-template-columns: repeat(
+			auto-fit,
+			minmax(160px, 1fr)
+		);
+
+		max-height: 220px;
+	}
+
+	.call-action-row {
+		min-width: 0;
+	}
+}
+
+@media (max-width: 700px) {
+	.call-actions-selection {
+		padding: 14px;
+	}
+
+	.call-action-details .call-detail-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.call-action-remarks-block {
+		padding: 14px;
+	}
+
+	.call-action-remarks-block .call-modal-remarks {
+		max-height: 180px;
+	}
+}
+
 /* ===================== responsive ===================== */
 
 @media (max-width: 700px) {

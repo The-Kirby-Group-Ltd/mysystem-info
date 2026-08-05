@@ -303,7 +303,10 @@ const CallDetailsModal = ({
 
 					{activeTab ===
 						"callActions" && (
-						<ActionsTab />
+						<ActionsTab 
+							call={callDetails}
+							isLoading={isLoadingCall}
+						/>
 					)}
 				</div>
 			</section>

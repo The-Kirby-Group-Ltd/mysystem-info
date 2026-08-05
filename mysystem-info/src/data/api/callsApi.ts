@@ -91,5 +91,3 @@ export const callsApi = {
 		return mapTypeStrings(call);
 	},
 };
-
-export default callsApi;

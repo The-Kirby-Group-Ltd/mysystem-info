@@ -26,16 +26,11 @@ const SystemsTab = ({
 	// Systems list and current selection
 	// =====================================================
 
-	// All systems returned for the selected site.
 	const [systemsList, setSystemsList] = useState<SiteSystem[]>([]);
 
-	// System currently selected in the dropdown.
-	// System 1 is preferred when it exists.
 	const [selectedSystemNo, setSelectedSystemNo] =
 		useState<number>(1);
 
-	// Find the full selected-system object from the loaded list.
-	// Changing selectedSystemNo does not make another systems request.
 	const selectedSystem =
 		systemsList.find(
 			(system) => system.systemNo === selectedSystemNo
@@ -45,8 +40,6 @@ const SystemsTab = ({
 	// System-type reference data
 	// =====================================================
 
-	// Reference records used to translate system codes such as F1
-	// into customer-friendly descriptions such as Fire Alarm.
 	const [systemTypes, setSystemTypes] = useState<
 		SystemTypeReference[]
 	>([]);
@@ -55,8 +48,6 @@ const SystemsTab = ({
 	// Filters
 	// =====================================================
 
-	// False means only live systems are requested.
-	// True removes the status filter so dead systems are included.
 	const [showDecommissioned, setShowDecommissioned] =
 		useState(false);
 
@@ -93,8 +84,6 @@ const SystemsTab = ({
 	// Maintenance schedule state
 	// =====================================================
 
-	// Populated from the dedicated maintenance-schedule endpoint.
-	// A dash is shown for non-maintained systems or missing schedules.
 	const [nextMaintenanceDate, setNextMaintenanceDate] =
 		useState("");
 
@@ -102,9 +91,6 @@ const SystemsTab = ({
 	// Display helpers
 	// =====================================================
 
-	// Translate a system reference code into its description.
-	// Fall back to the raw code if the reference request failed
-	// or no matching reference exists.
 	const getSystemDescription = (
 		systemCode: string
 	): string => {
@@ -151,8 +137,6 @@ const SystemsTab = ({
 				let page = 1;
 				let hasMore = true;
 
-				// The reference endpoint is paginated, so continue
-				// until every page has been retrieved.
 				while (hasMore) {
 					const response =
 						await referenceApi.getSystemTypes({
