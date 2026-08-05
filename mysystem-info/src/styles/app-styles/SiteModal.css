@@ -548,3 +548,40 @@
 .site-call-history-table .skeleton-block {
 	height: 11px;
 }
+
+/* ===================== book call tab ===================== */
+
+.site-modal-book-call-tab {
+	margin-left: auto;
+
+	background: rgba(219, 45, 45, 0.12);
+	border-color: rgba(219, 45, 45, 0.18);
+
+	color: rgba(165, 31, 31, 0.72);
+}
+
+.site-modal-book-call-tab:hover {
+	background: rgba(219, 45, 45, 0.2);
+	border-color: rgba(219, 45, 45, 0.32);
+
+	color: #a51f1f;
+}
+
+.site-modal-book-call-tab-active {
+	background: #db2d2d;
+	border: 1px solid rgba(0, 0, 0, 0.06);
+	border-bottom: none;
+
+	color: #fff;
+}
+
+.site-modal-book-call-tab-active:hover {
+	background: #db2d2d;
+	color: #fff;
+}
+
+@media (max-width: 700px) {
+	.site-modal-book-call-tab {
+		margin-left: 16px;
+	}
+}

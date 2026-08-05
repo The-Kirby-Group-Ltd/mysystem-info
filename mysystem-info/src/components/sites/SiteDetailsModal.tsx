@@ -16,7 +16,8 @@ type SiteModalTab =
 	| "general" 
 	| "systems" 
 	| "charges" 
-	| "callHistory";
+	| "callHistory"
+	| "bookCall";
 
 const SiteDetailsModal = ({
 	site,
@@ -185,6 +186,18 @@ const SiteDetailsModal = ({
                     >
                         Call History
                     </button>
+
+					<button
+						type="button"
+						className={
+							activeTab === "bookCall" 
+								? "site-modal-tab site-modal-book-call-tab site-modal-book-call-tab-active"
+								: "site-modal-tab site-modal-book-call-tab"
+						}
+						onClick={() => setActiveTab("bookCall")}
+					>
+						Book Call
+					</button>
 				</nav>
 
 				<div className="site-modal-content">
@@ -229,6 +242,16 @@ const SiteDetailsModal = ({
 
                     {activeTab === "callHistory" && (
 						<CallHistoryTab site={siteDetails} />
+					)}
+
+					{activeTab === "bookCall" && (
+						<section className="site-detail-section">
+							<h3>Book a Call</h3>
+
+							<p className="site-modal-empty">
+								Online call booking will be available soon.
+							</p>
+						</section>
 					)}
 				</div>
 			</section>
