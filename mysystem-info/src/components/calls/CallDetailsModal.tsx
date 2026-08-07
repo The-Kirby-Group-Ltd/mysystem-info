@@ -10,7 +10,7 @@ import GeneralTab from "./modal/GeneralTab";
 import ActionsTab from "./modal/ActionsTab";
 import SiteDetailsModal from "../sites/SiteDetailsModal";
 
-import "../../styles/app-styles/CallModal.css";
+import "../../styles/app-styles/calls/CallModal.css";
 
 type CallDetailsModalProps = {
 	call: Call;

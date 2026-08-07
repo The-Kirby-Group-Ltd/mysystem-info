@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Site } from "../../data/types/siteTypes";
 import { sitesApi } from "../../data/api/sitesApi";
-import "../../styles/app-styles/SiteModal.css";
+import "../../styles/app-styles/sites/SiteModal.css";
 import GeneralTab from "./modal/GeneralTab";
 import SystemsTab from "./modal/SystemsTab";
 import CallHistoryTab from "./modal/CallHistoryTab";

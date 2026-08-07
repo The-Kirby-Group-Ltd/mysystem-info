@@ -1,4 +1,4 @@
-import "../styles/app-styles/Sites.css";
+import "../styles/app-styles/sites/Sites.css";
 import SitesFilterPanel from "../components/sites/SitesFilterPanel";
 import SitesTable from "../components/sites/SitesTable";
 import SiteDetailsModal from "../components/sites/SiteDetailsModal";

@@ -1,0 +1,80 @@
+import type { DashboardSelect } from "../../../data/types/dashboardTypes";
+
+type DashboardSelectorProps = {
+	selectedDashboard: DashboardSelect;
+	onSelect: (dashboard: DashboardSelect) => void;
+};
+
+const DashboardSelector = ({
+	selectedDashboard,
+	onSelect,
+}: DashboardSelectorProps) => {
+	return (
+		<aside className="dashboard-board-select-area">
+			<div className="dashboard-selector-heading">
+				<span>Dashboard View</span>
+
+				<p>
+					Select the information you want to
+					focus on.
+				</p>
+			</div>
+
+			<div className="dashboard-selector-buttons">
+				<button
+					className={
+						selectedDashboard === "calls"
+							? "board-select-button board-select-button-active"
+							: "board-select-button"
+					}
+					type="button"
+					onClick={() => onSelect("calls")}
+				>
+					<span>Calls</span>
+
+					<small>
+						Call volumes and current statuses
+					</small>
+				</button>
+
+				<button
+					className={
+						selectedDashboard ===
+						"system-maintenances"
+							? "board-select-button board-select-button-active"
+							: "board-select-button"
+					}
+					type="button"
+					onClick={() =>
+						onSelect("system-maintenances")
+					}
+				>
+					<span>Maintenance</span>
+
+					<small>
+						System maintenance and upcoming
+						visits
+					</small>
+				</button>
+
+				<button
+					className={
+						selectedDashboard === "sla"
+							? "board-select-button board-select-button-active"
+							: "board-select-button"
+					}
+					type="button"
+					onClick={() => onSelect("sla")}
+				>
+					<span>SLA</span>
+
+					<small>
+						Response targets and performance
+					</small>
+				</button>
+			</div>
+		</aside>
+	);
+};
+
+export default DashboardSelector;

@@ -1,5 +1,5 @@
 import type { Site } from "../../data/types/siteTypes";
-import "../../styles/app-styles/SitesTable.css";
+import "../../styles/app-styles/sites/SitesTable.css";
 
 type SitesTableProps = {
 	sites: Site[];

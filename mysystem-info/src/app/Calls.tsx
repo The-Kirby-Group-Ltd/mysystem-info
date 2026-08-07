@@ -1,4 +1,4 @@
-import "../styles/app-styles/Calls.css";
+import "../styles/app-styles/calls/Calls.css";
 
 import { useState } from "react";
 import CallsFilterPanel from "../components/calls/CallsFilterPanel";

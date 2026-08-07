@@ -1,5 +1,5 @@
 import type { Call } from "../../data/types/callTypes";
-import "../../styles/app-styles/CallsTable.css";
+import "../../styles/app-styles/calls/CallsTable.css";
 
 type CallsTableProps = {
 	calls: Call[];
