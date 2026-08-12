@@ -139,7 +139,7 @@ const CallsDashboardBoard = ({
 
 			{isLoading && (
 				<p className="dashboard-loading">
-					Loading calls dashboard...
+					Loading calls dashboard... This may take some time... 
 				</p>
 			)}
 

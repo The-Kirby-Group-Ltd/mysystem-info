@@ -665,6 +665,107 @@ h1.dashboard-heading {
 	font-size: 0.85rem;
 }
 
+.dashboard-chart-card {
+	display: flex;
+	flex-direction: column;
+
+	min-width: 0;
+	min-height: 0;
+
+	padding: 16px;
+
+	border: 1px solid rgba(0, 0, 0, 0.08);
+	border-radius: 10px;
+
+	background: rgba(0, 0, 0, 0.012);
+}
+
+.dashboard-chart-card h4 {
+	margin: 0 0 8px;
+
+	color: #333;
+	font-size: 0.95rem;
+}
+
+.dashboard-donut-chart {
+	width: 100%;
+	min-width: 0;
+	flex-shrink: 0;
+}
+
+/* ===================== chart key ===================== */
+
+.dashboard-chart-key {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+
+	max-height: 120px;
+	margin-top: 6px;
+	padding-right: 4px;
+
+	overflow-y: auto;
+}
+
+.dashboard-chart-key-item {
+	display: grid;
+	grid-template-columns: 10px minmax(0, 1fr) auto;
+	align-items: center;
+	gap: 7px;
+
+	min-width: 0;
+
+	padding: 3px 2px;
+
+	color: #555;
+	font-size: 0.72rem;
+	line-height: 1.2;
+}
+
+.dashboard-chart-key-colour {
+	display: block;
+
+	width: 9px;
+	height: 9px;
+
+	border-radius: 2px;
+
+	flex-shrink: 0;
+}
+
+.dashboard-chart-key-label {
+	min-width: 0;
+
+	overflow: hidden;
+
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.dashboard-chart-key-item strong {
+	color: #333;
+	font-size: 0.72rem;
+	font-weight: 700;
+}
+
+/* Thin scrollbar for long keys */
+
+.dashboard-chart-key {
+	scrollbar-width: thin;
+	scrollbar-color:
+		rgba(0, 0, 0, 0.2)
+		transparent;
+}
+
+.dashboard-chart-key::-webkit-scrollbar {
+	width: 6px;
+}
+
+.dashboard-chart-key::-webkit-scrollbar-thumb {
+	background: rgba(0, 0, 0, 0.18);
+	border-radius: 999px;
+}
+
 @media (max-width: 1100px) {
 	.dashboard-charts-grid {
 		grid-template-columns: 1fr;

@@ -1,6 +1,5 @@
 import {
 	Cell,
-	Legend,
 	Pie,
 	PieChart,
 	ResponsiveContainer,
@@ -16,68 +15,147 @@ type DashboardDonutChartProps = {
 	data: DashboardBreakdownItem[];
 };
 
+// =====================================================
+// Accessible chart palette
+//
+// Uses strongly differentiated hues rather than shades
+// of the same colour.
+// =====================================================
+
 const colours = [
-	"#db2d2d",
-	"#a51f1f",
-	"#d66a6a",
-	"#7a78c2",
-	"#d49a32",
-	"#3d9461",
-	"#4f86c6",
-	"#888888",
+	"#0072B2", // blue
+	"#E69F00", // orange
+	"#009E73", // green
+	"#CC79A7", // purple / pink
+	"#56B4E9", // light blue
+	"#D55E00", // vermillion
+	"#F0E442", // yellow
+	"#666666", // grey
 ];
+
+// =====================================================
+// Donut chart
+// =====================================================
 
 const DashboardDonutChart = ({
 	title,
 	data,
 }: DashboardDonutChartProps) => {
+	// Don't include empty categories in the chart/key.
+	const chartData = data.filter(
+		(item) => item.count > 0
+	);
+
+	// Total is useful for the centre of the donut.
+	const total = chartData.reduce(
+		(sum, item) => sum + item.count,
+		0
+	);
+
 	return (
 		<div className="dashboard-chart-card">
 			<h4>{title}</h4>
 
-			{data.length === 0 ? (
+			{chartData.length === 0 ? (
 				<p className="dashboard-chart-empty">
 					No data available.
 				</p>
 			) : (
-				<div className="dashboard-donut-chart">
-					<ResponsiveContainer
-						width="100%"
-						height={260}
-					>
-						<PieChart>
-							<Pie
-								data={data}
-								dataKey="count"
-								nameKey="label"
-								cx="50%"
-								cy="48%"
-								innerRadius={58}
-								outerRadius={90}
-								paddingAngle={2}
-							>
-								{data.map((item, index) => (
-									<Cell
-										key={item.code}
-										fill={
-											colours[
-												index %
-													colours.length
-											]
-										}
+				<>
+					{/* =============================
+					    Donut
+					============================= */}
+
+					<div className="dashboard-donut-chart">
+						<ResponsiveContainer
+							width="100%"
+							height={210}
+						>
+							<PieChart>
+								<Pie
+									data={chartData}
+									dataKey="count"
+									nameKey="label"
+									cx="50%"
+									cy="50%"
+									innerRadius={50}
+									outerRadius={75}
+									paddingAngle={2}
+								>
+									{chartData.map(
+										(item, index) => (
+											<Cell
+												key={
+													item.code
+												}
+												fill={
+													colours[
+														index %
+															colours.length
+													]
+												}
+											/>
+										)
+									)}
+								</Pie>
+
+								<Tooltip
+									formatter={(
+										value,
+										name
+									) => [
+										value,
+										name,
+									]}
+								/>
+							</PieChart>
+						</ResponsiveContainer>
+
+						{/* =============================
+						    Centre value
+						============================= */}
+
+						<div className="dashboard-donut-centre">
+							<strong>{total}</strong>
+							<span>{" "}Total</span>
+						</div>
+					</div>
+
+					{/* =============================
+					    Custom chart key
+					============================= */}
+
+					<div className="dashboard-chart-key">
+						{chartData.map(
+							(item, index) => (
+								<div
+									className="dashboard-chart-key-item"
+									key={item.code}
+									title={item.label}
+								>
+									<span
+										className="dashboard-chart-key-colour"
+										style={{
+											backgroundColor:
+												colours[
+													index %
+														colours.length
+												],
+										}}
 									/>
-								))}
-							</Pie>
 
-							<Tooltip />
+									<span className="dashboard-chart-key-label">
+										{item.label}
+									</span>
 
-							<Legend
-								verticalAlign="bottom"
-								height={42}
-							/>
-						</PieChart>
-					</ResponsiveContainer>
-				</div>
+									<strong>
+										{item.count}
+									</strong>
+								</div>
+							)
+						)}
+					</div>
+				</>
 			)}
 		</div>
 	);
