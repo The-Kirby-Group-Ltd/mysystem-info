@@ -7,6 +7,8 @@ import type {
 	DashboardMonth,
 } from "../../../data/types/dashboardTypes";
 
+import DashboardDonutChart from "../general/DashboardDonutChart";
+
 type CallsDashboardBoardProps = {
 	customerNo: string;
 	siteId?: string;
@@ -27,10 +29,6 @@ const CallsDashboardBoard = ({
 
 	const [selectedYear, setSelectedYear] =
 		useState(new Date().getFullYear());
-
-	// =====================================================
-	// Load calls dashboard data
-	// =====================================================
 
 	useEffect(() => {
 		let isCancelled = false;
@@ -91,10 +89,6 @@ const CallsDashboardBoard = ({
 		selectedYear,
 	]);
 
-	// =====================================================
-	// Render
-	// =====================================================
-
 	return (
 		<div className="calls-dashboard-board">
 			<div className="dashboard-board-controls">
@@ -110,9 +104,7 @@ const CallsDashboardBoard = ({
 							)
 						}
 					>
-						<option value="ALL">
-							All year
-						</option>
+						<option value="ALL">All year</option>
 						<option value="JAN">January</option>
 						<option value="FEB">February</option>
 						<option value="MAR">March</option>
@@ -152,10 +144,7 @@ const CallsDashboardBoard = ({
 			)}
 
 			{error && (
-				<div
-					className="dashboard-error"
-					role="alert"
-				>
+				<div className="dashboard-error" role="alert">
 					<p>{error}</p>
 				</div>
 			)}
@@ -171,8 +160,7 @@ const CallsDashboardBoard = ({
 					</strong>
 
 					<p>
-						Calls currently awaiting
-						completion.
+						Calls currently awaiting completion.
 					</p>
 				</div>
 
@@ -186,8 +174,7 @@ const CallsDashboardBoard = ({
 					</strong>
 
 					<p>
-						Completed calls for the selected
-						period.
+						Completed calls for the selected period.
 					</p>
 				</div>
 
@@ -206,15 +193,27 @@ const CallsDashboardBoard = ({
 				</div>
 			</div>
 
-			<div className="dashboard-chart-placeholder">
-				<div>
-					<h4>Call Activity</h4>
+			<div className="dashboard-charts-grid">
+				<DashboardDonutChart
+					title="Call Status"
+					data={
+						dashboardData?.statusBreakdown ?? []
+					}
+				/>
 
-					<p>
-						Charts will be added here once the
-						summary data is confirmed.
-					</p>
-				</div>
+				<DashboardDonutChart
+					title="Call Types"
+					data={
+						dashboardData?.callTypeBreakdown ?? []
+					}
+				/>
+
+				<DashboardDonutChart
+					title="System Types"
+					data={
+						dashboardData?.systemTypeBreakdown ?? []
+					}
+				/>
 			</div>
 		</div>
 	);

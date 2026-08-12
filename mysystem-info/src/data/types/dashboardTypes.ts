@@ -1,7 +1,9 @@
 export type DashboardSelect =
 	| "calls"
 	| "system-maintenances"
-	| "sla";export type DashboardMonth =
+	| "sla";
+
+export type DashboardMonth =
 	| "ALL"
 	| "JAN"
 	| "FEB"
@@ -16,12 +18,23 @@ export type DashboardSelect =
 	| "NOV"
 	| "DEC";
 
+export type DashboardBreakdownItem = {
+	code: string;
+	label: string;
+	count: number;
+};
+
 export type CallsDashboardData = {
 	customerNo: string;
 	siteId: string;
+
 	openCalls: number;
 	completedCalls: number;
 	furtherActions: number;
+
+	statusBreakdown: DashboardBreakdownItem[];
+	callTypeBreakdown: DashboardBreakdownItem[];
+	systemTypeBreakdown: DashboardBreakdownItem[];
 };
 
 export type CallsDashboardQuery = {
