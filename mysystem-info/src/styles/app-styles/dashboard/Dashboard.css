@@ -313,6 +313,78 @@ h1.dashboard-heading {
 	font-weight: 700;
 }
 
+.dashboard-board-controls {
+	display: flex;
+	align-items: flex-end;
+	gap: 12px;
+	margin-bottom: 16px;
+}
+
+.dashboard-board-controls label {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.dashboard-board-controls label > span {
+	color: #777;
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.dashboard-board-controls select,
+.dashboard-board-controls input {
+	padding: 8px 10px;
+
+	border: 1px solid rgba(0, 0, 0, 0.14);
+	border-radius: 8px;
+
+	background: #fff;
+	color: #333;
+
+	font: inherit;
+	font-size: 0.85rem;
+
+	outline: none;
+}
+
+.dashboard-board-controls select:focus,
+.dashboard-board-controls input:focus {
+	border-color: #db2d2d;
+	box-shadow: 0 0 0 3px rgba(219, 45, 45, 0.1);
+}
+
+.dashboard-loading {
+	margin: 0 0 14px;
+	padding: 10px 14px;
+
+	border-radius: 8px;
+
+	background: rgba(219, 45, 45, 0.06);
+	color: #666;
+
+	font-size: 0.85rem;
+}
+
+.dashboard-error {
+	margin-bottom: 14px;
+	padding: 12px 14px;
+
+	border: 1px solid rgba(219, 45, 45, 0.25);
+	border-radius: 8px;
+
+	background: rgba(219, 45, 45, 0.06);
+	color: #8f1f1f;
+
+	font-size: 0.85rem;
+}
+
+.dashboard-error p {
+	margin: 0;
+}
+
 /* =========================================================
    DASHBOARD KPI CARDS
    ========================================================= */
