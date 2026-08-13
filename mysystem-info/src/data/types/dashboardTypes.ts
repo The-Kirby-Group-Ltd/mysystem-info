@@ -1,3 +1,5 @@
+import type { Call } from "./callTypes";
+
 export type DashboardSelect =
 	| "calls"
 	| "system-maintenances"
@@ -42,4 +44,41 @@ export type CallsDashboardQuery = {
 	siteId?: string;
 	dataMonth?: DashboardMonth;
 	dataYear?: number;
+};
+
+export type DashboardCallsFilterType =
+	| "OPEN"
+	| "COMPLETED"
+	| "FURTHER_ACTION"
+	| "STATUS"
+	| "CALL_TYPE"
+	| "SYSTEM_TYPE";
+
+export type CallsKpiSelection =
+	| "OPEN"
+	| "COMPLETED"
+	| "FURTHER_ACTION"
+	| null;
+
+export type DashboardCallsItemsQuery = {
+	customerNo: string;
+	siteId?: string;
+
+	dataMonth: DashboardMonth;
+	dataYear: number;
+
+	filterType: DashboardCallsFilterType;
+	filterValue?: string;
+
+	page?: number;
+	pageSize?: number;
+};
+
+export type DashboardCallsItemsResponse = {
+	items: Call[];
+
+	page: number;
+	pageSize: number;
+	total: number;
+	hasMore: boolean;
 };

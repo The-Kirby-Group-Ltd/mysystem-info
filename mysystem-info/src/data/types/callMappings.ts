@@ -100,3 +100,36 @@ export const getCallTypeLabel = (callType: string): string => {
     const cleanCallType = callType.trim();
     return callTypeLabels[cleanCallType] || `Unknown`;
 }
+
+// map reference string
+
+export const getCallTypeDisplay = (
+	callType: string
+): string => {
+	const cleanCallType = callType?.trim() ?? "";
+
+	if (!cleanCallType) {
+		return "—";
+	}
+
+	return (
+		callTypeLabels[cleanCallType] ??
+		cleanCallType
+	);
+};
+
+export const getCallStatusDisplay = (
+	status: string
+): string => {
+	const cleanStatus =
+		status?.trim().toUpperCase() ?? "";
+
+	if (!cleanStatus) {
+		return "—";
+	}
+
+	return (
+		callStatusLabels[cleanStatus] ??
+		status
+	);
+};

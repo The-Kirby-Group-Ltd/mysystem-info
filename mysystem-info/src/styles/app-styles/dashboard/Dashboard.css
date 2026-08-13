@@ -1,11 +1,17 @@
+/* =========================================================
+   DASHBOARD SCREEN
+   ========================================================= */
+
 .dashboard-screen {
 	width: 100%;
 	min-height: 100%;
+
 	padding-top: 1rem;
 	padding-bottom: 2rem;
 
 	color: #222;
 }
+
 
 /* =========================================================
    HEADER
@@ -13,8 +19,8 @@
 
 .dashboard-header {
 	display: flex;
-	justify-content: space-between;
 	align-items: flex-start;
+	justify-content: space-between;
 	gap: 24px;
 
 	margin-bottom: 24px;
@@ -23,14 +29,11 @@
 
 h1.dashboard-heading {
 	display: block;
+
 	margin: 0;
 
 	font-size: 2.4rem;
 	font-weight: 700;
-}
-
-.shown-customerno-heading {
-	color: rgba(219, 45, 45, 0.73);
 }
 
 .dashboard-subtitle {
@@ -38,6 +41,26 @@ h1.dashboard-heading {
 
 	color: #555;
 	font-size: 0.95rem;
+}
+
+.shown-customerno-heading {
+	color: rgba(219, 45, 45, 0.73);
+}
+
+.shown-siteid-heading {
+	color: #a51f1f;
+}
+
+
+/* =========================================================
+   HEADER SEARCH AREA
+   ========================================================= */
+
+.dashboard-search-area {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 9px;
 }
 
 .dashboard-customer-search {
@@ -58,6 +81,10 @@ h1.dashboard-heading {
 
 	font-size: 0.95rem;
 	outline: none;
+
+	transition:
+		border-color 0.2s ease,
+		box-shadow 0.2s ease;
 }
 
 .dashboard-customer-search input:focus {
@@ -79,19 +106,19 @@ h1.dashboard-heading {
 	font-weight: 600;
 
 	cursor: pointer;
-	transition: 0.2s ease;
+
+	transition:
+		background 0.2s ease;
 }
 
 .dashboard-customer-search button:hover {
 	background: #db2d2d;
 }
 
-.dashboard-search-area {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-end;
-	gap: 9px;
-}
+
+/* =========================================================
+   SPECIFIC SITE FILTER
+   ========================================================= */
 
 .dashboard-site-filter {
 	display: flex;
@@ -115,9 +142,11 @@ h1.dashboard-heading {
 .dashboard-site-checkbox input {
 	width: 16px;
 	height: 16px;
+
 	margin: 0;
 
 	accent-color: #db2d2d;
+
 	cursor: pointer;
 }
 
@@ -130,25 +159,29 @@ h1.dashboard-heading {
 	border-radius: 8px;
 
 	background: #fff;
-	font-size: 0.88rem;
 
+	font-size: 0.88rem;
 	outline: none;
+
+	transition:
+		border-color 0.2s ease,
+		box-shadow 0.2s ease;
 }
 
 .dashboard-site-input:focus {
 	border-color: #db2d2d;
-	box-shadow: 0 0 0 3px rgba(219, 45, 45, 0.1);
+
+	box-shadow:
+		0 0 0 3px rgba(219, 45, 45, 0.1);
 }
 
 .dashboard-site-input:disabled {
 	background: rgba(0, 0, 0, 0.04);
 	color: #999;
+
 	cursor: not-allowed;
 }
 
-.shown-siteid-heading {
-	color: #a51f1f;
-}
 
 /* =========================================================
    WELCOME / QUICK LINKS
@@ -178,8 +211,9 @@ h1.dashboard-heading {
 .dashboard-welcome-copy h3 {
 	margin: 0 0 5px;
 
-	font-size: 1.15rem;
 	color: #222;
+
+	font-size: 1.15rem;
 }
 
 .dashboard-welcome-copy h3 span {
@@ -190,6 +224,7 @@ h1.dashboard-heading {
 	margin: 0;
 
 	color: #666;
+
 	font-size: 0.9rem;
 	line-height: 1.5;
 }
@@ -229,18 +264,20 @@ h1.dashboard-heading {
 
 .dashboard-route-button strong {
 	color: #db2d2d;
+
 	font-size: 1.3rem;
 	line-height: 1;
 }
 
 .dashboard-route-button:hover {
-	background: rgba(219, 45, 45, 0.1);
 	border-color: rgba(219, 45, 45, 0.4);
 
+	background: rgba(219, 45, 45, 0.1);
 	color: #a51f1f;
 
 	transform: translateY(-1px);
 }
+
 
 /* =========================================================
    MAIN DASHBOARD LAYOUT
@@ -248,9 +285,11 @@ h1.dashboard-heading {
 
 .dashboard-section {
 	display: grid;
+
 	grid-template-columns:
 		minmax(0, 3fr)
 		minmax(220px, 0.8fr);
+
 	gap: 16px;
 
 	margin-bottom: 16px;
@@ -272,6 +311,11 @@ h1.dashboard-heading {
 	padding: 22px;
 }
 
+
+/* =========================================================
+   DASHBOARD BOARD HEADER
+   ========================================================= */
+
 .dashboard-board-header {
 	display: flex;
 	align-items: flex-start;
@@ -285,6 +329,7 @@ h1.dashboard-heading {
 	margin: 0 0 4px;
 
 	color: #a51f1f;
+
 	font-size: 0.72rem;
 	font-weight: 700;
 	letter-spacing: 0.08em;
@@ -295,6 +340,7 @@ h1.dashboard-heading {
 	margin: 0;
 
 	color: #222;
+
 	font-size: 1.25rem;
 }
 
@@ -313,171 +359,6 @@ h1.dashboard-heading {
 	font-weight: 700;
 }
 
-.dashboard-board-controls {
-	display: flex;
-	align-items: flex-end;
-	gap: 12px;
-	margin-bottom: 16px;
-}
-
-.dashboard-board-controls label {
-	display: flex;
-	flex-direction: column;
-	gap: 5px;
-}
-
-.dashboard-board-controls label > span {
-	color: #777;
-	font-size: 0.72rem;
-	font-weight: 700;
-	letter-spacing: 0.04em;
-	text-transform: uppercase;
-}
-
-.dashboard-board-controls select,
-.dashboard-board-controls input {
-	padding: 8px 10px;
-
-	border: 1px solid rgba(0, 0, 0, 0.14);
-	border-radius: 8px;
-
-	background: #fff;
-	color: #333;
-
-	font: inherit;
-	font-size: 0.85rem;
-
-	outline: none;
-}
-
-.dashboard-board-controls select:focus,
-.dashboard-board-controls input:focus {
-	border-color: #db2d2d;
-	box-shadow: 0 0 0 3px rgba(219, 45, 45, 0.1);
-}
-
-.dashboard-loading {
-	margin: 0 0 14px;
-	padding: 10px 14px;
-
-	border-radius: 8px;
-
-	background: rgba(219, 45, 45, 0.06);
-	color: #666;
-
-	font-size: 0.85rem;
-}
-
-.dashboard-error {
-	margin-bottom: 14px;
-	padding: 12px 14px;
-
-	border: 1px solid rgba(219, 45, 45, 0.25);
-	border-radius: 8px;
-
-	background: rgba(219, 45, 45, 0.06);
-	color: #8f1f1f;
-
-	font-size: 0.85rem;
-}
-
-.dashboard-error p {
-	margin: 0;
-}
-
-/* =========================================================
-   DASHBOARD KPI CARDS
-   ========================================================= */
-
-.dashboard-kpi-grid {
-	display: grid;
-	grid-template-columns:
-		repeat(3, minmax(0, 1fr));
-	gap: 14px;
-
-	margin-bottom: 18px;
-}
-
-.dashboard-kpi-card {
-	padding: 16px;
-
-	border: 1px solid rgba(0, 0, 0, 0.08);
-	border-radius: 10px;
-
-	background: rgba(0, 0, 0, 0.012);
-}
-
-.dashboard-kpi-card > span {
-	display: block;
-
-	margin-bottom: 8px;
-
-	color: #777;
-	font-size: 0.74rem;
-	font-weight: 700;
-	letter-spacing: 0.04em;
-	text-transform: uppercase;
-}
-
-.dashboard-kpi-card strong {
-	display: block;
-
-	margin-bottom: 6px;
-
-	color: #252525;
-	font-size: 1.7rem;
-	line-height: 1;
-}
-
-.dashboard-kpi-card p {
-	margin: 0;
-
-	color: #777;
-	font-size: 0.78rem;
-	line-height: 1.4;
-}
-
-/* =========================================================
-   CHART PLACEHOLDER
-   ========================================================= */
-
-.dashboard-chart-placeholder {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-
-	min-height: 250px;
-
-	padding: 26px;
-
-	border: 1px dashed rgba(219, 45, 45, 0.25);
-	border-radius: 10px;
-
-	background:
-		linear-gradient(
-			135deg,
-			rgba(219, 45, 45, 0.025),
-			rgba(255, 255, 255, 0)
-		);
-
-	text-align: center;
-}
-
-.dashboard-chart-placeholder h4 {
-	margin: 0 0 7px;
-
-	color: #333;
-	font-size: 1rem;
-}
-
-.dashboard-chart-placeholder p {
-	max-width: 480px;
-	margin: 0;
-
-	color: #777;
-	font-size: 0.88rem;
-	line-height: 1.55;
-}
 
 /* =========================================================
    DASHBOARD SELECTOR
@@ -500,6 +381,7 @@ h1.dashboard-heading {
 	margin-bottom: 5px;
 
 	color: #222;
+
 	font-size: 0.95rem;
 	font-weight: 700;
 }
@@ -508,6 +390,7 @@ h1.dashboard-heading {
 	margin: 0;
 
 	color: #777;
+
 	font-size: 0.8rem;
 	line-height: 1.4;
 }
@@ -546,8 +429,7 @@ h1.dashboard-heading {
 	transition:
 		background 0.2s ease,
 		border-color 0.2s ease,
-		transform 0.2s ease,
-		box-shadow 0.2s ease;
+		transform 0.2s ease;
 }
 
 .board-select-button > span {
@@ -557,220 +439,30 @@ h1.dashboard-heading {
 
 .board-select-button small {
 	color: #777;
+
 	font-size: 0.76rem;
 	font-weight: 400;
 	line-height: 1.35;
 }
 
 .board-select-button:hover {
-	background: rgba(219, 45, 45, 0.07);
 	border-color: rgba(219, 45, 45, 0.35);
+
+	background: rgba(219, 45, 45, 0.07);
 
 	transform: translateY(-1px);
 }
 
 .board-select-button-active {
-	background: rgba(219, 45, 45, 0.12);
 	border-color: rgba(219, 45, 45, 0.5);
+
+	background: rgba(219, 45, 45, 0.12);
 }
 
 .board-select-button-active > span {
 	color: #a51f1f;
 }
 
-/* =========================================================
-   SUPPORTING DATA SECTION
-   ========================================================= */
-
-.dashboard-data-section {
-	padding: 22px;
-}
-
-.dashboard-data-heading {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-
-	margin-bottom: 16px;
-}
-
-.dashboard-data-heading h3 {
-	margin: 0;
-
-	color: #222;
-	font-size: 1.1rem;
-}
-
-.dashboard-data-placeholder {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-
-	min-height: 150px;
-
-	border: 1px dashed rgba(0, 0, 0, 0.12);
-	border-radius: 10px;
-
-	background: rgba(0, 0, 0, 0.012);
-}
-
-.dashboard-data-placeholder p {
-	margin: 0;
-
-	color: #777;
-	font-size: 0.88rem;
-}
-
-/* =========================================================
-   CHARTS
-   ========================================================= */
-
-.dashboard-charts-grid {
-	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 14px;
-}
-
-.dashboard-chart-card {
-	min-width: 0;
-	padding: 16px;
-
-	border: 1px solid rgba(0, 0, 0, 0.08);
-	border-radius: 10px;
-
-	background: rgba(0, 0, 0, 0.012);
-}
-
-.dashboard-chart-card h4 {
-	margin: 0 0 8px;
-
-	color: #333;
-	font-size: 0.95rem;
-}
-
-.dashboard-donut-chart {
-	width: 100%;
-	min-width: 0;
-}
-
-.dashboard-chart-empty {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-
-	height: 260px;
-	margin: 0;
-
-	color: #777;
-	font-size: 0.85rem;
-}
-
-.dashboard-chart-card {
-	display: flex;
-	flex-direction: column;
-
-	min-width: 0;
-	min-height: 0;
-
-	padding: 16px;
-
-	border: 1px solid rgba(0, 0, 0, 0.08);
-	border-radius: 10px;
-
-	background: rgba(0, 0, 0, 0.012);
-}
-
-.dashboard-chart-card h4 {
-	margin: 0 0 8px;
-
-	color: #333;
-	font-size: 0.95rem;
-}
-
-.dashboard-donut-chart {
-	width: 100%;
-	min-width: 0;
-	flex-shrink: 0;
-}
-
-/* ===================== chart key ===================== */
-
-.dashboard-chart-key {
-	display: flex;
-	flex-direction: column;
-	gap: 5px;
-
-	max-height: 120px;
-	margin-top: 6px;
-	padding-right: 4px;
-
-	overflow-y: auto;
-}
-
-.dashboard-chart-key-item {
-	display: grid;
-	grid-template-columns: 10px minmax(0, 1fr) auto;
-	align-items: center;
-	gap: 7px;
-
-	min-width: 0;
-
-	padding: 3px 2px;
-
-	color: #555;
-	font-size: 0.72rem;
-	line-height: 1.2;
-}
-
-.dashboard-chart-key-colour {
-	display: block;
-
-	width: 9px;
-	height: 9px;
-
-	border-radius: 2px;
-
-	flex-shrink: 0;
-}
-
-.dashboard-chart-key-label {
-	min-width: 0;
-
-	overflow: hidden;
-
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
-.dashboard-chart-key-item strong {
-	color: #333;
-	font-size: 0.72rem;
-	font-weight: 700;
-}
-
-/* Thin scrollbar for long keys */
-
-.dashboard-chart-key {
-	scrollbar-width: thin;
-	scrollbar-color:
-		rgba(0, 0, 0, 0.2)
-		transparent;
-}
-
-.dashboard-chart-key::-webkit-scrollbar {
-	width: 6px;
-}
-
-.dashboard-chart-key::-webkit-scrollbar-thumb {
-	background: rgba(0, 0, 0, 0.18);
-	border-radius: 999px;
-}
-
-@media (max-width: 1100px) {
-	.dashboard-charts-grid {
-		grid-template-columns: 1fr;
-	}
-}
 
 /* =========================================================
    RESPONSIVE
@@ -783,6 +475,7 @@ h1.dashboard-heading {
 
 	.dashboard-selector-buttons {
 		display: grid;
+
 		grid-template-columns:
 			repeat(3, minmax(0, 1fr));
 	}
@@ -812,11 +505,29 @@ h1.dashboard-heading {
 		padding-left: 0;
 	}
 
+	.dashboard-search-area {
+		width: 100%;
+
+		align-items: stretch;
+	}
+
 	.dashboard-customer-search {
 		width: 100%;
 	}
 
 	.dashboard-customer-search input {
+		flex: 1;
+
+		width: auto;
+	}
+
+	.dashboard-site-filter {
+		justify-content: space-between;
+
+		width: 100%;
+	}
+
+	.dashboard-site-input {
 		flex: 1;
 		width: auto;
 	}
@@ -827,6 +538,7 @@ h1.dashboard-heading {
 
 	.dashboard-route-button {
 		width: 100%;
+
 		box-sizing: border-box;
 	}
 
@@ -834,10 +546,6 @@ h1.dashboard-heading {
 	.dashboard-board-select-area,
 	.dashboard-data-section {
 		padding: 16px;
-	}
-
-	.dashboard-kpi-grid {
-		grid-template-columns: 1fr;
 	}
 
 	.dashboard-selector-buttons {

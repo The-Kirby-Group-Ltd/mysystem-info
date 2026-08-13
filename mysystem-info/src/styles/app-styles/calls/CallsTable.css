@@ -20,7 +20,7 @@
 }
 
 .calls-table tbody tr:nth-child(odd) {
-	background: rgba(219, 45, 45, 0.18);
+	background: rgba(219, 45, 45, 0.1);
 }
 
 .calls-table td {

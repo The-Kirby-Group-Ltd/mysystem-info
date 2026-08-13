@@ -1,6 +1,19 @@
 import type { Call } from "../../data/types/callTypes";
 import "../../styles/app-styles/calls/CallsTable.css";
 
+import { useEffect, useState } from "react";
+
+import { referenceApi } from "../../data/api/referenceApi";
+
+import type {
+	EngineerReference,
+} from "../../data/types/referenceTypes";
+
+import {
+	getCallStatusDisplay,
+	getCallTypeDisplay,
+} from "../../data/types/callMappings";
+
 type CallsTableProps = {
 	calls: Call[];
 	rowsToShow: number;
@@ -22,6 +35,9 @@ const CallsTable = ({
 	const skeletonRows = Array.from({
 		length: Math.min(rowsToShow, 8),
 	});
+
+	const [engineers, setEngineers] =
+	useState<EngineerReference[]>([]);
 
 	// ================================
     // format date strings dd/mm/yyyy
@@ -56,6 +72,68 @@ const CallsTable = ({
 		}
 
 		return engineerNames[cleanCode] ?? engineerCode;
+	};
+
+	useEffect(() => {
+		let isCancelled = false;
+
+		const loadEngineers = async () => {
+			try {
+				const allEngineers: EngineerReference[] = [];
+
+				let page = 1;
+				let hasMore = true;
+
+				while (hasMore) {
+					const response =
+						await referenceApi.getEngineers({
+							page,
+							pageSize: 100,
+						});
+
+					allEngineers.push(...response.items);
+
+					hasMore = response.hasMore;
+					page++;
+				}
+
+				if (!isCancelled) {
+					setEngineers(allEngineers);
+				}
+			} catch {
+				// Falling back to engineer code is fine.
+				if (!isCancelled) {
+					setEngineers([]);
+				}
+			}
+		};
+
+		loadEngineers();
+
+		return () => {
+			isCancelled = true;
+		};
+	}, []);
+
+	const getEngineerDisplay = (
+		engineerCode: string
+	): string => {
+		const cleanCode =
+			engineerCode?.trim().toUpperCase() ?? "";
+
+		if (!cleanCode) {
+			return "—";
+		}
+
+		return (
+			engineers.find(
+				(engineer) =>
+					engineer.code
+						.trim()
+						.toUpperCase() === cleanCode
+			)?.description?.trim() ||
+			engineerCode
+		);
 	};
 
 	// ================================
@@ -119,10 +197,10 @@ const CallsTable = ({
 							</td>
 
 							{showSiteId && <td>{call.siteId}</td>}
-							<td>{call.callType || "—"}</td>
-							<td>{call.callStatus || "—"}</td>
+							<td>{getCallTypeDisplay(call.callType) || "—"}</td>
+							<td>{getCallStatusDisplay(call.callStatus) || "—"}</td>
 							<td>{formatDate(call.loggedDate)}</td>
-							<td>{getEngineerName(call.engineer)}</td>
+							<td>{getEngineerDisplay(call.engineer)}</td>
 						</tr>
 					))}
 

@@ -18,7 +18,7 @@
 }
 
 .sites-table tbody tr:nth-child(odd) {
-	background: rgba(219, 45, 45, 0.18);
+	background: rgba(219, 45, 45, 0.1);
 }
 
 .sites-table tbody tr::after {

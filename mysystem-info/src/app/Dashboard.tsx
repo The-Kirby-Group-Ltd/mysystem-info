@@ -7,7 +7,11 @@ import {
 	setStoredCustomerNo,
 } from "../data/storage/customerStorage";
 
-import type { DashboardSelect } from "../data/types/dashboardTypes";
+import type {
+	CallsKpiSelection,
+	DashboardMonth,
+	DashboardSelect,
+} from "../data/types/dashboardTypes";
 
 import DashboardHeader from "../components/dashboard/general/DashboardHeader";
 import DashboardWelcome from "../components/dashboard/general/DashboardWelcome";
@@ -15,23 +19,82 @@ import DashboardSelector from "../components/dashboard/general/DashboardSelector
 import DashboardDataSection from "../components/dashboard/general/DashboardDataSection";
 
 import CallsDashboardBoard from "../components/dashboard/boards/CallsDashboardBoard";
+import CallsDashboardSupportTable from "../components/dashboard/boards/CallsDashboardSupportTable";
 import MaintenanceDashboardBoard from "../components/dashboard/boards/MaintenanceDashboardBoard";
 import SlaDashboardBoard from "../components/dashboard/boards/SlaDashboardBoard";
 
 const Dashboard = () => {
-	const [customerNo, setCustomerNo] = useState(
-		() => getStoredCustomerNo()
+	// =====================================================
+	// Customer / site
+	// =====================================================
+
+	const [customerNo, setCustomerNo] =
+		useState(
+			() =>
+				getStoredCustomerNo()
+		);
+
+	const [
+		searchedCustomerNo,
+		setSearchedCustomerNo,
+	] = useState(
+		() =>
+			getStoredCustomerNo()
 	);
 
-	const [searchedCustomerNo, setSearchedCustomerNo] =
-		useState(() => getStoredCustomerNo());
+	const [
+		specificSite,
+		setSpecificSite,
+	] = useState(false);
 
-    const [specificSite, setSpecificSite] = useState(false);
-    const [siteId, setSiteId] = useState("");
-    const [searchedSiteId, setSearchedSiteId] = useState("");
+	const [siteId, setSiteId] =
+		useState("");
 
-	const [selectedDashboard, setSelectedDashboard] =
-		useState<DashboardSelect>("calls");
+	const [
+		searchedSiteId,
+		setSearchedSiteId,
+	] = useState("");
+
+	// =====================================================
+	// Dashboard
+	// =====================================================
+
+	const [
+		selectedDashboard,
+		setSelectedDashboard,
+	] =
+		useState<DashboardSelect>(
+			"calls"
+		);
+
+	const [
+		selectedMonth,
+		setSelectedMonth,
+	] =
+		useState<DashboardMonth>(
+			"ALL"
+		);
+
+	const [
+		selectedYear,
+		setSelectedYear,
+	] =
+		useState(
+			new Date()
+				.getFullYear()
+		);
+
+	const [
+		selectedCallsKpi,
+		setSelectedCallsKpi,
+	] =
+		useState<CallsKpiSelection>(
+			null
+		);
+
+	// =====================================================
+	// Helpers
+	// =====================================================
 
 	const getDashboardTitle = (
 		dashboard: DashboardSelect
@@ -48,73 +111,165 @@ const Dashboard = () => {
 		}
 	};
 
-	const handleCustomerSearch = () => {
-        const cleanCustomerNo =
-            customerNo.trim().toUpperCase();
+	const handleCustomerSearch =
+		() => {
+			const cleanCustomerNo =
+				customerNo
+					.trim()
+					.toUpperCase();
 
-        const cleanSiteId =
-            siteId.trim().toUpperCase();
+			const cleanSiteId =
+				siteId
+					.trim()
+					.toUpperCase();
 
-        if (!cleanCustomerNo) {
-            return;
-        }
+			if (!cleanCustomerNo) {
+				return;
+			}
 
-        setCustomerNo(cleanCustomerNo);
-        setSearchedCustomerNo(cleanCustomerNo);
-        setStoredCustomerNo(cleanCustomerNo);
+			if (
+				specificSite &&
+				!cleanSiteId
+			) {
+				return;
+			}
 
-        if (specificSite) {
-            setSiteId(cleanSiteId);
-            setSearchedSiteId(cleanSiteId);
-        } else {
-            setSiteId("");
-            setSearchedSiteId("");
-        }
-    };
+			setCustomerNo(
+				cleanCustomerNo
+			);
 
-	const renderDashboard = () => {
-		switch (selectedDashboard) {
-			case "calls":
-				return (
-					<CallsDashboardBoard
-						customerNo={searchedCustomerNo}
-                        siteId={searchedSiteId}
-					/>
+			setSearchedCustomerNo(
+				cleanCustomerNo
+			);
+
+			setStoredCustomerNo(
+				cleanCustomerNo
+			);
+
+			if (specificSite) {
+				setSiteId(
+					cleanSiteId
 				);
 
-			case "system-maintenances":
-				return (
-					<MaintenanceDashboardBoard
-						customerNo={searchedCustomerNo}
-                        siteId={searchedSiteId}
-					/>
+				setSearchedSiteId(
+					cleanSiteId
 				);
+			} else {
+				setSiteId("");
+				setSearchedSiteId("");
+			}
 
-			case "sla":
-				return (
-					<SlaDashboardBoard
-						customerNo={searchedCustomerNo}
-                        siteId={searchedSiteId}
-					/>
-				);
-		}
-	};
+			setSelectedCallsKpi(
+				null
+			);
+		};
+
+	const renderDashboard =
+		() => {
+			switch (
+				selectedDashboard
+			) {
+				case "calls":
+					return (
+						<CallsDashboardBoard
+							customerNo={
+								searchedCustomerNo
+							}
+							siteId={
+								searchedSiteId
+							}
+							selectedMonth={
+								selectedMonth
+							}
+							selectedYear={
+								selectedYear
+							}
+							onMonthChange={(
+								month
+							) => {
+								setSelectedMonth(
+									month
+								);
+
+								setSelectedCallsKpi(
+									null
+								);
+							}}
+							onYearChange={(
+								year
+							) => {
+								setSelectedYear(
+									year
+								);
+
+								setSelectedCallsKpi(
+									null
+								);
+							}}
+							selectedKpi={
+								selectedCallsKpi
+							}
+							onKpiChange={
+								setSelectedCallsKpi
+							}
+						/>
+					);
+
+				case "system-maintenances":
+					return (
+						<MaintenanceDashboardBoard
+							customerNo={
+								searchedCustomerNo
+							}
+							siteId={
+								searchedSiteId
+							}
+						/>
+					);
+
+				case "sla":
+					return (
+						<SlaDashboardBoard
+							customerNo={
+								searchedCustomerNo
+							}
+							siteId={
+								searchedSiteId
+							}
+						/>
+					);
+			}
+		};
 
 	return (
 		<div className="dashboard-screen">
 			<DashboardHeader
-                customerNo={customerNo}
-                searchedCustomerNo={searchedCustomerNo}
-                onCustomerNoChange={setCustomerNo}
-
-                specificSite={specificSite}
-                siteId={siteId}
-                searchedSiteId={searchedSiteId}
-                onSpecificSiteChange={setSpecificSite}
-                onSiteIdChange={setSiteId}
-
-                onSearch={handleCustomerSearch}
-            />
+				customerNo={
+					customerNo
+				}
+				searchedCustomerNo={
+					searchedCustomerNo
+				}
+				onCustomerNoChange={
+					setCustomerNo
+				}
+				specificSite={
+					specificSite
+				}
+				siteId={siteId}
+				searchedSiteId={
+					searchedSiteId
+				}
+				onSpecificSiteChange={
+					setSpecificSite
+				}
+				onSiteIdChange={
+					setSiteId
+				}
+				onSearch={
+					handleCustomerSearch
+				}
+			/>
 
 			<DashboardWelcome />
 
@@ -135,7 +290,9 @@ const Dashboard = () => {
 
 						{searchedCustomerNo && (
 							<span className="dashboard-customer-badge">
-								{searchedCustomerNo}
+								{
+									searchedCustomerNo
+								}
 							</span>
 						)}
 					</div>
@@ -146,16 +303,60 @@ const Dashboard = () => {
 				</div>
 
 				<DashboardSelector
-					selectedDashboard={selectedDashboard}
-					onSelect={setSelectedDashboard}
+					selectedDashboard={
+						selectedDashboard
+					}
+					onSelect={(
+						dashboard
+					) => {
+						setSelectedDashboard(
+							dashboard
+						);
+
+						setSelectedCallsKpi(
+							null
+						);
+					}}
 				/>
 			</section>
 
 			<DashboardDataSection
-				title={getDashboardTitle(
-					selectedDashboard
+				title={
+					getDashboardTitle(
+						selectedDashboard
+					)
+				}
+			>
+				{selectedDashboard ===
+				"calls" ? (
+					<CallsDashboardSupportTable
+						customerNo={
+							searchedCustomerNo
+						}
+						siteId={
+							searchedSiteId
+						}
+						dataMonth={
+							selectedMonth
+						}
+						dataYear={
+							selectedYear
+						}
+						selectedKpi={
+							selectedCallsKpi
+						}
+					/>
+				) : (
+					<div className="dashboard-data-placeholder">
+						<p>
+							Detailed supporting
+							records for this
+							dashboard will appear
+							here.
+						</p>
+					</div>
 				)}
-			/>
+			</DashboardDataSection>
 		</div>
 	);
 };

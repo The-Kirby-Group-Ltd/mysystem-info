@@ -1,0 +1,475 @@
+/* =========================================================
+   DASHBOARD DATE CONTROLS
+   ========================================================= */
+
+.dashboard-board-controls {
+	display: flex;
+	align-items: flex-end;
+	gap: 12px;
+
+	margin-bottom: 16px;
+}
+
+.dashboard-board-controls label {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.dashboard-board-controls label > span {
+	color: #777;
+
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.dashboard-board-controls select,
+.dashboard-board-controls input {
+	padding: 8px 10px;
+
+	border: 1px solid rgba(0, 0, 0, 0.14);
+	border-radius: 8px;
+
+	background: #fff;
+	color: #333;
+
+	font: inherit;
+	font-size: 0.85rem;
+
+	outline: none;
+
+	transition:
+		border-color 0.2s ease,
+		box-shadow 0.2s ease;
+}
+
+.dashboard-board-controls select:focus,
+.dashboard-board-controls input:focus {
+	border-color: #db2d2d;
+
+	box-shadow:
+		0 0 0 3px rgba(219, 45, 45, 0.1);
+}
+
+
+/* =========================================================
+   LOADING / ERROR STATES
+   ========================================================= */
+
+.dashboard-loading {
+	margin: 0 0 14px;
+	padding: 10px 14px;
+
+	border-radius: 8px;
+
+	background: rgba(219, 45, 45, 0.06);
+	color: #666;
+
+	font-size: 0.85rem;
+}
+
+.dashboard-error {
+	margin-bottom: 14px;
+	padding: 12px 14px;
+
+	border: 1px solid rgba(219, 45, 45, 0.25);
+	border-radius: 8px;
+
+	background: rgba(219, 45, 45, 0.06);
+	color: #8f1f1f;
+
+	font-size: 0.85rem;
+}
+
+.dashboard-error p {
+	margin: 0;
+}
+
+
+/* =========================================================
+   KPI CARDS
+   ========================================================= */
+
+.dashboard-kpi-grid {
+	display: grid;
+
+	grid-template-columns:
+		repeat(3, minmax(0, 1fr));
+
+	gap: 14px;
+
+	margin-bottom: 18px;
+}
+
+.dashboard-kpi-card {
+	padding: 16px;
+
+	border: 1px solid rgba(0, 0, 0, 0.08);
+	border-radius: 10px;
+
+	background: rgba(0, 0, 0, 0.012);
+}
+
+.dashboard-kpi-card > span {
+	display: block;
+
+	margin-bottom: 8px;
+
+	color: #777;
+
+	font-size: 0.74rem;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.dashboard-kpi-card strong {
+	display: block;
+
+	margin-bottom: 6px;
+
+	color: #252525;
+
+	font-size: 1.7rem;
+	line-height: 1;
+}
+
+.dashboard-kpi-card p {
+	margin: 0;
+
+	color: #777;
+
+	font-size: 0.78rem;
+	line-height: 1.4;
+}
+
+
+/* =========================================================
+   SELECTABLE KPI CARDS
+   ========================================================= */
+
+.dashboard-kpi-card-selectable {
+	position: relative;
+
+	display: block;
+
+	cursor: pointer;
+	user-select: none;
+
+	transition:
+		background 0.2s ease,
+		border-color 0.2s ease,
+		transform 0.2s ease;
+}
+
+.dashboard-kpi-card-selectable:hover {
+	border-color: rgba(219, 45, 45, 0.28);
+
+	background: rgba(219, 45, 45, 0.025);
+}
+
+.dashboard-kpi-card-selected {
+	border-color: rgba(219, 45, 45, 0.48);
+
+	background: rgba(219, 45, 45, 0.065);
+}
+
+.dashboard-kpi-checkbox {
+	position: absolute;
+
+	top: 14px;
+	right: 14px;
+
+	width: 17px;
+	height: 17px;
+
+	margin: 0;
+
+	accent-color: #db2d2d;
+
+	cursor: pointer;
+}
+
+.dashboard-kpi-card-selectable > span {
+	padding-right: 28px;
+}
+
+
+/* =========================================================
+   CHART PLACEHOLDER
+   ========================================================= */
+
+.dashboard-chart-placeholder {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	min-height: 250px;
+
+	padding: 26px;
+
+	border: 1px dashed rgba(219, 45, 45, 0.25);
+	border-radius: 10px;
+
+	background:
+		linear-gradient(
+			135deg,
+			rgba(219, 45, 45, 0.025),
+			rgba(255, 255, 255, 0)
+		);
+
+	text-align: center;
+}
+
+.dashboard-chart-placeholder h4 {
+	margin: 0 0 7px;
+
+	color: #333;
+
+	font-size: 1rem;
+}
+
+.dashboard-chart-placeholder p {
+	max-width: 480px;
+
+	margin: 0;
+
+	color: #777;
+
+	font-size: 0.88rem;
+	line-height: 1.55;
+}
+
+
+/* =========================================================
+   CHART LAYOUT
+   ========================================================= */
+
+.dashboard-charts-grid {
+	display: grid;
+
+	grid-template-columns:
+		repeat(3, minmax(0, 1fr));
+
+	gap: 14px;
+}
+
+.dashboard-chart-card {
+	display: flex;
+	flex-direction: column;
+
+	min-width: 0;
+	min-height: 0;
+
+	padding: 16px;
+
+	border: 1px solid rgba(0, 0, 0, 0.08);
+	border-radius: 10px;
+
+	background: rgba(0, 0, 0, 0.012);
+}
+
+.dashboard-chart-card h4 {
+	margin: 0 0 8px;
+
+	color: #333;
+
+	font-size: 0.95rem;
+}
+
+.dashboard-chart-empty {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	height: 260px;
+
+	margin: 0;
+
+	color: #777;
+
+	font-size: 0.85rem;
+}
+
+
+/* =========================================================
+   DONUT CHART
+   ========================================================= */
+
+.dashboard-donut-chart {
+	position: relative;
+
+	width: 100%;
+	min-width: 0;
+
+	flex-shrink: 0;
+}
+
+.dashboard-donut-centre {
+	position: absolute;
+
+	top: 50%;
+	left: 50%;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+
+	transform: translate(-50%, -50%);
+
+	pointer-events: none;
+}
+
+.dashboard-donut-centre strong {
+	color: #252525;
+
+	font-size: 1.3rem;
+	font-weight: 700;
+	line-height: 1;
+}
+
+.dashboard-donut-centre span {
+	margin-top: 4px;
+
+	color: #888;
+
+	font-size: 0.65rem;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+
+/* =========================================================
+   CHART KEY
+   ========================================================= */
+
+.dashboard-chart-key {
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+
+	max-height: 120px;
+
+	margin-top: 6px;
+	padding-right: 4px;
+
+	overflow-y: auto;
+
+	scrollbar-width: thin;
+	scrollbar-color:
+		rgba(0, 0, 0, 0.2)
+		transparent;
+}
+
+.dashboard-chart-key::-webkit-scrollbar {
+	width: 6px;
+}
+
+.dashboard-chart-key::-webkit-scrollbar-thumb {
+	border-radius: 999px;
+
+	background: rgba(0, 0, 0, 0.18);
+}
+
+.dashboard-chart-key-item {
+	display: grid;
+
+	grid-template-columns:
+		10px
+		minmax(0, 1fr)
+		auto;
+
+	align-items: center;
+	gap: 7px;
+
+	width: 100%;
+	min-width: 0;
+
+	padding: 4px 3px;
+
+	color: #555;
+
+	font-size: 0.72rem;
+	line-height: 1.2;
+}
+
+.dashboard-chart-key-colour {
+	display: block;
+
+	width: 9px;
+	height: 9px;
+
+	flex-shrink: 0;
+
+	border-radius: 2px;
+}
+
+.dashboard-chart-key-label {
+	min-width: 0;
+
+	overflow: hidden;
+
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.dashboard-chart-key-item strong {
+	color: #333;
+
+	font-size: 0.72rem;
+	font-weight: 700;
+}
+
+
+/* =========================================================
+   CLICKABLE CHART KEY
+   ========================================================= */
+
+button.dashboard-chart-key-item {
+	border: none;
+	border-radius: 5px;
+
+	background: transparent;
+
+	font: inherit;
+	text-align: left;
+
+	cursor: pointer;
+
+	transition:
+		background 0.15s ease,
+		color 0.15s ease;
+}
+
+button.dashboard-chart-key-item:not(:disabled):hover {
+	background: rgba(0, 0, 0, 0.045);
+}
+
+button.dashboard-chart-key-item:disabled {
+	cursor: default;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media screen and (max-width: 1100px) {
+	.dashboard-charts-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media screen and (max-width: 700px) {
+	.dashboard-kpi-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.dashboard-board-controls {
+		flex-wrap: wrap;
+	}
+}

@@ -13,44 +13,40 @@ import type {
 type DashboardDonutChartProps = {
 	title: string;
 	data: DashboardBreakdownItem[];
+
+	onItemClick?: (
+		item: DashboardBreakdownItem
+	) => void;
 };
 
-// =====================================================
-// Accessible chart palette
-//
-// Uses strongly differentiated hues rather than shades
-// of the same colour.
-// =====================================================
-
 const colours = [
-	"#0072B2", // blue
-	"#E69F00", // orange
-	"#009E73", // green
-	"#CC79A7", // purple / pink
-	"#56B4E9", // light blue
-	"#D55E00", // vermillion
-	"#F0E442", // yellow
-	"#666666", // grey
+	"#0072B2",
+	"#E69F00",
+	"#009E73",
+	"#CC79A7",
+	"#56B4E9",
+	"#D55E00",
+	"#F0E442",
+	"#666666",
 ];
-
-// =====================================================
-// Donut chart
-// =====================================================
 
 const DashboardDonutChart = ({
 	title,
 	data,
+	onItemClick,
 }: DashboardDonutChartProps) => {
-	// Don't include empty categories in the chart/key.
-	const chartData = data.filter(
-		(item) => item.count > 0
-	);
+	const chartData =
+		data.filter(
+			(item) =>
+				item.count > 0
+		);
 
-	// Total is useful for the centre of the donut.
-	const total = chartData.reduce(
-		(sum, item) => sum + item.count,
-		0
-	);
+	const total =
+		chartData.reduce(
+			(sum, item) =>
+				sum + item.count,
+			0
+		);
 
 	return (
 		<div className="dashboard-chart-card">
@@ -62,10 +58,6 @@ const DashboardDonutChart = ({
 				</p>
 			) : (
 				<>
-					{/* =============================
-					    Donut
-					============================= */}
-
 					<div className="dashboard-donut-chart">
 						<ResponsiveContainer
 							width="100%"
@@ -73,17 +65,53 @@ const DashboardDonutChart = ({
 						>
 							<PieChart>
 								<Pie
-									data={chartData}
+									data={
+										chartData
+									}
 									dataKey="count"
 									nameKey="label"
 									cx="50%"
 									cy="50%"
-									innerRadius={50}
-									outerRadius={75}
-									paddingAngle={2}
+									innerRadius={
+										50
+									}
+									outerRadius={
+										75
+									}
+									paddingAngle={
+										2
+									}
+									cursor={
+										onItemClick
+											? "pointer"
+											: "default"
+									}
+									onClick={(entry) => {
+										if (!onItemClick) {
+											return;
+										}
+
+										const payload = entry.payload;
+
+										if (
+											payload &&
+											typeof payload.code === "string" &&
+											typeof payload.label === "string" &&
+											typeof payload.count === "number"
+										) {
+											onItemClick({
+												code: payload.code,
+												label: payload.label,
+												count: payload.count,
+											});
+										}
+									}}
 								>
 									{chartData.map(
-										(item, index) => (
+										(
+											item,
+											index
+										) => (
 											<Cell
 												key={
 													item.code
@@ -99,39 +127,44 @@ const DashboardDonutChart = ({
 									)}
 								</Pie>
 
-								<Tooltip
-									formatter={(
-										value,
-										name
-									) => [
-										value,
-										name,
-									]}
-								/>
+								<Tooltip />
 							</PieChart>
 						</ResponsiveContainer>
 
-						{/* =============================
-						    Centre value
-						============================= */}
-
 						<div className="dashboard-donut-centre">
-							<strong>{total}</strong>
-							<span>{" "}Total</span>
+							<strong>
+								{total}
+							</strong>
+
+							<span>
+								Total
+							</span>
 						</div>
 					</div>
 
-					{/* =============================
-					    Custom chart key
-					============================= */}
-
 					<div className="dashboard-chart-key">
 						{chartData.map(
-							(item, index) => (
-								<div
+							(
+								item,
+								index
+							) => (
+								<button
+									type="button"
 									className="dashboard-chart-key-item"
-									key={item.code}
-									title={item.label}
+									key={
+										item.code
+									}
+									title={
+										item.label
+									}
+									disabled={
+										!onItemClick
+									}
+									onClick={() =>
+										onItemClick?.(
+											item
+										)
+									}
 								>
 									<span
 										className="dashboard-chart-key-colour"
@@ -145,13 +178,17 @@ const DashboardDonutChart = ({
 									/>
 
 									<span className="dashboard-chart-key-label">
-										{item.label}
+										{
+											item.label
+										}
 									</span>
 
 									<strong>
-										{item.count}
+										{
+											item.count
+										}
 									</strong>
-								</div>
+								</button>
 							)
 						)}
 					</div>
