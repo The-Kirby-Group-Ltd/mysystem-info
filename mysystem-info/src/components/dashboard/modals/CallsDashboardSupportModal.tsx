@@ -19,7 +19,7 @@ import type {
 	DashboardMonth,
 } from "../../../data/types/dashboardTypes";
 
-type DashboardChartSupportModalProps = {
+type CallsDashboardSupportModalProps = {
 	title: string;
 
 	customerNo: string;
@@ -34,7 +34,7 @@ type DashboardChartSupportModalProps = {
 	onClose: () => void;
 };
 
-const DashboardChartSupportModal = ({
+const CallsDashboardSupportModal = ({
 	title,
 
 	customerNo,
@@ -47,7 +47,7 @@ const DashboardChartSupportModal = ({
 	filterValue,
 
 	onClose,
-}: DashboardChartSupportModalProps) => {
+}: CallsDashboardSupportModalProps) => {
 	const [calls, setCalls] =
 		useState<Call[]>([]);
 
@@ -313,4 +313,4 @@ const DashboardChartSupportModal = ({
 	);
 };
 
-export default DashboardChartSupportModal;
+export default CallsDashboardSupportModal;

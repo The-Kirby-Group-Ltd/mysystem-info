@@ -8,7 +8,7 @@ import "../../../styles/app-styles/dashboard/DashboardBoards.css";
 import dashboardApi from "../../../data/api/dashboardApi";
 
 import DashboardDonutChart from "../general/DashboardDonutChart";
-import DashboardChartSupportModal from "../modals/DashboardChartSupportModal";
+import CallsDashboardSupportModal from "../modals/CallsDashboardSupportModal";
 
 import type {
 	CallsDashboardData,
@@ -201,6 +201,10 @@ const CallsDashboardBoard = ({
 		});
 	};
 
+	// =====================================================
+	// Render
+	// =====================================================
+
 	return (
 		<div className="calls-dashboard-board">
 			{/* =============================
@@ -293,6 +297,10 @@ const CallsDashboardBoard = ({
 					/>
 				</label>
 			</div>
+
+			{/* =============================
+			    State
+			============================= */}
 
 			{isLoading && (
 				<p className="dashboard-loading">
@@ -490,7 +498,7 @@ const CallsDashboardBoard = ({
 			</div>
 
 			{chartModal && (
-				<DashboardChartSupportModal
+				<CallsDashboardSupportModal
 					title={
 						chartModal.title
 					}
