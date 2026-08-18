@@ -1,12 +1,20 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../data/auth/useAuth";
 
 const SideBar = () => {
-	const { user } = useAuth();
+	const { user, logout } = useAuth();
+	const navigate = useNavigate();
 
 	const canAccessAdmin =
 		user?.roles.includes("Administrator") ||
 		user?.roles.includes("Staff");
+
+	const handleLogout = async () => {
+		console.log("logout key from sidebar was clicked.");
+
+		await logout();
+		navigate("/login");
+	};
 
 	return (
 		<aside className="sidebar">
@@ -88,6 +96,18 @@ const SideBar = () => {
 							{user?.roles?.[0] || "Portal User"}
 						</span>
 					</div>
+				</div>
+
+				<div className="sidebar-logout">
+					<button
+						className="sidebar-logout-button"
+						type="button"
+						onClick={handleLogout}
+						title="Log out"
+						aria-label="Log out"
+					>
+						<span className="sidebar-logout-icon" />
+					</button>
 				</div>
 			</div>
 		</aside>
