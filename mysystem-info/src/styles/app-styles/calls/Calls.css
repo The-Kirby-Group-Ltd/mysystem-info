@@ -1,35 +1,72 @@
+/* =========================================================
+   CALLS SCREEN
+   ========================================================= */
+
 .calls-screen {
 	width: 100%;
-	height: 100%;
-	color: #222;
+	min-height: 100%;
+
 	padding-top: 1rem;
+	padding-bottom: 2rem;
+
+	color: #222;
 }
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
 
 .calls-header {
 	display: flex;
-	justify-content: space-between;
 	align-items: flex-start;
+	justify-content: space-between;
 	gap: 24px;
+
 	margin-bottom: 24px;
 	padding-left: 1rem;
 }
 
+.calls-eyebrow,
+.calls-section-eyebrow {
+	margin: 0 0 5px;
+
+	color: #a51f1f;
+
+	font-size: 0.7rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
 h1.calls-heading {
 	display: block;
+
 	margin: 0;
+
+	color: #222;
+
 	font-size: 2.4rem;
 	font-weight: 700;
+	letter-spacing: -0.025em;
 }
 
 .calls-subtitle {
 	margin: 6px 0 0;
-	color: #555;
+
+	color: #666;
+
 	font-size: 0.95rem;
 }
 
 .calls-subtitle strong {
-	color: #db2d2dba;
+	color: rgba(219, 45, 45, 0.73);
 }
+
+
+/* =========================================================
+   CUSTOMER SEARCH
+   ========================================================= */
 
 .calls-customer-search {
 	display: flex;
@@ -39,60 +76,133 @@ h1.calls-heading {
 
 .calls-customer-search input {
 	width: 220px;
+
 	padding: 10px 12px;
+
 	border: 1px solid rgba(219, 45, 45, 0.35);
 	border-radius: 8px;
+
+	background: #fff;
+	color: #333;
+
+	font: inherit;
 	font-size: 0.95rem;
+
 	outline: none;
+
+	transition:
+		border-color 0.2s ease,
+		box-shadow 0.2s ease;
+}
+
+.calls-customer-search input:hover {
+	border-color: rgba(219, 45, 45, 0.5);
 }
 
 .calls-customer-search input:focus {
 	border-color: #db2d2d;
-	box-shadow: 0 0 0 3px rgba(219, 45, 45, 0.12);
+
+	box-shadow:
+		0 0 0 3px rgba(219, 45, 45, 0.12);
 }
 
-.calls-customer-search button,
-.calls-page-jump button {
+.calls-customer-search button {
 	padding: 10px 16px;
+
 	border: none;
 	border-radius: 8px;
+
 	background: rgba(219, 45, 45, 0.9);
 	color: #fff;
+
+	font: inherit;
+	font-size: 0.9rem;
 	font-weight: 600;
+
 	cursor: pointer;
-	transition: 0.2s ease;
+
+	transition:
+		background 0.2s ease,
+		transform 0.2s ease,
+		box-shadow 0.2s ease;
 }
 
-.calls-customer-search button:hover,
-.calls-page-jump button:hover {
+.calls-customer-search button:hover {
 	background: #db2d2d;
+
+	transform: translateY(-1px);
+
+	box-shadow:
+		0 5px 14px rgba(219, 45, 45, 0.14);
 }
 
-.calls-customer-search button:disabled,
-.calls-page-jump button:disabled {
-	opacity: 0.45;
-	cursor: not-allowed;
+.calls-customer-search button:active {
+	transform: translateY(0);
 }
 
-.calls-filters-section {
-	margin-bottom: 18px;
+
+/* =========================================================
+   FILTER / CONTROL CARD
+   ========================================================= */
+
+.calls-controls-card {
+	margin-bottom: 16px;
+	padding: 18px 20px;
+
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	border-radius: 12px;
+
+	background:
+		linear-gradient(
+			135deg,
+			rgba(219, 45, 45, 0.035),
+			rgba(255, 255, 255, 0) 44%
+		),
+		rgba(255, 255, 255, 0.96);
 }
+
+.calls-controls-heading {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 20px;
+
+	margin-bottom: 15px;
+}
+
+.calls-controls-heading h2 {
+	margin: 0;
+
+	color: #252525;
+
+	font-size: 1.1rem;
+	font-weight: 700;
+}
+
+
+/* =========================================================
+   FILTER PANEL
+   ========================================================= */
 
 .calls-filter-panel {
 	display: grid;
-	grid-template-columns: repeat(4, minmax(150px, 1fr));
+
+	grid-template-columns:
+		repeat(4, minmax(150px, 1fr));
+
 	gap: 12px;
 
-	padding: 16px;
+	padding: 0;
 
-	background: rgba(255, 255, 255, 0.82);
-	border: 1px solid rgba(219, 45, 45, 0.12);
-	border-radius: 12px;
+	border: none;
+
+	background: transparent;
 }
 
 .calls-filter-panel input,
 .calls-filter-panel select {
 	width: 100%;
+
 	box-sizing: border-box;
 
 	padding: 10px 12px;
@@ -101,23 +211,39 @@ h1.calls-heading {
 	border-radius: 8px;
 
 	background: #fff;
-	font-size: 0.95rem;
+	color: #333;
+
+	font: inherit;
+	font-size: 0.9rem;
+
 	outline: none;
+
+	transition:
+		border-color 0.2s ease,
+		box-shadow 0.2s ease;
+}
+
+.calls-filter-panel input:hover,
+.calls-filter-panel select:hover {
+	border-color: rgba(0, 0, 0, 0.22);
 }
 
 .calls-filter-panel input:focus,
 .calls-filter-panel select:focus {
 	border-color: #db2d2d;
-	box-shadow: 0 0 0 3px rgba(219, 45, 45, 0.1);
+
+	box-shadow:
+		0 0 0 3px rgba(219, 45, 45, 0.1);
 }
+
+
+/* =========================================================
+   ROW CONTROL
+   ========================================================= */
 
 .calls-toolbar {
 	display: flex;
-	justify-content: flex-start;
 	align-items: center;
-
-	margin-bottom: 8px;
-	padding-left: 1rem;
 }
 
 .calls-toolbar-control {
@@ -125,75 +251,139 @@ h1.calls-heading {
 	align-items: center;
 	gap: 8px;
 
-	color: #444;
-	font-size: 0.9rem;
+	color: #555;
+
+	font-size: 0.82rem;
+	font-weight: 600;
+}
+
+.calls-toolbar-control span {
+	color: #666;
+
+	font-size: 0.7rem;
+	font-weight: 700;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
 }
 
 .calls-toolbar-control input {
-	width: 80px;
+	width: 72px;
+
 	padding: 8px 10px;
 
-	border: 1px solid rgba(0, 0, 0, 0.16);
+	border: 1px solid rgba(0, 0, 0, 0.14);
 	border-radius: 8px;
 
+	background: #fff;
+
+	font: inherit;
+	font-size: 0.88rem;
+
 	outline: none;
+
+	transition:
+		border-color 0.2s ease,
+		box-shadow 0.2s ease;
 }
 
 .calls-toolbar-control input:focus {
 	border-color: #db2d2d;
-	box-shadow: 0 0 0 3px rgba(219, 45, 45, 0.1);
+
+	box-shadow:
+		0 0 0 3px rgba(219, 45, 45, 0.1);
 }
 
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
 .calls-error {
-	margin: 10px 0;
-	color: #db2d2d;
-	font-weight: 600;
+	margin: 0 0 14px;
+	padding: 10px 12px;
+
+	border: 1px solid rgba(219, 45, 45, 0.22);
+	border-radius: 8px;
+
+	background: rgba(219, 45, 45, 0.06);
+	color: #8f1f1f;
+
+	font-size: 0.86rem;
+	font-weight: 500;
 }
+
+
+/* =========================================================
+   TABLE CONTAINER
+   ========================================================= */
 
 .calls-view {
 	overflow: hidden;
 
-	background: rgba(255, 255, 255, 0.9);
-	border: 1px solid rgba(219, 45, 45, 0.2);
-	border-radius: 14px;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	border-radius: 12px;
 
-	box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+	background: rgba(255, 255, 255, 0.97);
+
+	box-shadow:
+		0 8px 22px rgba(0, 0, 0, 0.035);
 }
+
+
+/* =========================================================
+   PAGINATION
+   ========================================================= */
 
 .calls-pagination {
 	display: flex;
-	justify-content: flex-end;
 	align-items: center;
-	gap: 12px;
+	justify-content: flex-end;
+	gap: 10px;
 
-	margin-top: 16px;
-	padding-bottom: 2rem;
+	margin-top: 14px;
 }
 
 .calls-pagination-button {
-	width: 42px;
-	height: 42px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 
-	border: none;
-	border-radius: 50%;
+	width: 38px;
+	height: 38px;
 
-	background: rgba(219, 45, 45, 0.9);
-	color: #fff;
+	padding: 0;
 
-	font-size: 1.8rem;
+	border: 1px solid rgba(219, 45, 45, 0.18);
+	border-radius: 8px;
+
+	background: rgba(219, 45, 45, 0.05);
+	color: #a51f1f;
+
+	font-size: 1.45rem;
 	line-height: 1;
 
 	cursor: pointer;
-	transition: 0.2s ease;
+
+	transition:
+		background 0.2s ease,
+		border-color 0.2s ease,
+		color 0.2s ease,
+		transform 0.2s ease;
 }
 
-.calls-pagination-button:hover {
-	background: #db2d2d;
+.calls-pagination-button:hover:not(:disabled) {
+	border-color: rgba(219, 45, 45, 0.4);
+
+	background: rgba(219, 45, 45, 0.1);
+	color: #db2d2d;
+
 	transform: translateY(-1px);
 }
 
-.calls-pagination-button:disabled {
-	opacity: 0.45;
+.calls-pagination-button:disabled,
+.calls-page-jump button:disabled {
+	opacity: 0.4;
+
 	cursor: not-allowed;
 	transform: none;
 }
@@ -203,43 +393,85 @@ h1.calls-heading {
 	align-items: center;
 	gap: 8px;
 
-	padding: 6px 8px 6px 12px;
+	padding: 5px 6px 5px 11px;
 
-	background: rgba(255, 255, 255, 0.86);
 	border: 1px solid rgba(0, 0, 0, 0.1);
-	border-radius: 999px;
+	border-radius: 8px;
+
+	background: rgba(255, 255, 255, 0.96);
 }
 
 .calls-page-jump span {
-	color: #555;
-	font-size: 0.9rem;
+	color: #666;
+
+	font-size: 0.82rem;
+	font-weight: 500;
 }
 
 .calls-page-jump input {
-	width: 72px;
-	padding: 8px 10px;
+	width: 58px;
 
-	border: 1px solid rgba(0, 0, 0, 0.14);
-	border-radius: 999px;
+	padding: 7px 8px;
+
+	border: 1px solid rgba(0, 0, 0, 0.12);
+	border-radius: 6px;
+
+	background: #fff;
+
+	font: inherit;
+	font-size: 0.85rem;
+	text-align: center;
 
 	outline: none;
-	text-align: center;
 }
 
 .calls-page-jump input:focus {
 	border-color: #db2d2d;
-	box-shadow: 0 0 0 3px rgba(219, 45, 45, 0.1);
+
+	box-shadow:
+		0 0 0 3px rgba(219, 45, 45, 0.08);
 }
+
+.calls-page-jump button {
+	padding: 7px 12px;
+
+	border: none;
+	border-radius: 6px;
+
+	background: rgba(219, 45, 45, 0.9);
+	color: #fff;
+
+	font: inherit;
+	font-size: 0.82rem;
+	font-weight: 600;
+
+	cursor: pointer;
+
+	transition:
+		background 0.2s ease;
+}
+
+.calls-page-jump button:hover:not(:disabled) {
+	background: #db2d2d;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
 
 @media screen and (max-width: 1100px) {
 	.calls-filter-panel {
-		grid-template-columns: repeat(2, minmax(180px, 1fr));
+		grid-template-columns:
+			repeat(2, minmax(180px, 1fr));
 	}
 }
 
 @media screen and (max-width: 900px) {
 	.calls-header {
 		flex-direction: column;
+
+		padding-left: 0;
 	}
 
 	.calls-customer-search {
@@ -248,6 +480,8 @@ h1.calls-heading {
 
 	.calls-customer-search input {
 		flex: 1;
+
+		width: auto;
 	}
 
 	.calls-pagination {
@@ -256,15 +490,29 @@ h1.calls-heading {
 }
 
 @media screen and (max-width: 650px) {
+	.calls-controls-card {
+		padding: 16px;
+	}
+
+	.calls-controls-heading {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 12px;
+	}
+
 	.calls-filter-panel {
 		grid-template-columns: 1fr;
 	}
 
-	.calls-page-jump {
-		padding-left: 10px;
+	.calls-pagination {
+		flex-wrap: wrap;
 	}
 
-	.calls-page-jump input {
-		width: 56px;
+	.calls-page-jump {
+		order: -1;
+
+		width: 100%;
+
+		justify-content: center;
 	}
 }

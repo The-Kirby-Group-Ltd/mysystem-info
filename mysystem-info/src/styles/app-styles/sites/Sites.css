@@ -1,35 +1,72 @@
+/* =========================================================
+   SITES SCREEN
+   ========================================================= */
+
 .sites-screen {
 	width: 100%;
-	height: 100%;
+	min-height: 100%;
+
+	padding-top: 1rem;
+	padding-bottom: 2rem;
+
 	color: #222;
-    padding-top: 1rem;
 }
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
 
 .sites-header {
 	display: flex;
-	justify-content: space-between;
 	align-items: flex-start;
+	justify-content: space-between;
 	gap: 24px;
+
 	margin-bottom: 24px;
-    padding-left: 1rem;
+	padding-left: 1rem;
+}
+
+.sites-eyebrow,
+.sites-section-eyebrow {
+	margin: 0 0 5px;
+
+	color: #a51f1f;
+
+	font-size: 0.7rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
 }
 
 h1.sites-heading {
 	display: block;
+
 	margin: 0;
+
+	color: #222;
+
 	font-size: 2.4rem;
 	font-weight: 700;
-}
-
-.shown-customerno-heading {
-    color: #db2d2dba;
+	letter-spacing: -0.025em;
 }
 
 .sites-subtitle {
 	margin: 6px 0 0;
-	color: #555;
+
+	color: #666;
+
 	font-size: 0.95rem;
 }
+
+.shown-customerno-heading {
+	color: rgba(219, 45, 45, 0.73);
+}
+
+
+/* =========================================================
+   CUSTOMER SEARCH
+   ========================================================= */
 
 .sites-customer-search {
 	display: flex;
@@ -39,139 +76,314 @@ h1.sites-heading {
 
 .sites-customer-search input {
 	width: 220px;
+
 	padding: 10px 12px;
+
 	border: 1px solid rgba(219, 45, 45, 0.35);
 	border-radius: 8px;
+
+	background: #fff;
+	color: #333;
+
+	font: inherit;
 	font-size: 0.95rem;
+
 	outline: none;
+
+	transition:
+		border-color 0.2s ease,
+		box-shadow 0.2s ease;
+}
+
+.sites-customer-search input:hover {
+	border-color: rgba(219, 45, 45, 0.5);
 }
 
 .sites-customer-search input:focus {
 	border-color: #db2d2d;
-	box-shadow: 0 0 0 3px rgba(219, 45, 45, 0.12);
+
+	box-shadow:
+		0 0 0 3px rgba(219, 45, 45, 0.12);
 }
 
-.sites-customer-search button,
-.page-jump button {
+.sites-customer-search button {
 	padding: 10px 16px;
+
 	border: none;
 	border-radius: 8px;
+
 	background: rgba(219, 45, 45, 0.9);
 	color: #fff;
+
+	font: inherit;
+	font-size: 0.9rem;
 	font-weight: 600;
+
 	cursor: pointer;
-	transition: 0.2s ease;
+
+	transition:
+		background 0.2s ease,
+		transform 0.2s ease,
+		box-shadow 0.2s ease;
 }
 
-.sites-customer-search button:hover,
-.page-jump button:hover {
+.sites-customer-search button:hover {
 	background: #db2d2d;
+
+	transform: translateY(-1px);
+
+	box-shadow:
+		0 5px 14px rgba(219, 45, 45, 0.14);
 }
 
-.filters-section {
-	margin-bottom: 18px;
+.sites-customer-search button:active {
+	transform: translateY(0);
 }
+
+
+/* =========================================================
+   FILTER / CONTROL CARD
+   ========================================================= */
+
+.sites-controls-card {
+	margin-bottom: 16px;
+	padding: 18px 20px;
+
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	border-radius: 12px;
+
+	background:
+		linear-gradient(
+			135deg,
+			rgba(219, 45, 45, 0.035),
+			rgba(255, 255, 255, 0) 44%
+		),
+		rgba(255, 255, 255, 0.96);
+}
+
+.sites-controls-heading {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 20px;
+
+	margin-bottom: 15px;
+}
+
+.sites-controls-heading h2 {
+	margin: 0;
+
+	color: #252525;
+
+	font-size: 1.1rem;
+	font-weight: 700;
+}
+
+
+/* =========================================================
+   FILTERS
+   ========================================================= */
 
 .sites-filter-panel {
 	display: grid;
-	grid-template-columns: repeat(3, minmax(160px, 1fr));
-	/* gap: 12px; */
-	background: rgba(255, 255, 255, 0.82);
-	border: 1px solid rgba(219, 45, 45, 0.12);
-	border-radius: 12px;
-	padding: 16px;
+
+	grid-template-columns:
+		repeat(3, minmax(160px, 1fr));
+
+	gap: 12px;
+
+	padding: 0;
+
+	border: none;
+
+	background: transparent;
 }
 
 .sites-filter-panel input,
 .sites-filter-panel select {
-	width: 90%;
+	width: 100%;
+
+	box-sizing: border-box;
+
 	padding: 10px 12px;
+
 	border: 1px solid rgba(0, 0, 0, 0.14);
 	border-radius: 8px;
-	font-size: 0.95rem;
-	outline: none;
+
 	background: #fff;
+	color: #333;
+
+	font: inherit;
+	font-size: 0.9rem;
+
+	outline: none;
+
+	transition:
+		border-color 0.2s ease,
+		box-shadow 0.2s ease;
+}
+
+.sites-filter-panel input:hover,
+.sites-filter-panel select:hover {
+	border-color: rgba(0, 0, 0, 0.22);
 }
 
 .sites-filter-panel input:focus,
 .sites-filter-panel select:focus {
 	border-color: #db2d2d;
-	box-shadow: 0 0 0 3px rgba(219, 45, 45, 0.1);
+
+	box-shadow:
+		0 0 0 3px rgba(219, 45, 45, 0.1);
 }
+
+
+/* =========================================================
+   ROW CONTROL
+   ========================================================= */
 
 .sites-toolbar {
 	display: flex;
-	justify-content: flex-start;
-    padding-left: 1rem;
 	align-items: center;
-	margin-bottom: 8px;
 }
 
 .sites-toolbar-control {
 	display: flex;
 	align-items: center;
 	gap: 8px;
-	font-size: 0.9rem;
-	color: #444;
+
+	color: #555;
+
+	font-size: 0.82rem;
+	font-weight: 600;
+}
+
+.sites-toolbar-control span {
+	color: #666;
+
+	font-size: 0.7rem;
+	font-weight: 700;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
 }
 
 .sites-toolbar-control input {
-	width: 80px;
+	width: 72px;
+
 	padding: 8px 10px;
-	border: 1px solid rgba(0, 0, 0, 0.16);
+
+	border: 1px solid rgba(0, 0, 0, 0.14);
 	border-radius: 8px;
+
+	background: #fff;
+
+	font: inherit;
+	font-size: 0.88rem;
+
 	outline: none;
+
+	transition:
+		border-color 0.2s ease,
+		box-shadow 0.2s ease;
 }
 
 .sites-toolbar-control input:focus {
 	border-color: #db2d2d;
-	box-shadow: 0 0 0 3px rgba(219, 45, 45, 0.1);
+
+	box-shadow:
+		0 0 0 3px rgba(219, 45, 45, 0.1);
 }
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
 
 .sites-error {
-	color: #db2d2d;
-	font-weight: 600;
-	margin: 10px 0;
+	margin: 0 0 14px;
+	padding: 10px 12px;
+
+	border: 1px solid rgba(219, 45, 45, 0.22);
+	border-radius: 8px;
+
+	background: rgba(219, 45, 45, 0.06);
+	color: #8f1f1f;
+
+	font-size: 0.86rem;
+	font-weight: 500;
 }
 
+
+/* =========================================================
+   TABLE CONTAINER
+   ========================================================= */
+
 .sites-view {
-	background: rgba(255, 255, 255, 0.9);
-	border: 1px solid rgba(219, 45, 45, 0.2);
-	border-radius: 14px;
 	overflow: hidden;
-	box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	border-radius: 12px;
+
+	background: rgba(255, 255, 255, 0.97);
+
+	box-shadow:
+		0 8px 22px rgba(0, 0, 0, 0.035);
 }
+
+
+/* =========================================================
+   PAGINATION
+   ========================================================= */
 
 .sites-pagination {
 	display: flex;
-	justify-content: flex-end;
 	align-items: center;
-	gap: 12px;
-	margin-top: 16px;
-    padding-bottom: 2rem;
+	justify-content: flex-end;
+	gap: 10px;
+
+	margin-top: 14px;
 }
 
 .pagination-button {
-	width: 42px;
-	height: 42px;
-	border: none;
-	border-radius: 50%;
-	background: rgba(219, 45, 45, 0.9);
-	color: #fff;
-	font-size: 1.8rem;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+
+	width: 38px;
+	height: 38px;
+
+	padding: 0;
+
+	border: 1px solid rgba(219, 45, 45, 0.18);
+	border-radius: 8px;
+
+	background: rgba(219, 45, 45, 0.05);
+	color: #a51f1f;
+
+	font-size: 1.45rem;
 	line-height: 1;
+
 	cursor: pointer;
-	transition: 0.2s ease;
+
+	transition:
+		background 0.2s ease,
+		border-color 0.2s ease,
+		color 0.2s ease,
+		transform 0.2s ease;
 }
 
-.pagination-button:hover {
-	background: #db2d2d;
+.pagination-button:hover:not(:disabled) {
+	border-color: rgba(219, 45, 45, 0.4);
+
+	background: rgba(219, 45, 45, 0.1);
+	color: #db2d2d;
+
 	transform: translateY(-1px);
 }
 
 .pagination-button:disabled,
 .page-jump button:disabled {
-	opacity: 0.45;
+	opacity: 0.4;
+
 	cursor: not-allowed;
 	transform: none;
 }
@@ -180,39 +392,89 @@ h1.sites-heading {
 	display: flex;
 	align-items: center;
 	gap: 8px;
-	padding: 6px 8px 6px 12px;
-	background: rgba(255, 255, 255, 0.86);
+
+	padding: 5px 6px 5px 11px;
+
 	border: 1px solid rgba(0, 0, 0, 0.1);
-	border-radius: 999px;
+	border-radius: 8px;
+
+	background: rgba(255, 255, 255, 0.96);
 }
 
 .page-jump span {
-	color: #555;
-	font-size: 0.9rem;
+	color: #666;
+
+	font-size: 0.82rem;
+	font-weight: 500;
 }
 
 .page-jump input {
-	width: 72px;
-	padding: 8px 10px;
-	border: 1px solid rgba(0, 0, 0, 0.14);
-	border-radius: 999px;
-	outline: none;
+	width: 58px;
+
+	padding: 7px 8px;
+
+	border: 1px solid rgba(0, 0, 0, 0.12);
+	border-radius: 6px;
+
+	background: #fff;
+
+	font: inherit;
+	font-size: 0.85rem;
 	text-align: center;
+
+	outline: none;
 }
 
 .page-jump input:focus {
 	border-color: #db2d2d;
-	box-shadow: 0 0 0 3px rgba(219, 45, 45, 0.1);
+
+	box-shadow:
+		0 0 0 3px rgba(219, 45, 45, 0.08);
 }
+
+.page-jump button {
+	padding: 7px 12px;
+
+	border: none;
+	border-radius: 6px;
+
+	background: rgba(219, 45, 45, 0.9);
+	color: #fff;
+
+	font: inherit;
+	font-size: 0.82rem;
+	font-weight: 600;
+
+	cursor: pointer;
+
+	transition:
+		background 0.2s ease;
+}
+
+.page-jump button:hover:not(:disabled) {
+	background: #db2d2d;
+}
+
+
+/* =========================================================
+   SMALL SHARED TEXT
+   ========================================================= */
 
 .property-reference-text {
 	margin: 0;
 	padding: 0;
 }
 
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
 @media screen and (max-width: 900px) {
 	.sites-header {
 		flex-direction: column;
+
+		padding-left: 0;
 	}
 
 	.sites-customer-search {
@@ -221,6 +483,12 @@ h1.sites-heading {
 
 	.sites-customer-search input {
 		flex: 1;
+
+		width: auto;
+	}
+
+	.sites-controls-heading {
+		align-items: flex-start;
 	}
 
 	.sites-filter-panel {
@@ -228,6 +496,38 @@ h1.sites-heading {
 	}
 
 	.sites-pagination {
+		justify-content: center;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.sites-controls-card {
+		padding: 16px;
+	}
+
+	.sites-controls-heading {
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.sites-customer-search {
+		align-items: stretch;
+	}
+
+	.sites-customer-search input,
+	.sites-customer-search button {
+		min-height: 42px;
+	}
+
+	.sites-pagination {
+		flex-wrap: wrap;
+	}
+
+	.page-jump {
+		order: -1;
+
+		width: 100%;
+
 		justify-content: center;
 	}
 }

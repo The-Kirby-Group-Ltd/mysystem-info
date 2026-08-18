@@ -92,7 +92,13 @@ const Sites = () => {
 		<div className="sites-screen">
 			<div className="sites-header">
 				<div>
-					<h1 className="sites-heading">Sites</h1>
+					<p className="sites-eyebrow">
+						Customer Estate
+					</p>
+
+					<h1 className="sites-heading">
+						Sites
+					</h1>
 
 					{searchedCustomerNo && (
 						<p className="sites-subtitle">
@@ -123,22 +129,42 @@ const Sites = () => {
 				</div>
 			</div>
 
-			<div className="filters-section">
-				<SitesFilterPanel filters={filters} onFiltersChange={setFilters} />
-			</div>
+			<section className="sites-controls-card">
+				<div className="sites-controls-heading">
+					<div>
+						<p className="sites-section-eyebrow">
+							Filters
+						</p>
 
-			<div className="sites-toolbar">
-				<label className="sites-toolbar-control">
-					Rows
-					<input
-						type="number"
-						min={1}
-						max={100}
-						value={siteRows}
-						onChange={(e) => handleRowsChange(Number(e.target.value))}
-					/>
-				</label>
-			</div>
+						<h2>
+							Find sites
+						</h2>
+					</div>
+
+					<div className="sites-toolbar">
+						<label className="sites-toolbar-control">
+							<span>Rows</span>
+
+							<input
+								type="number"
+								min={1}
+								max={100}
+								value={siteRows}
+								onChange={(e) =>
+									handleRowsChange(
+										Number(e.target.value)
+									)
+								}
+							/>
+						</label>
+					</div>
+				</div>
+
+				<SitesFilterPanel
+					filters={filters}
+					onFiltersChange={setFilters}
+				/>
+			</section>
 
 			{error && <p className="sites-error">{error}</p>}
 

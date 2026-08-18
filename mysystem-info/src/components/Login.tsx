@@ -40,36 +40,82 @@ const Login = () => {
 
 	return (
 		<div className="login-page">
-			<div className="login-box">
-			<h1 className="login-header">Log In</h1>
+			<div className="login-shell">
+				<section className="login-intro">
+					<div className="login-brand">
+						<h1>
+							mysystem<span>.info</span>
+						</h1>
 
-			<form className="login-form" onSubmit={handleLogin}>
-				<div className="login-input-boxes">
-					<input
-						type="text"
-						placeholder="Username or Email"
-						value={username}
-						onChange={(e) => setUsername(e.target.value)}
-					/>
+						<p>By The Kirby Group&copy;</p>
+					</div>
+				</section>
 
-					<input
-						type="password"
-						placeholder="Password"
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-					/>
-				</div>
+				<section className="login-box">
+					<div className="login-box-heading">
+						<h2>Log in</h2>
 
-				{error && <p className="login-error">{error}</p>}
-				{status && <p className="login-status">{status}</p>}
+						<p>Enter your portal credentials to continue.</p>
+					</div>
 
-				<button className="login-button" type="submit">
-					Login
-				</button>
-			</form>
-		</div>
-		</div>
-		
+					<form 
+						className="login-form"
+						onSubmit={handleLogin}
+					>
+						<div className="login-input-boxes">
+							<label>
+								<span>
+									Username or Email
+								</span>
+
+								<input
+									type="text"
+									value={username}
+									onChange={(e) => 
+										setUsername(e.target.value)
+									}
+									autoComplete="username"
+								/>
+							</label>
+
+							<label>
+								<span>
+									Password
+								</span>
+
+								<input
+									type="password"
+									value={password}
+									onChange={(e) => 
+										setPassword(e.target.value)
+									}
+									autoComplete="password"
+								/>
+							</label>
+						</div>
+
+						{error && (
+							<p className="login-error">
+								{error}
+							</p>
+						)}
+
+						{status && (
+							<p className="login-status">
+								{status}
+							</p>
+						)}
+
+						<button
+							className="login-button"
+							type="submit"
+						>
+							Log in
+						</button>
+					</form>
+				</section>
+			</div>
+		</div>		
 	);
 };
 

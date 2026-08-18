@@ -112,7 +112,13 @@ const Calls = () => {
 		<div className="calls-screen">
 			<div className="calls-header">
 				<div>
-					<h1 className="calls-heading">Calls</h1>
+					<p className="calls-eyebrow">
+						Service Activity
+					</p>
+
+					<h1 className="calls-heading">
+						Calls
+					</h1>
 
 					{searchedCustomerNo && (
 						<p className="calls-subtitle">
@@ -148,29 +154,42 @@ const Calls = () => {
 				</div>
 			</div>
 
-			<div className="calls-filters-section">
+			<section className="calls-controls-card">
+				<div className="calls-controls-heading">
+					<div>
+						<p className="calls-section-eyebrow">
+							Filters
+						</p>
+
+						<h2>
+							Find calls
+						</h2>
+					</div>
+
+					<div className="calls-toolbar">
+						<label className="calls-toolbar-control">
+							<span>Rows</span>
+
+							<input
+								type="number"
+								min={1}
+								max={100}
+								value={rowsToShow}
+								onChange={(event) =>
+									handleRowsChange(
+										Number(event.target.value)
+									)
+								}
+							/>
+						</label>
+					</div>
+				</div>
+
 				<CallsFilterPanel
 					filters={filters}
 					onFiltersChange={setFilters}
 				/>
-			</div>
-
-			<div className="calls-toolbar">
-				<label className="calls-toolbar-control">
-					Rows
-					<input
-						type="number"
-						min={1}
-						max={100}
-						value={rowsToShow}
-						onChange={(event) =>
-							handleRowsChange(
-								Number(event.target.value)
-							)
-						}
-					/>
-				</label>
-			</div>
+			</section>
 
 			{error && (
 				<p className="calls-error">{error}</p>
