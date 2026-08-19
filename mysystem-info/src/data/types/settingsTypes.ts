@@ -1,12 +1,14 @@
 export type DefaultDashboard = 
     | "calls"
     | "system-maintenance"
-    | "sla";
+    | "sla"
+    | null;
 
 export type DefaultPageSize = 
     | 10
     | 25
     | 30
     | 50
-    | 100;
+    | 100
+    | null;
 

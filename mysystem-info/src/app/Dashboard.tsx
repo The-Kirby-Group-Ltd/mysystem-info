@@ -22,6 +22,7 @@ import CallsDashboardBoard from "../components/dashboard/boards/CallsDashboardBo
 import CallsDashboardSupportTable from "../components/dashboard/boards/CallsDashboardSupportTable";
 import MaintenanceDashboardBoard from "../components/dashboard/boards/MaintenanceDashboardBoard";
 import SlaDashboardBoard from "../components/dashboard/boards/SlaDashboardBoard";
+import { getStoredPreferredDashboard } from "../data/storage/settingsStorage";
 
 const Dashboard = () => {
 	// =====================================================
@@ -29,68 +30,52 @@ const Dashboard = () => {
 	// =====================================================
 
 	const [customerNo, setCustomerNo] =
-		useState(
-			() =>
-				getStoredCustomerNo()
+		useState(() =>
+			getStoredCustomerNo()
 		);
 
-	const [
-		searchedCustomerNo,
-		setSearchedCustomerNo,
-	] = useState(
-		() =>
+	const [searchedCustomerNo, setSearchedCustomerNo] = 
+		useState(() =>
 			getStoredCustomerNo()
-	);
+		);
 
-	const [
-		specificSite,
-		setSpecificSite,
-	] = useState(false);
+	const [specificSite, setSpecificSite] = 
+		useState(false);
 
 	const [siteId, setSiteId] =
 		useState("");
 
-	const [
-		searchedSiteId,
-		setSearchedSiteId,
-	] = useState("");
+	const [searchedSiteId, setSearchedSiteId] = 
+		useState("");
 
 	// =====================================================
 	// Dashboard
 	// =====================================================
 
-	const [
-		selectedDashboard,
-		setSelectedDashboard,
-	] =
-		useState<DashboardSelect>(
-			"calls"
-		);
+	const [selectedDashboard, setSelectedDashboard] =
+		useState<DashboardSelect>((): DashboardSelect => {
+			var stored = getStoredPreferredDashboard();
+			
+			switch (stored) {
+				case "calls":
+					return "calls";
+				case "system-maintenance":
+					return "system-maintenance";
+				case "sla":
+					return "sla";
+				default: 
+					return "calls";
+			}
+		});
 
-	const [
-		selectedMonth,
-		setSelectedMonth,
-	] =
-		useState<DashboardMonth>(
-			"ALL"
-		);
+	const [selectedMonth, setSelectedMonth] =
+		useState<DashboardMonth>("ALL");
 
-	const [
-		selectedYear,
-		setSelectedYear,
-	] =
-		useState(
-			new Date()
-				.getFullYear()
-		);
+	const [selectedYear, setSelectedYear] =
+		useState(new Date().getFullYear());
 
-	const [
-		selectedCallsKpi,
-		setSelectedCallsKpi,
-	] =
-		useState<CallsKpiSelection>(
-			null
-		);
+	const [selectedCallsKpi, setSelectedCallsKpi] =
+		useState<CallsKpiSelection>(null);
 
 	// =====================================================
 	// Helpers
@@ -103,7 +88,7 @@ const Dashboard = () => {
 			case "calls":
 				return "Calls Dashboard";
 
-			case "system-maintenances":
+			case "system-maintenance":
 				return "System Maintenance Dashboard";
 
 			case "sla":
@@ -215,7 +200,7 @@ const Dashboard = () => {
 						/>
 					);
 
-				case "system-maintenances":
+				case "system-maintenance":
 					return (
 						<MaintenanceDashboardBoard
 							customerNo={

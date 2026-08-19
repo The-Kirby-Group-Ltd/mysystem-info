@@ -108,6 +108,10 @@
 	gap: 16px;
 }
 
+.setting-field-header {
+	margin: 0;
+}
+
 
 /* =========================================================
    SETTINGS CARDS
@@ -155,6 +159,125 @@
 	font-size: 0.88rem;
 }
 
+/* =========================================================
+   ACCOUNT SECTION
+   ========================================================= */
+
+	/* here */
+
+/* =========================================================
+   PREFERENCES SECTION
+   ========================================================= */
+
+.portal-preferences-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 24px;
+}
+
+
+/* =========================================================
+   FIELD LABEL
+   ========================================================= */
+
+.setting-field-header {
+	margin: 0 0 5px;
+
+	color: #666;
+
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+
+/* =========================================================
+   SELECT WRAPPER
+   ========================================================= */
+
+.selection-field {
+	position: relative;
+
+	width: 100%;
+	min-width: 0;
+}
+
+
+/* =========================================================
+   SELECT
+   ========================================================= */
+
+.settings-input-field {
+	width: 100%;
+	box-sizing: border-box;
+
+	margin: 4px 0;
+	padding: 9px 44px 9px 10px;
+
+	border: 1px solid rgba(0, 0, 0, 0.15);
+	border-radius: 10px;
+
+	background: #fff;
+	color: #222;
+
+	font: inherit;
+	font-size: 0.88rem;
+
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+
+	outline: none;
+
+	cursor: pointer;
+
+	transition:
+		border-color 0.2s ease;
+}
+
+.settings-input-field:hover {
+	border-color: rgba(0, 0, 0, 0.24);
+}
+
+.settings-input-field:focus {
+	border-color: #db2d2d;
+}
+
+
+/* =========================================================
+   CUSTOM SELECT ICON
+   ========================================================= */
+
+.settings-select-icon {
+	position: absolute;
+
+	top: 50%;
+	right: 14px;
+
+	width: 18px;
+	height: 18px;
+
+	transform: translateY(-50%);
+
+	object-fit: contain;
+
+	pointer-events: none;
+
+	z-index: 10;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media screen and (max-width: 700px) {
+	.portal-preferences-grid {
+		grid-template-columns: 1fr;
+		gap: 16px;
+	}
+}
 
 /* =========================================================
    SESSION SECTION

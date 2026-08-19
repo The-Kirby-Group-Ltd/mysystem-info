@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 import "../styles/app-styles/settings/Settings.css";
 
+import PortalPreferencesCard from "../components/settings/PortalPreferencesCard";
+
 const Settings = () => {
 	const { user, logout } = useAuth();
 	const navigate = useNavigate();
@@ -76,15 +78,9 @@ const Settings = () => {
 			<div className="settings-sections">
 				<section className="settings-card account-settings-section">
 					<div className="settings-card-heading">
-						<div>
-							<p className="settings-section-eyebrow">
-								Account
-							</p>
-
-							<h2>
-								Account Information
-							</h2>
-						</div>
+                        <h2>
+                            Account Information
+                        </h2>
 					</div>
 
 					<div className="settings-card-content">
@@ -93,34 +89,14 @@ const Settings = () => {
 				</section>
 
 				<section className="settings-card portal-preferences-section">
-					<div className="settings-card-heading">
-						<div>
-							<p className="settings-section-eyebrow">
-								Preferences
-							</p>
-
-							<h2>
-								Portal Preferences
-							</h2>
-						</div>
-					</div>
-
-					<div className="settings-card-content">
-						{/* Default dashboard, rows per page, etc. */}
-					</div>
+                    <PortalPreferencesCard />
 				</section>
 
 				<section className="settings-card session-section">
 					<div className="settings-card-heading">
-						<div>
-							<p className="settings-section-eyebrow">
-								Security
-							</p>
-
-							<h2>
-								This Session
-							</h2>
-						</div>
+                        <h2>
+                            This Session
+                        </h2>
 					</div>
 
 					<div className="settings-session-content">

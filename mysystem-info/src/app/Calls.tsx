@@ -15,6 +15,7 @@ import type {
 	CallFilters,
 } from "../data/types/callTypes";
 import { callsApi } from "../data/api/callsApi";
+import { getStoredPreferredPageSize } from "../data/storage/settingsStorage";
 
 const emptyFilters: CallFilters = {
 	siteId: "",
@@ -38,7 +39,22 @@ const Calls = () => {
 
 	const [page, setPage] = useState(1);
 	const [pageInput, setPageInput] = useState("1");
-	const [rowsToShow, setRowsToShow] = useState(10);
+	const [rowsToShow, setRowsToShow] = useState(() => {
+		const stored = getStoredPreferredPageSize();
+
+		switch (stored) {
+			case 25:
+				return 25;
+			case 30:
+				return 30;
+			case 50: 
+				return 50;
+			case 100:
+				return 100;
+			default:
+				return 10;
+		}
+	});
 	const [hasMore, setHasMore] = useState(false);
 
 	const [isLoading, setIsLoading] = useState(false);

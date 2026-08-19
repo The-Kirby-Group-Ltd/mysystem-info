@@ -40,13 +40,13 @@ const DashboardSelector = ({
 				<button
 					className={
 						selectedDashboard ===
-						"system-maintenances"
+						"system-maintenance"
 							? "board-select-button board-select-button-active"
 							: "board-select-button"
 					}
 					type="button"
 					onClick={() =>
-						onSelect("system-maintenances")
+						onSelect("system-maintenance")
 					}
 				>
 					<span>Maintenance</span>

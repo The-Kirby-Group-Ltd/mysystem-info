@@ -6,7 +6,7 @@ import type { Call } from "./callTypes";
 
 export type DashboardSelect =
 	| "calls"
-	| "system-maintenances"
+	| "system-maintenance"
 	| "sla";
 
 export type DashboardMonth =
