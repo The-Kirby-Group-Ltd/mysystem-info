@@ -10,10 +10,12 @@ const SideBar = () => {
 		user?.roles.includes("Staff");
 
 	const handleLogout = async () => {
-		console.log("logout key from sidebar was clicked.");
-
-		await logout();
-		navigate("/login");
+		try {
+			await logout();
+			navigate("/login");
+		} catch (error) {
+			alert(`Log out failed. Please try again. \n\nError: ${error}`);
+		}
 	};
 
 	return (

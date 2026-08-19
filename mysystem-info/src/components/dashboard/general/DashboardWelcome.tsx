@@ -5,9 +5,9 @@ const DashboardWelcome = () => {
 		<section className="dashboard-welcome-section">
 			<div className="dashboard-welcome-copy">
 				<h3>
-					Welcome to mysystem.
+					Welcome to mysystem
 					<span className="site-name">
-						info
+						.info
 					</span>
 					!
 				</h3>
