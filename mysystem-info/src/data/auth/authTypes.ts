@@ -12,6 +12,8 @@ export type AuthUser = {
 	firstName: string;
 	lastName: string;
 	roles: UserRole[];
+	customerNos: string[];
+	siteIds: string[];
 };
 
 export type LoginRequest = {

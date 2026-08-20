@@ -74,10 +74,15 @@ h1.calls-heading {
 	gap: 10px;
 }
 
-.calls-customer-search input {
+.calls-customer-search input,
+.calls-customer-search select {
 	width: 220px;
+	height: 41px;
 
-	padding: 10px 12px;
+	box-sizing: border-box;
+
+	margin: 0;
+	padding: 0 12px;
 
 	border: 1px solid rgba(219, 45, 45, 0.35);
 	border-radius: 8px;
@@ -87,27 +92,48 @@ h1.calls-heading {
 
 	font: inherit;
 	font-size: 0.95rem;
+	line-height: 1;
 
 	outline: none;
 
 	transition:
 		border-color 0.2s ease,
-		box-shadow 0.2s ease;
+		box-shadow 0.2s ease,
+		background 0.2s ease;
 }
 
-.calls-customer-search input:hover {
+.calls-customer-search select {
+	cursor: pointer;
+}
+
+.calls-customer-search input:hover,
+.calls-customer-search select:hover {
 	border-color: rgba(219, 45, 45, 0.5);
 }
 
-.calls-customer-search input:focus {
+.calls-customer-search input:focus,
+.calls-customer-search select:focus {
 	border-color: #db2d2d;
 
 	box-shadow:
 		0 0 0 3px rgba(219, 45, 45, 0.12);
 }
 
+.calls-customer-search input:disabled,
+.calls-customer-search select:disabled {
+	background: rgba(0, 0, 0, 0.04);
+	color: #888;
+
+	cursor: not-allowed;
+}
+
 .calls-customer-search button {
-	padding: 10px 16px;
+	height: 41px;
+
+	box-sizing: border-box;
+
+	margin: 0;
+	padding: 0 16px;
 
 	border: none;
 	border-radius: 8px;
@@ -118,6 +144,7 @@ h1.calls-heading {
 	font: inherit;
 	font-size: 0.9rem;
 	font-weight: 600;
+	line-height: 1;
 
 	cursor: pointer;
 
@@ -127,7 +154,7 @@ h1.calls-heading {
 		box-shadow 0.2s ease;
 }
 
-.calls-customer-search button:hover {
+.calls-customer-search button:hover:not(:disabled) {
 	background: #db2d2d;
 
 	transform: translateY(-1px);
@@ -136,8 +163,15 @@ h1.calls-heading {
 		0 5px 14px rgba(219, 45, 45, 0.14);
 }
 
-.calls-customer-search button:active {
+.calls-customer-search button:active:not(:disabled) {
 	transform: translateY(0);
+}
+
+.calls-customer-search button:disabled {
+	opacity: 0.45;
+
+	cursor: not-allowed;
+	transform: none;
 }
 
 
@@ -478,7 +512,8 @@ h1.calls-heading {
 		width: 100%;
 	}
 
-	.calls-customer-search input {
+	.calls-customer-search input,
+	.calls-customer-search select {
 		flex: 1;
 
 		width: auto;

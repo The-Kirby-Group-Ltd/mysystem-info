@@ -1,48 +1,195 @@
 import "../styles/app-styles/sites/Sites.css";
+
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { useAuth } from "../data/auth/useAuth";
+import { sitesApi } from "../data/api/sitesApi";
+
 import SitesFilterPanel from "../components/sites/SitesFilterPanel";
 import SitesTable from "../components/sites/SitesTable";
 import SiteDetailsModal from "../components/sites/SiteDetailsModal";
-import { useState } from "react";
-import { sitesApi } from "../data/api/sitesApi";
-import type { Site, SiteFilters } from "../data/types/siteTypes";
-import { getStoredCustomerNo, setStoredCustomerNo } from "../data/storage/customerStorage";
+
+import {
+	getStoredCustomerNo,
+	setStoredCustomerNo,
+} from "../data/storage/customerStorage";
+
+import {
+	getStoredPreferredPageSize,
+} from "../data/storage/settingsStorage";
+
+import type {
+	Site,
+	SiteFilters,
+} from "../data/types/siteTypes";
+
+// =========================================================
+// Defaults
+// =========================================================
+
+const emptyFilters: SiteFilters = {
+	siteId: "",
+	propertyReferenceNo: "",
+	postCode: "",
+	status: "",
+};
 
 const Sites = () => {
+	const { user, logout } = useAuth();
+	const navigate = useNavigate();
+
+	// =====================================================
+	// Access
+	// =====================================================
+
+	const hasUnrestrictedAccess =
+		user?.roles.includes("Administrator") === true ||
+		user?.roles.includes("Staff") === true ||
+		user?.roles.includes("Engineer") === true;
+
+	const allowedCustomerNos =
+		user?.customerNos
+			?.map((customerNo) =>
+				customerNo.trim().toUpperCase()
+			)
+			.filter(Boolean) ?? [];
+
+	// =====================================================
+	// Customer state
+	// =====================================================
+
 	const [customerNo, setCustomerNo] = useState(
 		() => getStoredCustomerNo()
 	);
-	const [searchedCustomerNo, setSearchedCustomerNo] = useState("");
 
-	const [filters, setFilters] = useState<SiteFilters>({
-		siteId: "",
-		propertyReferenceNo: "",
-		postCode: "",
-		status: "",
-	});
+	const [searchedCustomerNo, setSearchedCustomerNo] =
+		useState("");
+
+	// =====================================================
+	// Filter state
+	// =====================================================
+
+	const [filters, setFilters] =
+		useState<SiteFilters>(emptyFilters);
+
+	// =====================================================
+	// Site state
+	// =====================================================
 
 	const [sites, setSites] = useState<Site[]>([]);
-	const [selectedSite, setSelectedSite] = useState<Site | null>(null);
+	const [selectedSite, setSelectedSite] =
+		useState<Site | null>(null);
+
+	// =====================================================
+	// Pagination state
+	// =====================================================
 
 	const [page, setPage] = useState(1);
 	const [pageInput, setPageInput] = useState("1");
-	const [siteRows, setSiteRows] = useState(10);
+
+	const [siteRows, setSiteRows] = useState(() => {
+		const stored = getStoredPreferredPageSize();
+
+		switch (stored) {
+			case 25:
+				return 25;
+			case 30:
+				return 30;
+			case 50:
+				return 50;
+			case 100:
+				return 100;
+			default:
+				return 10;
+		}
+	});
+
 	const [hasMore, setHasMore] = useState(false);
+
+	// =====================================================
+	// Request state
+	// =====================================================
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
 
+	// =====================================================
+	// Customer access restriction
+	// =====================================================
+
+	useEffect(() => {
+		if (!user) {
+			setError(
+				"Unable to resolve user information. You will now be logged out."
+			);
+
+			void logout();
+			navigate("/login", { replace: true });
+			return;
+		}
+
+		if (hasUnrestrictedAccess) {
+			return;
+		}
+
+		if (allowedCustomerNos.length === 0) {
+			setCustomerNo("");
+			setError(
+				"No customer access has been assigned to this account."
+			);
+			return;
+		}
+
+		const storedCustomerNo =
+			getStoredCustomerNo()
+				.trim()
+				.toUpperCase();
+
+		const storedCustomerIsAllowed =
+			allowedCustomerNos.includes(storedCustomerNo);
+
+		setCustomerNo(
+			storedCustomerIsAllowed
+				? storedCustomerNo
+				: allowedCustomerNos[0]
+		);
+	}, [
+		user,
+		logout,
+		navigate,
+		hasUnrestrictedAccess,
+	]);
+
+	// =====================================================
+	// Load sites
+	// =====================================================
+
 	const loadSites = async (pageToLoad = 1) => {
 		setError("");
 
-		const cleanCustomerNo = customerNo.trim().toUpperCase();
+		const cleanCustomerNo =
+			customerNo.trim().toUpperCase();
 
 		if (!cleanCustomerNo) {
 			setError("Customer No is required.");
 			return;
 		}
 
+		if (
+			!hasUnrestrictedAccess &&
+			!allowedCustomerNos.includes(cleanCustomerNo)
+		) {
+			setError(
+				"You do not have access to this customer."
+			);
+			return;
+		}
+
 		if (pageToLoad < 1) {
-			setError("Page number must be 1 or higher.");
+			setError(
+				"Page number must be 1 or higher."
+			);
 			return;
 		}
 
@@ -62,34 +209,112 @@ const Sites = () => {
 			setPage(result.page);
 			setPageInput(result.page.toString());
 			setHasMore(result.hasMore);
-			setStoredCustomerNo(cleanCustomerNo);
+
 			setCustomerNo(cleanCustomerNo);
 			setSearchedCustomerNo(cleanCustomerNo);
-		} catch (err) {
-			setError(err instanceof Error ? err.message : "Failed to load sites.");
+			setStoredCustomerNo(cleanCustomerNo);
+		} catch (error) {
+			setError(
+				error instanceof Error
+					? error.message
+					: "Failed to load sites."
+			);
 		} finally {
 			setIsLoading(false);
 		}
 	};
 
+	// =====================================================
+	// Pagination handlers
+	// =====================================================
+
 	const handlePageSubmit = () => {
 		const requestedPage = Number(pageInput);
 
-		if (!Number.isInteger(requestedPage) || requestedPage < 1) {
-			setError("Please enter a valid page number.");
+		if (
+			!Number.isInteger(requestedPage) ||
+			requestedPage < 1
+		) {
+			setError(
+				"Please enter a valid page number."
+			);
 			return;
 		}
 
-		loadSites(requestedPage);
+		void loadSites(requestedPage);
 	};
 
 	const handleRowsChange = (value: number) => {
-		const cleanValue = Math.min(Math.max(value, 1), 100);
+		const cleanValue =
+			Math.min(
+				Math.max(value, 1),
+				100
+			);
+
 		setSiteRows(cleanValue);
 	};
 
+	// =====================================================
+	// Customer selector
+	// =====================================================
+
+	const renderCustomerSelector = () => {
+		if (hasUnrestrictedAccess) {
+			return (
+				<input
+					type="text"
+					placeholder="Customer No"
+					value={customerNo}
+					onChange={(event) =>
+						setCustomerNo(event.target.value)
+					}
+					onKeyDown={(event) => {
+						if (event.key === "Enter") {
+							void loadSites(1);
+						}
+					}}
+				/>
+			);
+		}
+
+		return (
+			<select
+				value={customerNo}
+				disabled={allowedCustomerNos.length === 0}
+				onChange={(event) =>
+					setCustomerNo(event.target.value)
+				}
+			>
+				{allowedCustomerNos.length === 0 ? (
+					<option value="">
+						No customers available
+					</option>
+				) : (
+					allowedCustomerNos.map(
+						(allowedCustomerNo) => (
+							<option
+								key={allowedCustomerNo}
+								value={allowedCustomerNo}
+							>
+								{allowedCustomerNo}
+							</option>
+						)
+					)
+				)}
+			</select>
+		);
+	};
+
+	// =====================================================
+	// Render
+	// =====================================================
+
 	return (
 		<div className="sites-screen">
+			{/* =================================================
+			    Header
+			================================================= */}
+
 			<div className="sites-header">
 				<div>
 					<p className="sites-eyebrow">
@@ -104,30 +329,30 @@ const Sites = () => {
 						<p className="sites-subtitle">
 							Showing customer{" "}
 							<strong className="shown-customerno-heading">
-								{searchedCustomerNo.toUpperCase()}
+								{searchedCustomerNo}
 							</strong>
 						</p>
 					)}
 				</div>
 
 				<div className="sites-customer-search">
-					<input
-						type="text"
-						placeholder="Customer No"
-						value={customerNo}
-						onChange={(e) => setCustomerNo(e.target.value)}
-						onKeyDown={(e) => {
-							if (e.key === "Enter") {
-								loadSites(1);
-							}
-						}}
-					/>
+					{renderCustomerSelector()}
 
-					<button type="button" onClick={() => loadSites(1)}>
+					<button
+						type="button"
+						disabled={isLoading || !customerNo}
+						onClick={() =>
+							void loadSites(1)
+						}
+					>
 						Search
 					</button>
 				</div>
 			</div>
+
+			{/* =================================================
+			    Filters
+			================================================= */}
 
 			<section className="sites-controls-card">
 				<div className="sites-controls-heading">
@@ -136,9 +361,7 @@ const Sites = () => {
 							Filters
 						</p>
 
-						<h2>
-							Find sites
-						</h2>
+						<h2>Find sites</h2>
 					</div>
 
 					<div className="sites-toolbar">
@@ -150,9 +373,9 @@ const Sites = () => {
 								min={1}
 								max={100}
 								value={siteRows}
-								onChange={(e) =>
+								onChange={(event) =>
 									handleRowsChange(
-										Number(e.target.value)
+										Number(event.target.value)
 									)
 								}
 							/>
@@ -166,7 +389,19 @@ const Sites = () => {
 				/>
 			</section>
 
-			{error && <p className="sites-error">{error}</p>}
+			{/* =================================================
+			    Error
+			================================================= */}
+
+			{error && (
+				<p className="sites-error">
+					{error}
+				</p>
+			)}
+
+			{/* =================================================
+			    Sites table
+			================================================= */}
 
 			<div className="sites-view">
 				<SitesTable
@@ -177,33 +412,43 @@ const Sites = () => {
 				/>
 			</div>
 
+			{/* =================================================
+			    Pagination
+			================================================= */}
+
 			<div className="sites-pagination">
 				<button
 					type="button"
 					className="pagination-button"
 					disabled={page <= 1 || isLoading}
-					onClick={() => loadSites(page - 1)}
+					onClick={() =>
+						void loadSites(page - 1)
+					}
 				>
 					‹
 				</button>
 
 				<div className="page-jump">
 					<span>Page</span>
+
 					<input
 						type="number"
 						min={1}
 						value={pageInput}
-						onChange={(e) => setPageInput(e.target.value)}
-						onKeyDown={(e) => {
-							if (e.key === "Enter") {
+						onChange={(event) =>
+							setPageInput(event.target.value)
+						}
+						onKeyDown={(event) => {
+							if (event.key === "Enter") {
 								handlePageSubmit();
 							}
 						}}
 					/>
+
 					<button
 						type="button"
-						onClick={handlePageSubmit}
 						disabled={isLoading}
+						onClick={handlePageSubmit}
 					>
 						Go
 					</button>
@@ -213,16 +458,24 @@ const Sites = () => {
 					type="button"
 					className="pagination-button"
 					disabled={!hasMore || isLoading}
-					onClick={() => loadSites(page + 1)}
+					onClick={() =>
+						void loadSites(page + 1)
+					}
 				>
 					›
 				</button>
 			</div>
 
+			{/* =================================================
+			    Site details
+			================================================= */}
+
 			{selectedSite && (
 				<SiteDetailsModal
 					site={selectedSite}
-					onClose={() => setSelectedSite(null)}
+					onClose={() =>
+						setSelectedSite(null)
+					}
 				/>
 			)}
 		</div>

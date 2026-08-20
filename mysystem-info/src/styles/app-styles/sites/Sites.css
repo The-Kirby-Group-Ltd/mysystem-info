@@ -74,10 +74,15 @@ h1.sites-heading {
 	gap: 10px;
 }
 
-.sites-customer-search input {
+.sites-customer-search input,
+.sites-customer-search select {
 	width: 220px;
+	height: 41px;
 
-	padding: 10px 12px;
+	box-sizing: border-box;
+
+	margin: 0;
+	padding: 0 12px;
 
 	border: 1px solid rgba(219, 45, 45, 0.35);
 	border-radius: 8px;
@@ -87,27 +92,48 @@ h1.sites-heading {
 
 	font: inherit;
 	font-size: 0.95rem;
+	line-height: 1;
 
 	outline: none;
 
 	transition:
 		border-color 0.2s ease,
-		box-shadow 0.2s ease;
+		box-shadow 0.2s ease,
+		background 0.2s ease;
 }
 
-.sites-customer-search input:hover {
+.sites-customer-search select {
+	cursor: pointer;
+}
+
+.sites-customer-search input:hover,
+.sites-customer-search select:hover {
 	border-color: rgba(219, 45, 45, 0.5);
 }
 
-.sites-customer-search input:focus {
+.sites-customer-search input:focus,
+.sites-customer-search select:focus {
 	border-color: #db2d2d;
 
 	box-shadow:
 		0 0 0 3px rgba(219, 45, 45, 0.12);
 }
 
+.sites-customer-search input:disabled,
+.sites-customer-search select:disabled {
+	background: rgba(0, 0, 0, 0.04);
+	color: #888;
+
+	cursor: not-allowed;
+}
+
 .sites-customer-search button {
-	padding: 10px 16px;
+	height: 41px;
+
+	box-sizing: border-box;
+
+	margin: 0;
+	padding: 0 16px;
 
 	border: none;
 	border-radius: 8px;
@@ -118,6 +144,7 @@ h1.sites-heading {
 	font: inherit;
 	font-size: 0.9rem;
 	font-weight: 600;
+	line-height: 1;
 
 	cursor: pointer;
 
@@ -127,7 +154,7 @@ h1.sites-heading {
 		box-shadow 0.2s ease;
 }
 
-.sites-customer-search button:hover {
+.sites-customer-search button:hover:not(:disabled) {
 	background: #db2d2d;
 
 	transform: translateY(-1px);
@@ -136,8 +163,15 @@ h1.sites-heading {
 		0 5px 14px rgba(219, 45, 45, 0.14);
 }
 
-.sites-customer-search button:active {
+.sites-customer-search button:active:not(:disabled) {
 	transform: translateY(0);
+}
+
+.sites-customer-search button:disabled {
+	opacity: 0.45;
+
+	cursor: not-allowed;
+	transform: none;
 }
 
 
@@ -481,7 +515,8 @@ h1.sites-heading {
 		width: 100%;
 	}
 
-	.sites-customer-search input {
+	.sites-customer-search input,
+	.sites-customer-search select {
 		flex: 1;
 
 		width: auto;
@@ -515,8 +550,9 @@ h1.sites-heading {
 	}
 
 	.sites-customer-search input,
+	.sites-customer-search select,
 	.sites-customer-search button {
-		min-height: 42px;
+		min-height: 41px;
 	}
 
 	.sites-pagination {

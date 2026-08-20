@@ -32,14 +32,18 @@ h1.dashboard-heading {
 
 	margin: 0;
 
+	color: #222;
+
 	font-size: 2.4rem;
 	font-weight: 700;
+	letter-spacing: -0.025em;
 }
 
 .dashboard-subtitle {
 	margin: 6px 0 0;
 
-	color: #555;
+	color: #666;
+
 	font-size: 0.95rem;
 }
 
@@ -63,39 +67,77 @@ h1.dashboard-heading {
 	gap: 9px;
 }
 
+
+/* =========================================================
+   CUSTOMER SEARCH
+   ========================================================= */
+
 .dashboard-customer-search {
 	display: flex;
 	align-items: center;
 	gap: 10px;
 }
 
-.dashboard-customer-search input {
+.dashboard-customer-search input,
+.dashboard-customer-search select {
 	width: 220px;
+	height: 41px;
 
-	padding: 10px 12px;
+	box-sizing: border-box;
+
+	margin: 0;
+	padding: 0 12px;
 
 	border: 1px solid rgba(219, 45, 45, 0.35);
 	border-radius: 8px;
 
 	background: #fff;
+	color: #333;
 
+	font: inherit;
 	font-size: 0.95rem;
+	line-height: 1;
+
 	outline: none;
 
 	transition:
 		border-color 0.2s ease,
-		box-shadow 0.2s ease;
+		box-shadow 0.2s ease,
+		background 0.2s ease;
 }
 
-.dashboard-customer-search input:focus {
+.dashboard-customer-search select {
+	cursor: pointer;
+}
+
+.dashboard-customer-search input:hover,
+.dashboard-customer-search select:hover {
+	border-color: rgba(219, 45, 45, 0.5);
+}
+
+.dashboard-customer-search input:focus,
+.dashboard-customer-search select:focus {
 	border-color: #db2d2d;
 
 	box-shadow:
 		0 0 0 3px rgba(219, 45, 45, 0.12);
 }
 
+.dashboard-customer-search input:disabled,
+.dashboard-customer-search select:disabled {
+	background: rgba(0, 0, 0, 0.04);
+	color: #888;
+
+	cursor: not-allowed;
+}
+
 .dashboard-customer-search button {
-	padding: 10px 16px;
+	height: 41px;
+
+	box-sizing: border-box;
+
+	margin: 0;
+	padding: 0 16px;
 
 	border: none;
 	border-radius: 8px;
@@ -103,16 +145,37 @@ h1.dashboard-heading {
 	background: rgba(219, 45, 45, 0.9);
 	color: #fff;
 
+	font: inherit;
+	font-size: 0.9rem;
 	font-weight: 600;
+	line-height: 1;
 
 	cursor: pointer;
 
 	transition:
-		background 0.2s ease;
+		background 0.2s ease,
+		transform 0.2s ease,
+		box-shadow 0.2s ease;
 }
 
-.dashboard-customer-search button:hover {
+.dashboard-customer-search button:hover:not(:disabled) {
 	background: #db2d2d;
+
+	transform: translateY(-1px);
+
+	box-shadow:
+		0 5px 14px rgba(219, 45, 45, 0.14);
+}
+
+.dashboard-customer-search button:active:not(:disabled) {
+	transform: translateY(0);
+}
+
+.dashboard-customer-search button:disabled {
+	opacity: 0.45;
+
+	cursor: not-allowed;
+	transform: none;
 }
 
 
@@ -133,6 +196,7 @@ h1.dashboard-heading {
 	gap: 7px;
 
 	color: #555;
+
 	font-size: 0.85rem;
 
 	cursor: pointer;
@@ -152,20 +216,31 @@ h1.dashboard-heading {
 
 .dashboard-site-input {
 	width: 150px;
+	height: 36px;
 
-	padding: 8px 10px;
+	box-sizing: border-box;
+
+	padding: 0 10px;
 
 	border: 1px solid rgba(0, 0, 0, 0.14);
 	border-radius: 8px;
 
 	background: #fff;
+	color: #333;
 
+	font: inherit;
 	font-size: 0.88rem;
+
 	outline: none;
 
 	transition:
 		border-color 0.2s ease,
-		box-shadow 0.2s ease;
+		box-shadow 0.2s ease,
+		background 0.2s ease;
+}
+
+.dashboard-site-input:hover:not(:disabled) {
+	border-color: rgba(0, 0, 0, 0.22);
 }
 
 .dashboard-site-input:focus {
@@ -180,6 +255,25 @@ h1.dashboard-heading {
 	color: #999;
 
 	cursor: not-allowed;
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.dashboard-error {
+	margin: 0 0 14px;
+	padding: 10px 12px;
+
+	border: 1px solid rgba(219, 45, 45, 0.22);
+	border-radius: 8px;
+
+	background: rgba(219, 45, 45, 0.06);
+	color: #8f1f1f;
+
+	font-size: 0.86rem;
+	font-weight: 500;
 }
 
 
@@ -475,7 +569,6 @@ h1.dashboard-heading {
 
 	.dashboard-selector-buttons {
 		display: grid;
-
 		grid-template-columns:
 			repeat(3, minmax(0, 1fr));
 	}
@@ -515,7 +608,8 @@ h1.dashboard-heading {
 		width: 100%;
 	}
 
-	.dashboard-customer-search input {
+	.dashboard-customer-search input,
+	.dashboard-customer-search select {
 		flex: 1;
 
 		width: auto;

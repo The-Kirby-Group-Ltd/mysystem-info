@@ -1,11 +1,18 @@
 import "../styles/app-styles/dashboard/Dashboard.css";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { useAuth } from "../data/auth/useAuth";
 
 import {
 	getStoredCustomerNo,
 	setStoredCustomerNo,
 } from "../data/storage/customerStorage";
+
+import {
+	getStoredPreferredDashboard,
+} from "../data/storage/settingsStorage";
 
 import type {
 	CallsKpiSelection,
@@ -22,30 +29,44 @@ import CallsDashboardBoard from "../components/dashboard/boards/CallsDashboardBo
 import CallsDashboardSupportTable from "../components/dashboard/boards/CallsDashboardSupportTable";
 import MaintenanceDashboardBoard from "../components/dashboard/boards/MaintenanceDashboardBoard";
 import SlaDashboardBoard from "../components/dashboard/boards/SlaDashboardBoard";
-import { getStoredPreferredDashboard } from "../data/storage/settingsStorage";
 
 const Dashboard = () => {
+	const { user, logout } = useAuth();
+	const navigate = useNavigate();
+
+	// =====================================================
+	// Access
+	// =====================================================
+
+	const hasUnrestrictedAccess =
+		user?.roles.includes("Administrator") === true ||
+		user?.roles.includes("Staff") === true ||
+		user?.roles.includes("Engineer") === true;
+
+	const allowedCustomerNos =
+		user?.customerNos
+			?.map((customerNo) =>
+				customerNo.trim().toUpperCase()
+			)
+			.filter(Boolean) ?? [];
+
 	// =====================================================
 	// Customer / site
 	// =====================================================
 
 	const [customerNo, setCustomerNo] =
-		useState(() =>
-			getStoredCustomerNo()
-		);
+		useState(() => getStoredCustomerNo());
 
-	const [searchedCustomerNo, setSearchedCustomerNo] = 
-		useState(() =>
-			getStoredCustomerNo()
-		);
+	const [searchedCustomerNo, setSearchedCustomerNo] =
+		useState("");
 
-	const [specificSite, setSpecificSite] = 
+	const [specificSite, setSpecificSite] =
 		useState(false);
 
 	const [siteId, setSiteId] =
 		useState("");
 
-	const [searchedSiteId, setSearchedSiteId] = 
+	const [searchedSiteId, setSearchedSiteId] =
 		useState("");
 
 	// =====================================================
@@ -53,17 +74,21 @@ const Dashboard = () => {
 	// =====================================================
 
 	const [selectedDashboard, setSelectedDashboard] =
-		useState<DashboardSelect>((): DashboardSelect => {
-			var stored = getStoredPreferredDashboard();
-			
+		useState<DashboardSelect>(() => {
+			const stored =
+				getStoredPreferredDashboard();
+
 			switch (stored) {
 				case "calls":
 					return "calls";
+
 				case "system-maintenance":
 					return "system-maintenance";
+
 				case "sla":
 					return "sla";
-				default: 
+
+				default:
 					return "calls";
 			}
 		});
@@ -76,6 +101,60 @@ const Dashboard = () => {
 
 	const [selectedCallsKpi, setSelectedCallsKpi] =
 		useState<CallsKpiSelection>(null);
+
+	const [error, setError] =
+		useState("");
+
+	// =====================================================
+	// Customer access restriction
+	// =====================================================
+
+	useEffect(() => {
+		if (!user) {
+			setError(
+				"Unable to resolve user information. You will now be logged out."
+			);
+
+			void logout();
+			navigate("/login", { replace: true });
+			return;
+		}
+
+		if (hasUnrestrictedAccess) {
+			return;
+		}
+
+		if (allowedCustomerNos.length === 0) {
+			setCustomerNo("");
+			setSearchedCustomerNo("");
+			setError(
+				"No customer access has been assigned to this account."
+			);
+			return;
+		}
+
+		const storedCustomerNo =
+			getStoredCustomerNo()
+				.trim()
+				.toUpperCase();
+
+		const storedCustomerIsAllowed =
+			allowedCustomerNos.includes(storedCustomerNo);
+
+		const allowedCustomerNo =
+			storedCustomerIsAllowed
+				? storedCustomerNo
+				: allowedCustomerNos[0];
+
+		setCustomerNo(allowedCustomerNo);
+		setSearchedCustomerNo(allowedCustomerNo);
+		setStoredCustomerNo(allowedCustomerNo);
+	}, [
+		user,
+		logout,
+		navigate,
+		hasUnrestrictedAccess,
+	]);
 
 	// =====================================================
 	// Helpers
@@ -96,165 +175,128 @@ const Dashboard = () => {
 		}
 	};
 
-	const handleCustomerSearch =
-		() => {
-			const cleanCustomerNo =
-				customerNo
-					.trim()
-					.toUpperCase();
+	// =====================================================
+	// Search
+	// =====================================================
 
-			const cleanSiteId =
-				siteId
-					.trim()
-					.toUpperCase();
+	const handleCustomerSearch = () => {
+		setError("");
 
-			if (!cleanCustomerNo) {
-				return;
-			}
+		const cleanCustomerNo =
+			customerNo.trim().toUpperCase();
 
-			if (
-				specificSite &&
-				!cleanSiteId
-			) {
-				return;
-			}
+		const cleanSiteId =
+			siteId.trim().toUpperCase();
 
-			setCustomerNo(
-				cleanCustomerNo
+		if (!cleanCustomerNo) {
+			setError("Customer No is required.");
+			return;
+		}
+
+		if (
+			!hasUnrestrictedAccess &&
+			!allowedCustomerNos.includes(cleanCustomerNo)
+		) {
+			setError(
+				"You do not have access to this customer."
 			);
+			return;
+		}
 
-			setSearchedCustomerNo(
-				cleanCustomerNo
+		if (
+			specificSite &&
+			!cleanSiteId
+		) {
+			setError(
+				"Site ID is required when Specific Site is selected."
 			);
+			return;
+		}
 
-			setStoredCustomerNo(
-				cleanCustomerNo
-			);
+		setCustomerNo(cleanCustomerNo);
+		setSearchedCustomerNo(cleanCustomerNo);
+		setStoredCustomerNo(cleanCustomerNo);
 
-			if (specificSite) {
-				setSiteId(
-					cleanSiteId
+		if (specificSite) {
+			setSiteId(cleanSiteId);
+			setSearchedSiteId(cleanSiteId);
+		} else {
+			setSiteId("");
+			setSearchedSiteId("");
+		}
+
+		setSelectedCallsKpi(null);
+	};
+
+	// =====================================================
+	// Dashboard renderer
+	// =====================================================
+
+	const renderDashboard = () => {
+		switch (selectedDashboard) {
+			case "calls":
+				return (
+					<CallsDashboardBoard
+						customerNo={searchedCustomerNo}
+						siteId={searchedSiteId}
+						selectedMonth={selectedMonth}
+						selectedYear={selectedYear}
+						onMonthChange={(month) => {
+							setSelectedMonth(month);
+							setSelectedCallsKpi(null);
+						}}
+						onYearChange={(year) => {
+							setSelectedYear(year);
+							setSelectedCallsKpi(null);
+						}}
+						selectedKpi={selectedCallsKpi}
+						onKpiChange={setSelectedCallsKpi}
+					/>
 				);
 
-				setSearchedSiteId(
-					cleanSiteId
+			case "system-maintenance":
+				return (
+					<MaintenanceDashboardBoard
+						customerNo={searchedCustomerNo}
+						siteId={searchedSiteId}
+					/>
 				);
-			} else {
-				setSiteId("");
-				setSearchedSiteId("");
-			}
 
-			setSelectedCallsKpi(
-				null
-			);
-		};
+			case "sla":
+				return (
+					<SlaDashboardBoard
+						customerNo={searchedCustomerNo}
+						siteId={searchedSiteId}
+					/>
+				);
+		}
+	};
 
-	const renderDashboard =
-		() => {
-			switch (
-				selectedDashboard
-			) {
-				case "calls":
-					return (
-						<CallsDashboardBoard
-							customerNo={
-								searchedCustomerNo
-							}
-							siteId={
-								searchedSiteId
-							}
-							selectedMonth={
-								selectedMonth
-							}
-							selectedYear={
-								selectedYear
-							}
-							onMonthChange={(
-								month
-							) => {
-								setSelectedMonth(
-									month
-								);
-
-								setSelectedCallsKpi(
-									null
-								);
-							}}
-							onYearChange={(
-								year
-							) => {
-								setSelectedYear(
-									year
-								);
-
-								setSelectedCallsKpi(
-									null
-								);
-							}}
-							selectedKpi={
-								selectedCallsKpi
-							}
-							onKpiChange={
-								setSelectedCallsKpi
-							}
-						/>
-					);
-
-				case "system-maintenance":
-					return (
-						<MaintenanceDashboardBoard
-							customerNo={
-								searchedCustomerNo
-							}
-							siteId={
-								searchedSiteId
-							}
-						/>
-					);
-
-				case "sla":
-					return (
-						<SlaDashboardBoard
-							customerNo={
-								searchedCustomerNo
-							}
-							siteId={
-								searchedSiteId
-							}
-						/>
-					);
-			}
-		};
+	// =====================================================
+	// Render
+	// =====================================================
 
 	return (
 		<div className="dashboard-screen">
 			<DashboardHeader
-				customerNo={
-					customerNo
-				}
-				searchedCustomerNo={
-					searchedCustomerNo
-				}
-				onCustomerNoChange={
-					setCustomerNo
-				}
-				specificSite={
-					specificSite
-				}
+				customerNo={customerNo}
+				searchedCustomerNo={searchedCustomerNo}
+				specificSite={specificSite}
 				siteId={siteId}
-				searchedSiteId={
-					searchedSiteId
-				}
-				onSpecificSiteChange={
-					setSpecificSite
-				}
-				onSiteIdChange={
-					setSiteId
-				}
-				onSearch={
-					handleCustomerSearch
-				}
+				searchedSiteId={searchedSiteId}
+				hasUnrestrictedAccess={hasUnrestrictedAccess}
+				allowedCustomerNos={allowedCustomerNos}
+				onCustomerNoChange={setCustomerNo}
+				onSpecificSiteChange={setSpecificSite}
+				onSiteIdChange={setSiteId}
+				onSearch={handleCustomerSearch}
 			/>
+
+			{error && (
+				<p className="dashboard-error">
+					{error}
+				</p>
+			)}
 
 			<DashboardWelcome />
 
@@ -275,9 +317,7 @@ const Dashboard = () => {
 
 						{searchedCustomerNo && (
 							<span className="dashboard-customer-badge">
-								{
-									searchedCustomerNo
-								}
+								{searchedCustomerNo}
 							</span>
 						)}
 					</div>
@@ -288,56 +328,30 @@ const Dashboard = () => {
 				</div>
 
 				<DashboardSelector
-					selectedDashboard={
-						selectedDashboard
-					}
-					onSelect={(
-						dashboard
-					) => {
-						setSelectedDashboard(
-							dashboard
-						);
-
-						setSelectedCallsKpi(
-							null
-						);
+					selectedDashboard={selectedDashboard}
+					onSelect={(dashboard) => {
+						setSelectedDashboard(dashboard);
+						setSelectedCallsKpi(null);
 					}}
 				/>
 			</section>
 
 			<DashboardDataSection
-				title={
-					getDashboardTitle(
-						selectedDashboard
-					)
-				}
+				title={getDashboardTitle(selectedDashboard)}
 			>
-				{selectedDashboard ===
-				"calls" ? (
+				{selectedDashboard === "calls" ? (
 					<CallsDashboardSupportTable
-						customerNo={
-							searchedCustomerNo
-						}
-						siteId={
-							searchedSiteId
-						}
-						dataMonth={
-							selectedMonth
-						}
-						dataYear={
-							selectedYear
-						}
-						selectedKpi={
-							selectedCallsKpi
-						}
+						customerNo={searchedCustomerNo}
+						siteId={searchedSiteId}
+						dataMonth={selectedMonth}
+						dataYear={selectedYear}
+						selectedKpi={selectedCallsKpi}
 					/>
 				) : (
 					<div className="dashboard-data-placeholder">
 						<p>
-							Detailed supporting
-							records for this
-							dashboard will appear
-							here.
+							Detailed supporting records for this
+							dashboard will appear here.
 						</p>
 					</div>
 				)}

@@ -1,6 +1,11 @@
 import "../styles/app-styles/calls/Calls.css";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { useAuth } from "../data/auth/useAuth";
+import { callsApi } from "../data/api/callsApi";
+
 import CallsFilterPanel from "../components/calls/CallsFilterPanel";
 import CallsTable from "../components/calls/CallsTable";
 import CallDetailsModal from "../components/calls/CallDetailsModal";
@@ -10,12 +15,18 @@ import {
 	setStoredCustomerNo,
 } from "../data/storage/customerStorage";
 
+import {
+	getStoredPreferredPageSize,
+} from "../data/storage/settingsStorage";
+
 import type {
 	Call,
 	CallFilters,
 } from "../data/types/callTypes";
-import { callsApi } from "../data/api/callsApi";
-import { getStoredPreferredPageSize } from "../data/storage/settingsStorage";
+
+// =========================================================
+// Defaults
+// =========================================================
 
 const emptyFilters: CallFilters = {
 	siteId: "",
@@ -25,20 +36,59 @@ const emptyFilters: CallFilters = {
 };
 
 const Calls = () => {
+	const { user, logout } = useAuth();
+	const navigate = useNavigate();
+
+	// =====================================================
+	// Access
+	// =====================================================
+
+	const hasUnrestrictedAccess =
+		user?.roles.includes("Administrator") === true ||
+		user?.roles.includes("Staff") === true ||
+		user?.roles.includes("Engineer") === true;
+
+	const allowedCustomerNos =
+		user?.customerNos
+			?.map((customerNo) =>
+				customerNo.trim().toUpperCase()
+			)
+			.filter(Boolean) ?? [];
+
+	// =====================================================
+	// Customer state
+	// =====================================================
+
 	const [customerNo, setCustomerNo] = useState(
 		() => getStoredCustomerNo()
 	);
-	const [searchedCustomerNo, setSearchedCustomerNo] = useState("");
+
+	const [searchedCustomerNo, setSearchedCustomerNo] =
+		useState("");
+
+	// =====================================================
+	// Filter state
+	// =====================================================
 
 	const [filters, setFilters] =
 		useState<CallFilters>(emptyFilters);
 
+	// =====================================================
+	// Call state
+	// =====================================================
+
 	const [calls, setCalls] = useState<Call[]>([]);
+
 	const [selectedCall, setSelectedCall] =
 		useState<Call | null>(null);
 
+	// =====================================================
+	// Pagination state
+	// =====================================================
+
 	const [page, setPage] = useState(1);
 	const [pageInput, setPageInput] = useState("1");
+
 	const [rowsToShow, setRowsToShow] = useState(() => {
 		const stored = getStoredPreferredPageSize();
 
@@ -47,7 +97,7 @@ const Calls = () => {
 				return 25;
 			case 30:
 				return 30;
-			case 50: 
+			case 50:
 				return 50;
 			case 100:
 				return 100;
@@ -55,23 +105,92 @@ const Calls = () => {
 				return 10;
 		}
 	});
+
 	const [hasMore, setHasMore] = useState(false);
+
+	// =====================================================
+	// Request state
+	// =====================================================
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
 
+	// =====================================================
+	// Customer access restriction
+	// =====================================================
+
+	useEffect(() => {
+		if (!user) {
+			setError(
+				"Unable to resolve user information. You will now be logged out."
+			);
+
+			void logout();
+			navigate("/login", { replace: true });
+			return;
+		}
+
+		if (hasUnrestrictedAccess) {
+			return;
+		}
+
+		if (allowedCustomerNos.length === 0) {
+			setCustomerNo("");
+			setError(
+				"No customer access has been assigned to this account."
+			);
+			return;
+		}
+
+		const storedCustomerNo =
+			getStoredCustomerNo()
+				.trim()
+				.toUpperCase();
+
+		const storedCustomerIsAllowed =
+			allowedCustomerNos.includes(storedCustomerNo);
+
+		setCustomerNo(
+			storedCustomerIsAllowed
+				? storedCustomerNo
+				: allowedCustomerNos[0]
+		);
+	}, [
+		user,
+		logout,
+		navigate,
+		hasUnrestrictedAccess,
+	]);
+
+	// =====================================================
+	// Load calls
+	// =====================================================
+
 	const loadCalls = async (pageToLoad = 1) => {
 		setError("");
 
-		const cleanCustomerNo = customerNo.trim().toUpperCase();
+		const cleanCustomerNo =
+			customerNo.trim().toUpperCase();
 
 		if (!cleanCustomerNo) {
 			setError("Customer No is required.");
 			return;
 		}
 
+		if (
+			!hasUnrestrictedAccess &&
+			!allowedCustomerNos.includes(cleanCustomerNo)
+		) {
+			setError(
+				"You do not have access to this customer."
+			);
+			return;
+		}
+
 		if (pageToLoad < 1) {
-			setError("Page number must be 1 or higher.");
+			setError(
+				"Page number must be 1 or higher."
+			);
 			return;
 		}
 
@@ -94,9 +213,10 @@ const Calls = () => {
 			setPage(result.page);
 			setPageInput(result.page.toString());
 			setHasMore(result.hasMore);
-			setStoredCustomerNo(cleanCustomerNo);
+
 			setCustomerNo(cleanCustomerNo);
 			setSearchedCustomerNo(cleanCustomerNo);
+			setStoredCustomerNo(cleanCustomerNo);
 		} catch (error) {
 			setError(
 				error instanceof Error
@@ -108,24 +228,104 @@ const Calls = () => {
 		}
 	};
 
-	const handlePageSubmit = () => {
-		const requestedPage = Number(pageInput);
+	// =====================================================
+	// Pagination handlers
+	// =====================================================
 
-		if (!Number.isInteger(requestedPage) || requestedPage < 1) {
-			setError("Please enter a valid page number.");
+	const handlePageSubmit = () => {
+		const requestedPage =
+			Number(pageInput);
+
+		if (
+			!Number.isInteger(requestedPage) ||
+			requestedPage < 1
+		) {
+			setError(
+				"Please enter a valid page number."
+			);
 			return;
 		}
 
-		loadCalls(requestedPage);
+		void loadCalls(requestedPage);
 	};
 
 	const handleRowsChange = (value: number) => {
-		const cleanValue = Math.min(Math.max(value, 1), 100);
+		const cleanValue =
+			Math.min(
+				Math.max(value, 1),
+				100
+			);
+
 		setRowsToShow(cleanValue);
 	};
 
+	// =====================================================
+	// Customer selector
+	// =====================================================
+
+	const renderCustomerSelector = () => {
+		if (hasUnrestrictedAccess) {
+			return (
+				<input
+					type="text"
+					placeholder="Customer No"
+					value={customerNo}
+					onChange={(event) =>
+						setCustomerNo(
+							event.target.value
+						)
+					}
+					onKeyDown={(event) => {
+						if (event.key === "Enter") {
+							void loadCalls(1);
+						}
+					}}
+				/>
+			);
+		}
+
+		return (
+			<select
+				value={customerNo}
+				disabled={
+					allowedCustomerNos.length === 0
+				}
+				onChange={(event) =>
+					setCustomerNo(
+						event.target.value
+					)
+				}
+			>
+				{allowedCustomerNos.length === 0 ? (
+					<option value="">
+						No customers available
+					</option>
+				) : (
+					allowedCustomerNos.map(
+						(allowedCustomerNo) => (
+							<option
+								key={allowedCustomerNo}
+								value={allowedCustomerNo}
+							>
+								{allowedCustomerNo}
+							</option>
+						)
+					)
+				)}
+			</select>
+		);
+	};
+
+	// =====================================================
+	// Render
+	// =====================================================
+
 	return (
 		<div className="calls-screen">
+			{/* =================================================
+			    Header
+			================================================= */}
+
 			<div className="calls-header">
 				<div>
 					<p className="calls-eyebrow">
@@ -140,35 +340,33 @@ const Calls = () => {
 						<p className="calls-subtitle">
 							Showing customer{" "}
 							<strong>
-								{searchedCustomerNo.toUpperCase()}
+								{searchedCustomerNo}
 							</strong>
 						</p>
 					)}
 				</div>
 
 				<div className="calls-customer-search">
-					<input
-						type="text"
-						placeholder="Customer No"
-						value={customerNo}
-						onChange={(event) =>
-							setCustomerNo(event.target.value)
-						}
-						onKeyDown={(event) => {
-							if (event.key === "Enter") {
-								loadCalls(1);
-							}
-						}}
-					/>
+					{renderCustomerSelector()}
 
 					<button
 						type="button"
-						onClick={() => loadCalls(1)}
+						disabled={
+							isLoading ||
+							!customerNo
+						}
+						onClick={() =>
+							void loadCalls(1)
+						}
 					>
 						Search
 					</button>
 				</div>
 			</div>
+
+			{/* =================================================
+			    Filters
+			================================================= */}
 
 			<section className="calls-controls-card">
 				<div className="calls-controls-heading">
@@ -177,9 +375,7 @@ const Calls = () => {
 							Filters
 						</p>
 
-						<h2>
-							Find calls
-						</h2>
+						<h2>Find calls</h2>
 					</div>
 
 					<div className="calls-toolbar">
@@ -193,7 +389,9 @@ const Calls = () => {
 								value={rowsToShow}
 								onChange={(event) =>
 									handleRowsChange(
-										Number(event.target.value)
+										Number(
+											event.target.value
+										)
 									)
 								}
 							/>
@@ -207,9 +405,19 @@ const Calls = () => {
 				/>
 			</section>
 
+			{/* =================================================
+			    Error
+			================================================= */}
+
 			{error && (
-				<p className="calls-error">{error}</p>
+				<p className="calls-error">
+					{error}
+				</p>
 			)}
+
+			{/* =================================================
+			    Calls table
+			================================================= */}
 
 			<div className="calls-view">
 				<CallsTable
@@ -220,12 +428,21 @@ const Calls = () => {
 				/>
 			</div>
 
+			{/* =================================================
+			    Pagination
+			================================================= */}
+
 			<div className="calls-pagination">
 				<button
 					type="button"
 					className="calls-pagination-button"
-					disabled={page <= 1 || isLoading}
-					onClick={() => loadCalls(page - 1)}
+					disabled={
+						page <= 1 ||
+						isLoading
+					}
+					onClick={() =>
+						void loadCalls(page - 1)
+					}
 				>
 					‹
 				</button>
@@ -238,7 +455,9 @@ const Calls = () => {
 						min={1}
 						value={pageInput}
 						onChange={(event) =>
-							setPageInput(event.target.value)
+							setPageInput(
+								event.target.value
+							)
 						}
 						onKeyDown={(event) => {
 							if (event.key === "Enter") {
@@ -249,8 +468,10 @@ const Calls = () => {
 
 					<button
 						type="button"
-						onClick={handlePageSubmit}
 						disabled={isLoading}
+						onClick={
+							handlePageSubmit
+						}
 					>
 						Go
 					</button>
@@ -259,17 +480,28 @@ const Calls = () => {
 				<button
 					type="button"
 					className="calls-pagination-button"
-					disabled={!hasMore || isLoading}
-					onClick={() => loadCalls(page + 1)}
+					disabled={
+						!hasMore ||
+						isLoading
+					}
+					onClick={() =>
+						void loadCalls(page + 1)
+					}
 				>
 					›
 				</button>
 			</div>
 
+			{/* =================================================
+			    Call details
+			================================================= */}
+
 			{selectedCall && (
 				<CallDetailsModal
 					call={selectedCall}
-					onClose={() => setSelectedCall(null)}
+					onClose={() =>
+						setSelectedCall(null)
+					}
 				/>
 			)}
 		</div>
