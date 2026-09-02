@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "../styles/app-styles/settings/Settings.css";
 
 import PortalPreferencesCard from "../components/settings/PortalPreferencesCard";
+import AccountSettingsCard from "../components/settings/AccountSettingsCard";
 
 const Settings = () => {
 	const { user, logout } = useAuth();
@@ -77,15 +78,7 @@ const Settings = () => {
 
 			<div className="settings-sections">
 				<section className="settings-card account-settings-section">
-					<div className="settings-card-heading">
-                        <h2>
-                            Account Information
-                        </h2>
-					</div>
-
-					<div className="settings-card-content">
-						{/* Account information/settings will go here */}
-					</div>
+					<AccountSettingsCard />
 				</section>
 
 				<section className="settings-card portal-preferences-section">
