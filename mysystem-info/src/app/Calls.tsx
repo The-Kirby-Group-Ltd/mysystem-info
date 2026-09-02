@@ -1,6 +1,10 @@
 import "../styles/app-styles/calls/Calls.css";
 
-import { useEffect, useState } from "react";
+import { 
+	useMemo,
+	useEffect, 
+	useState ,
+} from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../data/auth/useAuth";
@@ -24,6 +28,12 @@ import type {
 	CallFilters,
 } from "../data/types/callTypes";
 
+import {
+	hasUnrestrictedAccess,
+	getUserCustomerNos,
+	canAccessCustomer
+} from "../data/auth/accessHelpers";
+
 // =========================================================
 // Defaults
 // =========================================================
@@ -43,17 +53,18 @@ const Calls = () => {
 	// Access
 	// =====================================================
 
-	const hasUnrestrictedAccess =
-		user?.roles.includes("Administrator") === true ||
-		user?.roles.includes("Staff") === true ||
-		user?.roles.includes("Engineer") === true;
+	const unrestricted =
+		user
+			? hasUnrestrictedAccess(user)
+			: false;
 
-	const allowedCustomerNos =
-		user?.customerNos
-			?.map((customerNo) =>
-				customerNo.trim().toUpperCase()
-			)
-			.filter(Boolean) ?? [];
+	const allowedCustomerNos = 
+		useMemo(() => 
+			user 
+				? getUserCustomerNos(user)
+				: [],
+			[user]
+		);
 
 	// =====================================================
 	// Customer state
@@ -121,45 +132,39 @@ const Calls = () => {
 
 	useEffect(() => {
 		if (!user) {
-			setError(
-				"Unable to resolve user information. You will now be logged out."
-			);
+			setError("Unable to resolve user information. You will now be logged out.");
 
 			void logout();
 			navigate("/login", { replace: true });
 			return;
 		}
 
-		if (hasUnrestrictedAccess) {
+		if (unrestricted)
 			return;
-		}
 
 		if (allowedCustomerNos.length === 0) {
 			setCustomerNo("");
-			setError(
-				"No customer access has been assigned to this account."
-			);
+			setError("No customer access has been assigned to this account.");
 			return;
 		}
 
-		const storedCustomerNo =
+		const storedCustomerNo = 
 			getStoredCustomerNo()
 				.trim()
 				.toUpperCase();
 
-		const storedCustomerIsAllowed =
-			allowedCustomerNos.includes(storedCustomerNo);
-
-		setCustomerNo(
-			storedCustomerIsAllowed
+		const initialCustomerNo = 
+			canAccessCustomer(user, storedCustomerNo)
 				? storedCustomerNo
-				: allowedCustomerNos[0]
-		);
+				: allowedCustomerNos[0];
+
+		setCustomerNo(initialCustomerNo);
 	}, [
 		user,
 		logout,
 		navigate,
-		hasUnrestrictedAccess,
+		unrestricted,
+		allowedCustomerNos,
 	]);
 
 	// =====================================================
@@ -178,8 +183,13 @@ const Calls = () => {
 		}
 
 		if (
-			!hasUnrestrictedAccess &&
-			!allowedCustomerNos.includes(cleanCustomerNo)
+			!user || (
+				!unrestricted &&
+				!canAccessCustomer(
+					user,
+					cleanCustomerNo
+				)
+			)
 		) {
 			setError(
 				"You do not have access to this customer."
@@ -264,7 +274,7 @@ const Calls = () => {
 	// =====================================================
 
 	const renderCustomerSelector = () => {
-		if (hasUnrestrictedAccess) {
+		if (unrestricted) {
 			return (
 				<input
 					type="text"
@@ -287,9 +297,7 @@ const Calls = () => {
 		return (
 			<select
 				value={customerNo}
-				disabled={
-					allowedCustomerNos.length === 0
-				}
+				disabled={allowedCustomerNos.length === 0}
 				onChange={(event) =>
 					setCustomerNo(
 						event.target.value

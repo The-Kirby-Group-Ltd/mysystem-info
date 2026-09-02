@@ -1,6 +1,10 @@
 import "../styles/app-styles/dashboard/Dashboard.css";
 
-import { useEffect, useState } from "react";
+import { 
+	useMemo,
+	useEffect, 
+	useState ,
+} from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../data/auth/useAuth";
@@ -20,6 +24,12 @@ import type {
 	DashboardSelect,
 } from "../data/types/dashboardTypes";
 
+import {
+	hasUnrestrictedAccess,
+	getUserCustomerNos,
+	canAccessCustomer
+} from "../data/auth/accessHelpers";
+
 import DashboardHeader from "../components/dashboard/general/DashboardHeader";
 import DashboardWelcome from "../components/dashboard/general/DashboardWelcome";
 import DashboardSelector from "../components/dashboard/general/DashboardSelector";
@@ -38,17 +48,18 @@ const Dashboard = () => {
 	// Access
 	// =====================================================
 
-	const hasUnrestrictedAccess =
-		user?.roles.includes("Administrator") === true ||
-		user?.roles.includes("Staff") === true ||
-		user?.roles.includes("Engineer") === true;
+	const unrestricted = 
+		user 
+			? hasUnrestrictedAccess(user)
+			: false;
 
-	const allowedCustomerNos =
-		user?.customerNos
-			?.map((customerNo) =>
-				customerNo.trim().toUpperCase()
-			)
-			.filter(Boolean) ?? [];
+	const allowedCustomerNos = 
+		useMemo(() => 
+			user 
+				? getUserCustomerNos(user)
+				: [],
+		[user]
+	);
 
 	// =====================================================
 	// Customer / site
@@ -120,7 +131,7 @@ const Dashboard = () => {
 			return;
 		}
 
-		if (hasUnrestrictedAccess) {
+		if (unrestricted) {
 			return;
 		}
 
@@ -138,22 +149,20 @@ const Dashboard = () => {
 				.trim()
 				.toUpperCase();
 
-		const storedCustomerIsAllowed =
-			allowedCustomerNos.includes(storedCustomerNo);
-
-		const allowedCustomerNo =
-			storedCustomerIsAllowed
+		const initialCustomerNo =
+			canAccessCustomer(user, storedCustomerNo)
 				? storedCustomerNo
 				: allowedCustomerNos[0];
 
-		setCustomerNo(allowedCustomerNo);
-		setSearchedCustomerNo(allowedCustomerNo);
-		setStoredCustomerNo(allowedCustomerNo);
+		setCustomerNo(initialCustomerNo);
+		setSearchedCustomerNo(initialCustomerNo);
+		setStoredCustomerNo(initialCustomerNo);
 	}, [
 		user,
 		logout,
 		navigate,
-		hasUnrestrictedAccess,
+		unrestricted,
+		allowedCustomerNos,
 	]);
 
 	// =====================================================
@@ -188,14 +197,26 @@ const Dashboard = () => {
 		const cleanSiteId =
 			siteId.trim().toUpperCase();
 
+		if (!user) {
+			setError(
+				"Unable to resolve user information."
+			);
+			return;
+		}
+
 		if (!cleanCustomerNo) {
-			setError("Customer No is required.");
+			setError(
+				"Customer No is required."
+			);
 			return;
 		}
 
 		if (
-			!hasUnrestrictedAccess &&
-			!allowedCustomerNos.includes(cleanCustomerNo)
+			!unrestricted &&
+			!canAccessCustomer(
+				user,
+				cleanCustomerNo
+			)
 		) {
 			setError(
 				"You do not have access to this customer."
@@ -284,7 +305,7 @@ const Dashboard = () => {
 				specificSite={specificSite}
 				siteId={siteId}
 				searchedSiteId={searchedSiteId}
-				hasUnrestrictedAccess={hasUnrestrictedAccess}
+				hasUnrestrictedAccess={unrestricted}
 				allowedCustomerNos={allowedCustomerNos}
 				onCustomerNoChange={setCustomerNo}
 				onSpecificSiteChange={setSpecificSite}

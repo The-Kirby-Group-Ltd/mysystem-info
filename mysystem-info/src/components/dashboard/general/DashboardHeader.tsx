@@ -45,11 +45,13 @@ const DashboardHeader = ({
 					placeholder="Customer No"
 					value={customerNo}
 					onChange={(event) =>
-						onCustomerNoChange(event.target.value)
+						onCustomerNoChange(
+							event.target.value
+						)
 					}
 					onKeyDown={(event) => {
 						if (event.key === "Enter") {
-							onSearch();
+							void onSearch();
 						}
 					}}
 				/>
@@ -61,7 +63,9 @@ const DashboardHeader = ({
 				value={customerNo}
 				disabled={allowedCustomerNos.length === 0}
 				onChange={(event) =>
-					onCustomerNoChange(event.target.value)
+					onCustomerNoChange(
+						event.target.value
+					)
 				}
 			>
 				{allowedCustomerNos.length === 0 ? (
