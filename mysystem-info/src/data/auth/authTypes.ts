@@ -32,3 +32,10 @@ export type AuthState = {
 	isAuthenticated: boolean;
 	isLoading: boolean;
 };
+
+export type ChangePasswordRequest = {
+	oldPassword: string;
+	newPassword: string;
+	verificationCode: string;
+};
+
