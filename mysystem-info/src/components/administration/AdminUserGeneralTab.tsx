@@ -1,0 +1,3 @@
+const AdminUserGeneralTab = () => {
+    return;
+}
