@@ -297,9 +297,7 @@ const Administration = () => {
 	// =====================================================
 
 	const handleUserUpdated = () => {
-		setSelectedUser(null);
-
-		void loadUsers(filters);
+		void loadUsers();
 	};
 
 	// =====================================================

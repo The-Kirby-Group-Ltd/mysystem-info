@@ -1,3 +1,13 @@
+import "../../styles/app-styles/administration/AdminUserModal.css";
+
+import { useState, useEffect } from "react";
+
+import { adminApi } from "../../data/api/adminApi";
+
+import AdminUserGeneralTab from "./AdminUserGeneralTab";
+import AdminUserAccessTab from "./AdminUserAccessTab";
+import AdminUserSecurityTab from "./AdminUserSecurityTab";
+
 import type {
 	AdminUser,
 } from "../../data/types/adminTypes";
@@ -8,11 +18,86 @@ type AdminUserModalProps = {
 	onUserUpdated: () => void;
 };
 
+type AdminUserModalTab = 
+	| "general"
+	| "access"
+	| "security";
+
 const AdminUserModal = ({
 	user,
 	onClose,
 	onUserUpdated,
 }: AdminUserModalProps) => {
+
+	// =====================================================
+	// State
+	// =====================================================
+
+	const [userDetails, setUserDetails] = useState<AdminUser>(user);
+	const [activeTab, setActiveTab] = useState<AdminUserModalTab>("general");
+
+	const [isLoadingUser, setIsLoadingUser] = useState(false);
+	const [error, setError] = useState("");
+
+	// =====================================================
+	// Allow closing with Esc
+	// =====================================================
+
+	useEffect(() => {
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if (event.key === "Escape") {
+				onClose();
+			}
+		};
+
+		const previousOverflow = document.body.style.overflow;
+
+		document.body.style.overflow = "hidden";
+		window.addEventListener("keydown", handleKeyDown);
+
+		return () => {
+			document.body.style.overflow = previousOverflow;
+			window.removeEventListener("keydown", handleKeyDown);
+		};
+	}, [onClose]);
+
+	// =====================================================
+	// Load the user's full details
+	// =====================================================
+
+	useEffect(() => {
+		let isCancelled = false;
+
+		const loadUserDetails = async () => {
+			setIsLoadingUser(true);
+			setError("");
+
+			try {
+				const fullUser = await adminApi.getUserById(user?.userId);
+
+				if (!isCancelled) {
+					setUserDetails(fullUser);
+				}
+			} catch (error) {
+				if (!isCancelled) 
+					setError(error instanceof Error
+						? error.message
+						: "Failed to load the full user details.");
+			} finally {
+				if (!isCancelled) 
+					setIsLoadingUser(false);
+			}
+		}
+
+		setUserDetails(user);
+		setActiveTab("general");
+		loadUserDetails();
+
+		return () => {
+			isCancelled = true;
+		}
+	}, [user]);
+
 	// =====================================================
 	// Render
 	// =====================================================
@@ -37,7 +122,7 @@ const AdminUserModal = ({
 				    Header
 				========================================= */}
 
-				<div className="admin-user-modal-header">
+				<header className="admin-user-modal-header">
 					<div>
 						<p className="admin-user-modal-eyebrow">
 							User Administration
@@ -61,33 +146,69 @@ const AdminUserModal = ({
 					>
 						×
 					</button>
-				</div>
+				</header>
+
+				{/* =========================================
+				    Tab buttons
+				========================================= */}
+
+				<nav 
+					className="admin-user-modal-tabs"
+					aria-label="User details/interactives sections"
+				>
+					<button
+						type="button"
+						className={
+							activeTab === "general"
+								? "admin-user-modal-tab admin-user-modal-tab-active"
+								: "admin-user-modal-tab"
+						}
+						onClick={() => setActiveTab("general")}
+					>
+						General
+					</button>
+
+					<button
+						type="button"
+						className={
+							activeTab === "access"
+								? "admin-user-modal-tab admin-user-modal-tab-active"
+								: "admin-user-modal-tab"
+						}
+						onClick={() => setActiveTab("access")}
+					>
+						Access Rights
+					</button>
+
+					<button
+						type="button"
+						className={
+							activeTab === "security"
+								? "admin-user-modal-tab admin-user-modal-tab-active"
+								: "admin-user-modal-tab"
+						}
+						onClick={() => setActiveTab("security")}
+					>
+						Security
+					</button>
+				</nav>
 
 				{/* =========================================
 				    Content
 				========================================= */}
 
 				<div className="admin-user-modal-content">
-					<p>
-						User administration controls will go here.
-					</p>
+					{activeTab === "general" && (
+						<AdminUserGeneralTab />
+					)}
 
-					<p>
-						Username: <strong>{user.username}</strong>
-					</p>
+					{activeTab === "access" && (
+						<AdminUserAccessTab />
+					)}
 
-					<p>
-						Email: <strong>{user.email}</strong>
-					</p>
-
-					<p>
-						Status:{" "}
-						<strong>
-							{user.isActive
-								? "Active"
-								: "Inactive"}
-						</strong>
-					</p>
+					{activeTab === "security" && (
+						<AdminUserSecurityTab />
+					)}
 				</div>
 
 				{/* =========================================
