@@ -321,10 +321,6 @@ const Administration = () => {
 					<h1 className="admin-heading">
 						Administration
 					</h1>
-
-					<p className="admin-subtitle">
-						Manage portal users and access.
-					</p>
 				</div>
 			</div>
 
