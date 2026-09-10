@@ -199,7 +199,10 @@ const AdminUserModal = ({
 
 				<div className="admin-user-modal-content">
 					{activeTab === "general" && (
-						<AdminUserGeneralTab />
+						<AdminUserGeneralTab 
+							user={user}
+							isLoading={isLoadingUser}
+						/>
 					)}
 
 					{activeTab === "access" && (

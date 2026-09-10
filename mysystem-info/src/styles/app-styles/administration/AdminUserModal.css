@@ -28,7 +28,7 @@
 	flex-direction: column;
 
 	width: min(960px, 96vw);
-	height: min(760px, 92vh);
+	height: min(760px, 86vh);
 
 	overflow: hidden;
 
@@ -374,6 +374,72 @@
 	background: #db2d2d;
 
 	transform: translateY(-1px);
+}
+
+/* =========================================================
+   DETAIL SECTIONS
+   ========================================================= */
+
+.user-detail-section {
+	padding: 20px;
+
+	border: 1px solid rgba(0, 0, 0, 0.09);
+	border-radius: 10px;
+
+	background: #fff;
+}
+
+.user-detail-section h3 {
+	margin: 0 0 16px;
+
+	color: #252525;
+
+	font-size: 1rem;
+	font-weight: 700;
+}
+
+
+/* =========================================================
+   DETAIL GRID
+   ========================================================= */
+
+.user-detail-grid {
+	display: grid;
+
+	grid-template-columns:
+		repeat(2, minmax(0, 1fr));
+
+	gap: 16px 24px;
+}
+
+.user-detail-field {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+
+	min-width: 0;
+}
+
+.user-detail-field-wide {
+	grid-column: 1 / -1;
+}
+
+.user-detail-field > span {
+	color: #777;
+
+	font-size: 0.7rem;
+	font-weight: 700;
+	letter-spacing: 0.045em;
+	text-transform: uppercase;
+}
+
+.user-detail-field strong {
+	color: #2b2b2b;
+
+	font-size: 0.9rem;
+	font-weight: 600;
+
+	overflow-wrap: anywhere;
 }
 
 /* =========================================================
