@@ -198,9 +198,18 @@ const AdminUserModal = ({
 				========================================= */}
 
 				<div className="admin-user-modal-content">
+					{error && (
+						<div 
+							className="user-modal-error"
+							role="alert"	
+						>
+							<p>{error}</p>
+						</div>
+					)}
+
 					{activeTab === "general" && (
 						<AdminUserGeneralTab 
-							user={user}
+							user={userDetails}
 							isLoading={isLoadingUser}
 						/>
 					)}
