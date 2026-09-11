@@ -59,6 +59,33 @@ h1.admin-heading {
 	font-size: 0.95rem;
 }
 
+.admin-create-user-button {
+	min-height: 38px;
+	padding: 8px 14px;
+	border-radius: 8px;
+	font: inherit;
+	font-size: 0.82rem;
+	font-weight: 700;
+	cursor: pointer;
+	transition:
+		background 0.2s ease,
+		border-color 0.2s ease,
+		color 0.2s ease,
+		transform 0.2s ease;
+	border: 1px solid rgba(219, 45, 45, 0.2);
+	background: rgba(219, 45, 45, 0.9);
+	color: #fff;
+}
+
+.admin-create-user-button:hover {
+	background: #db2d2d;
+
+	transform: translateY(-1px);
+
+	box-shadow:
+		0 5px 14px rgba(219, 45, 45, 0.14);
+}
+
 
 /* =========================================================
    FILTER / CONTROL CARD

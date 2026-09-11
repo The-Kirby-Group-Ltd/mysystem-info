@@ -18,6 +18,8 @@ import {
 	getStoredPreferredPageSize,
 } from "../data/storage/settingsStorage";
 
+import AdminCreateUserModal 
+	from "../components/administration/AdminCreateUserModal";
 import AdminUserModal
 	from "../components/administration/AdminUserModal";
 import AdminUsersFilterTable
@@ -42,26 +44,21 @@ const Administration = () => {
 	const navigate = useNavigate();
 
 	// =====================================================
-	// User state
+	// State
 	// =====================================================
 
+	// User state
 	const [users, setUsers] =
 		useState<AdminUser[]>([]);
 
 	const [selectedUser, setSelectedUser] =
 		useState<AdminUser | null>(null);
 
-	// =====================================================
 	// Filter state
-	// =====================================================
-
 	const [filters, setFilters] =
 		useState<AdminUserFilters>(emptyFilters);
 
-	// =====================================================
 	// Pagination state
-	// =====================================================
-
 	const [page, setPage] =
 		useState(1);
 
@@ -91,15 +88,15 @@ const Administration = () => {
 			}
 		});
 
-	// =====================================================
-	// Request state
-	// =====================================================
-
 	const [error, setError] =
 		useState("");
 
 	const [isLoading, setIsLoading] =
 		useState(false);
+
+	// user creation modal
+	const [showCreateUserModal, setShowCreateUserModal] =
+	useState(false);
 
 	// =====================================================
 	// Derived pagination
@@ -320,6 +317,16 @@ const Administration = () => {
 						Administration
 					</h1>
 				</div>
+
+				<button
+					type="button"
+					className="admin-create-user-button"
+					onClick={() =>
+						setShowCreateUserModal(true)
+					}
+				>
+					+ Create User
+				</button>
 			</div>
 
 			{/* =================================================
@@ -466,7 +473,7 @@ const Administration = () => {
 			</div>
 
 			{/* =================================================
-			    User modal
+			    Modals
 			================================================= */}
 
 			{selectedUser && (
@@ -478,6 +485,18 @@ const Administration = () => {
 					onUserUpdated={
 						handleUserUpdated
 					}
+				/>
+			)}
+
+			{showCreateUserModal && (
+				<AdminCreateUserModal
+					onClose={() =>
+						setShowCreateUserModal(false)
+					}
+					onUserCreated={() => {
+						setShowCreateUserModal(false);
+						void loadUsers();
+					}}
 				/>
 			)}
 		</div>
