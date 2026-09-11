@@ -198,7 +198,7 @@ const AdminUserModal = ({
 				========================================= */}
 
 				<div className="admin-user-modal-content">
-					{error && (
+					{error !== "" && (
 						<div 
 							className="user-modal-error"
 							role="alert"	
@@ -215,7 +215,9 @@ const AdminUserModal = ({
 					)}
 
 					{activeTab === "access" && (
-						<AdminUserAccessTab />
+						<AdminUserAccessTab 
+							user={userDetails}
+						/>
 					)}
 
 					{activeTab === "security" && (

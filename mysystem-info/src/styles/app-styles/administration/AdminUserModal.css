@@ -387,6 +387,8 @@
 	border-radius: 10px;
 
 	background: #fff;
+
+	margin-bottom: 20px;
 }
 
 .user-detail-section h3 {
@@ -443,6 +445,102 @@
 }
 
 /* =========================================================
+   ACCESS TAB - ROLE
+   ========================================================= */
+
+.aum-role-grid {
+	display: grid;
+	grid-template-columns:
+		minmax(180px, 1fr)
+		minmax(220px, 1.5fr)
+		auto;
+
+	align-items: end;
+
+	gap: 18px;
+}
+
+.aum-role-action {
+	display: flex;
+	align-items: flex-end;
+}
+
+.aum-update-button {
+	min-height: 40px;
+
+	padding: 9px 15px;
+
+	border: 1px solid rgba(219, 45, 45, 0.18);
+	border-radius: 8px;
+
+	background: rgba(219, 45, 45, 0.9);
+	color: #fff;
+
+	font: inherit;
+	font-size: 0.82rem;
+	font-weight: 700;
+
+	cursor: pointer;
+
+	transition:
+		background 0.2s ease,
+		transform 0.2s ease,
+		opacity 0.2s ease;
+}
+
+.aum-update-button:hover:not(:disabled) {
+	background: #db2d2d;
+
+	transform: translateY(-1px);
+}
+
+.aum-update-button:disabled {
+	opacity: 0.45;
+
+	cursor: not-allowed;
+	transform: none;
+}
+
+
+/* =========================================================
+   ACCESS TAB MESSAGES
+   ========================================================= */
+
+.aum-access-note {
+	margin: 14px 0 0;
+
+	color: #777;
+
+	font-size: 0.8rem;
+	line-height: 1.45;
+}
+
+.aum-error,
+.aum-success {
+	margin: 14px 0 0;
+	padding: 10px 12px;
+
+	border-radius: 8px;
+
+	font-size: 0.82rem;
+	font-weight: 500;
+}
+
+.aum-error {
+	border: 1px solid rgba(219, 45, 45, 0.2);
+
+	background: rgba(219, 45, 45, 0.055);
+	color: #8f1f1f;
+}
+
+.aum-success {
+	border: 1px solid rgba(36, 145, 74, 0.16);
+
+	background: rgba(36, 145, 74, 0.07);
+	color: #19713a;
+}
+
+/* =========================================================
    RESPONSIVE
    ========================================================= */
 
@@ -476,5 +574,19 @@
 
 	.admin-user-detail-field-wide {
 		grid-column: auto;
+	}
+}
+
+/* =========================================================
+   ACCESS TAB RESPONSIVE
+   ========================================================= */
+
+@media screen and (max-width: 700px) {
+	.aum-role-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.aum-update-button {
+		width: 100%;
 	}
 }
