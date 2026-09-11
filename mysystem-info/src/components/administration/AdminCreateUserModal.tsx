@@ -98,6 +98,17 @@ const AdminCreateUserModal = ({
 	const currentUserIsAdministrator =
 		currentUser?.roles.includes("Administrator") ?? false;
 
+	const availableRoles = 
+		currentUserIsAdministrator
+			? roles
+			: roles.filter((role) => 
+				[
+					"Engineer",
+					"CustomerUser",
+					"SiteUser",
+				].includes(role.roleName)
+			);
+
 	// =====================================================
 	// Load roles
 	// =====================================================
@@ -512,7 +523,7 @@ const AdminCreateUserModal = ({
 									Select role
 								</option>
 
-								{roles.map((role) => (
+								{availableRoles.map((role) => (
 									<option
 										key={role.roleId}
 										value={role.roleName}

@@ -318,15 +318,20 @@ const Administration = () => {
 					</h1>
 				</div>
 
-				<button
-					type="button"
-					className="admin-create-user-button"
-					onClick={() =>
-						setShowCreateUserModal(true)
-					}
-				>
-					+ Create User
-				</button>
+				{(
+					user?.roles.includes("Administrator") ||
+					user?.roles.includes("Staff")
+				) && (
+					<button
+						type="button"
+						className="admin-create-user-button"
+						onClick={() =>
+							setShowCreateUserModal(true)
+						}
+					>
+						+ Create User
+					</button>
+				)}
 			</div>
 
 			{/* =================================================
