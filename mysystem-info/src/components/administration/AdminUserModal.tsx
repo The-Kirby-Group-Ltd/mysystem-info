@@ -221,7 +221,9 @@ const AdminUserModal = ({
 					)}
 
 					{activeTab === "security" && (
-						<AdminUserSecurityTab />
+						<AdminUserSecurityTab 
+							user={userDetails}
+						/>
 					)}
 				</div>
 

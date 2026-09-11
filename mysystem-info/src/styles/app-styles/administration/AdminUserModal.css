@@ -741,6 +741,98 @@
 	background: rgba(0, 0, 0, 0.012);
 }
 
+/* =========================================================
+   SECURITY TAB
+   ========================================================= */
+
+.aum-security-status-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 20px;
+}
+
+.aum-security-actions {
+	display: flex;
+	justify-content: flex-end;
+
+	margin-top: 16px;
+}
+
+.aum-password-requirements {
+	margin: 0;
+
+	color: #777;
+
+	font-size: 0.78rem;
+	line-height: 1.45;
+}
+
+
+/* =========================================================
+   STATUS BUTTONS
+   ========================================================= */
+
+.aum-status-button {
+	flex: 0 0 auto;
+
+	min-height: 40px;
+
+	padding: 9px 15px;
+
+	border-radius: 8px;
+
+	font: inherit;
+	font-size: 0.82rem;
+	font-weight: 700;
+
+	cursor: pointer;
+
+	transition:
+		background 0.2s ease,
+		border-color 0.2s ease,
+		color 0.2s ease,
+		transform 0.2s ease,
+		opacity 0.2s ease;
+}
+
+.aum-status-button-danger {
+	border: 1px solid rgba(219, 45, 45, 0.2);
+
+	background: rgba(219, 45, 45, 0.06);
+	color: #a51f1f;
+}
+
+.aum-status-button-danger:hover:not(:disabled) {
+	border-color: rgba(219, 45, 45, 0.35);
+
+	background: rgba(219, 45, 45, 0.11);
+	color: #db2d2d;
+
+	transform: translateY(-1px);
+}
+
+.aum-status-button-success {
+	border: 1px solid rgba(36, 145, 74, 0.18);
+
+	background: rgba(36, 145, 74, 0.07);
+	color: #19713a;
+}
+
+.aum-status-button-success:hover:not(:disabled) {
+	border-color: rgba(36, 145, 74, 0.32);
+
+	background: rgba(36, 145, 74, 0.12);
+
+	transform: translateY(-1px);
+}
+
+.aum-status-button:disabled {
+	opacity: 0.45;
+
+	cursor: not-allowed;
+	transform: none;
+}
 
 /* =========================================================
    USER MODAL FOOTER
@@ -877,6 +969,23 @@
 
 	.aum-info-content {
 		padding: 14px;
+	}
+
+	.aum-security-status-row {
+		align-items: stretch;
+		flex-direction: column;
+	}
+
+	.aum-status-button {
+		width: 100%;
+	}
+
+	.aum-security-actions {
+		justify-content: stretch;
+	}
+
+	.aum-security-actions .aum-update-button {
+		width: 100%;
 	}
 }
 
