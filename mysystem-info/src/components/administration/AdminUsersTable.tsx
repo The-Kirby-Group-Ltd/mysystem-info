@@ -121,14 +121,14 @@ const AdminUsersTable = ({
 							<td>
 								{renderAccessCount(
 									user.customerNos,
-									"customers"
+									"Customers"
 								)}
 							</td>
 
 							<td>
 								{renderAccessCount(
 									user.siteIds,
-									"sites"
+									"Sites"
 								)}
 							</td>
 

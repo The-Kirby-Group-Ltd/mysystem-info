@@ -131,6 +131,7 @@
 	color: #fff;
 }
 
+
 /* =========================================================
    TAB RAIL
    ========================================================= */
@@ -184,6 +185,7 @@
 	color: #db2d2d;
 }
 
+
 /* =========================================================
    USER MODAL CONTENT
    ========================================================= */
@@ -203,10 +205,10 @@
 
 
 /* =========================================================
-   USER DETAIL SECTIONS
+   DETAIL SECTIONS
    ========================================================= */
 
-.admin-user-detail-section {
+.user-detail-section {
 	padding: 20px;
 
 	border: 1px solid rgba(0, 0, 0, 0.09);
@@ -215,11 +217,11 @@
 	background: #fff;
 }
 
-.admin-user-detail-section + .admin-user-detail-section {
+.user-detail-section + .user-detail-section {
 	margin-top: 16px;
 }
 
-.admin-user-detail-section h3 {
+.user-detail-section h3 {
 	margin: 0 0 16px;
 
 	color: #252525;
@@ -228,7 +230,12 @@
 	font-weight: 700;
 }
 
-.admin-user-detail-grid {
+
+/* =========================================================
+   DETAIL GRID
+   ========================================================= */
+
+.user-detail-grid {
 	display: grid;
 
 	grid-template-columns:
@@ -237,7 +244,7 @@
 	gap: 16px 24px;
 }
 
-.admin-user-detail-field {
+.user-detail-field {
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
@@ -245,12 +252,12 @@
 	min-width: 0;
 }
 
-.admin-user-detail-field-wide {
+.user-detail-field-wide {
 	grid-column: 1 / -1;
 }
 
-.admin-user-detail-field > span,
-.admin-user-detail-field > label {
+.user-detail-field > span,
+.user-detail-field > label {
 	color: #777;
 
 	font-size: 0.7rem;
@@ -259,18 +266,19 @@
 	text-transform: uppercase;
 }
 
-.admin-user-detail-field strong {
+.user-detail-field strong {
 	color: #2b2b2b;
 
 	font-size: 0.9rem;
 	font-weight: 600;
+	line-height: 1.45;
 
 	overflow-wrap: anywhere;
 }
 
-.admin-user-detail-field input,
-.admin-user-detail-field select,
-.admin-user-detail-field textarea {
+.user-detail-field input,
+.user-detail-field select,
+.user-detail-field textarea {
 	width: 100%;
 
 	box-sizing: border-box;
@@ -290,22 +298,447 @@
 
 	transition:
 		border-color 0.2s ease,
-		box-shadow 0.2s ease;
+		box-shadow 0.2s ease,
+		background 0.2s ease;
 }
 
-.admin-user-detail-field input:hover,
-.admin-user-detail-field select:hover,
-.admin-user-detail-field textarea:hover {
+.user-detail-field input:hover,
+.user-detail-field select:hover,
+.user-detail-field textarea:hover {
 	border-color: rgba(0, 0, 0, 0.22);
 }
 
-.admin-user-detail-field input:focus,
-.admin-user-detail-field select:focus,
-.admin-user-detail-field textarea:focus {
+.user-detail-field input:focus,
+.user-detail-field select:focus,
+.user-detail-field textarea:focus {
 	border-color: #db2d2d;
 
 	box-shadow:
 		0 0 0 3px rgba(219, 45, 45, 0.09);
+}
+
+.user-detail-field input:disabled,
+.user-detail-field select:disabled,
+.user-detail-field textarea:disabled {
+	background: rgba(0, 0, 0, 0.025);
+	color: #888;
+
+	cursor: not-allowed;
+}
+
+
+/* =========================================================
+   ACCESS TAB - ROLE
+   ========================================================= */
+
+.aum-role-grid {
+	display: grid;
+
+	grid-template-columns:
+		minmax(180px, 1fr)
+		minmax(240px, 1.4fr);
+
+	align-items: end;
+
+	gap: 18px;
+}
+
+
+/* =========================================================
+   ACCESS TAB - SECTION DESCRIPTION
+   ========================================================= */
+
+.aum-section-description {
+	margin: -7px 0 15px;
+
+	color: #777;
+
+	font-size: 0.8rem;
+	line-height: 1.5;
+}
+
+
+/* =========================================================
+   ACCESS TAB - CUSTOMER / SITE CHIPS
+   ========================================================= */
+
+.aum-access-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+
+	min-height: 38px;
+
+	margin-bottom: 14px;
+}
+
+.aum-access-empty {
+	margin: 5px 0;
+
+	color: #888;
+
+	font-size: 0.82rem;
+	font-style: italic;
+}
+
+.aum-access-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+
+	padding: 6px 7px 6px 10px;
+
+	border: 1px solid rgba(219, 45, 45, 0.14);
+	border-radius: 999px;
+
+	background: rgba(219, 45, 45, 0.055);
+	color: #8f1f1f;
+
+	font-size: 0.78rem;
+	font-weight: 700;
+	line-height: 1;
+}
+
+.aum-access-chip > span {
+	line-height: 1.2;
+}
+
+.aum-access-chip button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+
+	width: 20px;
+	height: 20px;
+
+	padding: 0;
+
+	border: none;
+	border-radius: 50%;
+
+	background: rgba(219, 45, 45, 0.1);
+	color: #a51f1f;
+
+	font: inherit;
+	font-size: 0.95rem;
+	font-weight: 700;
+	line-height: 1;
+
+	cursor: pointer;
+
+	transition:
+		background 0.15s ease,
+		color 0.15s ease;
+}
+
+.aum-access-chip button:hover:not(:disabled) {
+	background: #db2d2d;
+	color: #fff;
+}
+
+.aum-access-chip button:disabled {
+	opacity: 0.4;
+
+	cursor: not-allowed;
+}
+
+
+/* =========================================================
+   ACCESS TAB - ENTRY ROW
+   ========================================================= */
+
+.aum-access-entry {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+
+	max-width: 470px;
+}
+
+.aum-access-entry input {
+	flex: 1;
+
+	min-width: 0;
+
+	padding: 10px 11px;
+
+	border: 1px solid rgba(0, 0, 0, 0.13);
+	border-radius: 8px;
+
+	background: #fff;
+	color: #333;
+
+	font: inherit;
+	font-size: 0.88rem;
+
+	outline: none;
+
+	transition:
+		border-color 0.2s ease,
+		box-shadow 0.2s ease;
+}
+
+.aum-access-entry input:hover {
+	border-color: rgba(0, 0, 0, 0.22);
+}
+
+.aum-access-entry input:focus {
+	border-color: #db2d2d;
+
+	box-shadow:
+		0 0 0 3px rgba(219, 45, 45, 0.09);
+}
+
+.aum-access-entry input:disabled {
+	background: rgba(0, 0, 0, 0.025);
+	color: #888;
+
+	cursor: not-allowed;
+}
+
+.aum-access-entry button {
+	min-width: 70px;
+	min-height: 39px;
+
+	padding: 8px 13px;
+
+	border: 1px solid rgba(0, 0, 0, 0.11);
+	border-radius: 8px;
+
+	background: #fff;
+	color: #555;
+
+	font: inherit;
+	font-size: 0.8rem;
+	font-weight: 700;
+
+	cursor: pointer;
+
+	transition:
+		background 0.2s ease,
+		border-color 0.2s ease,
+		color 0.2s ease,
+		transform 0.2s ease;
+}
+
+.aum-access-entry button:hover:not(:disabled) {
+	border-color: rgba(219, 45, 45, 0.22);
+
+	background: rgba(219, 45, 45, 0.05);
+	color: #a51f1f;
+
+	transform: translateY(-1px);
+}
+
+.aum-access-entry button:disabled {
+	opacity: 0.45;
+
+	cursor: not-allowed;
+	transform: none;
+}
+
+
+/* =========================================================
+   ACCESS TAB - SAVE ROW
+   ========================================================= */
+
+.aum-access-save-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 20px;
+}
+
+.aum-access-save-row h3 {
+	margin-bottom: 8px;
+}
+
+.aum-access-save-row .aum-section-description {
+	margin: 0;
+
+	max-width: 560px;
+}
+
+
+/* =========================================================
+   ACCESS TAB - UPDATE BUTTON
+   ========================================================= */
+
+.aum-update-button {
+	flex: 0 0 auto;
+
+	min-height: 40px;
+
+	padding: 9px 15px;
+
+	border: 1px solid rgba(219, 45, 45, 0.18);
+	border-radius: 8px;
+
+	background: rgba(219, 45, 45, 0.9);
+	color: #fff;
+
+	font: inherit;
+	font-size: 0.82rem;
+	font-weight: 700;
+
+	cursor: pointer;
+
+	transition:
+		background 0.2s ease,
+		box-shadow 0.2s ease,
+		transform 0.2s ease,
+		opacity 0.2s ease;
+}
+
+.aum-update-button:hover:not(:disabled) {
+	background: #db2d2d;
+
+	box-shadow:
+		0 5px 14px rgba(219, 45, 45, 0.12);
+
+	transform: translateY(-1px);
+}
+
+.aum-update-button:active:not(:disabled) {
+	transform: translateY(0);
+}
+
+.aum-update-button:disabled {
+	opacity: 0.45;
+
+	cursor: not-allowed;
+	transform: none;
+}
+
+
+/* =========================================================
+   ACCESS TAB - NOTES / MESSAGES
+   ========================================================= */
+
+.aum-access-note {
+	margin: 14px 0 0;
+
+	color: #777;
+
+	font-size: 0.8rem;
+	line-height: 1.45;
+}
+
+.aum-error,
+.aum-success {
+	margin: 14px 0 0;
+	padding: 10px 12px;
+
+	border-radius: 8px;
+
+	font-size: 0.82rem;
+	font-weight: 500;
+	line-height: 1.4;
+}
+
+.aum-error {
+	border: 1px solid rgba(219, 45, 45, 0.2);
+
+	background: rgba(219, 45, 45, 0.055);
+	color: #8f1f1f;
+}
+
+.aum-success {
+	border: 1px solid rgba(36, 145, 74, 0.16);
+
+	background: rgba(36, 145, 74, 0.07);
+	color: #19713a;
+}
+
+
+/* =========================================================
+   EXPANDING ROLE INFORMATION
+   ========================================================= */
+
+.aum-info-panel {
+	margin-top: 16px;
+	margin-bottom: 16px;
+
+	overflow: hidden;
+
+	border: 1px solid rgba(0, 0, 0, 0.09);
+	border-radius: 10px;
+
+	background: #fff;
+}
+
+.aum-info-summary {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+
+	padding: 14px 18px;
+
+	color: #444;
+
+	font-size: 0.86rem;
+	font-weight: 700;
+
+	cursor: pointer;
+
+	list-style: none;
+
+	transition:
+		background 0.2s ease,
+		color 0.2s ease;
+}
+
+.aum-info-summary::-webkit-details-marker {
+	display: none;
+}
+
+.aum-info-summary:hover {
+	background: rgba(219, 45, 45, 0.035);
+	color: #a51f1f;
+}
+
+.aum-info-chevron {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 0;
+
+	color: #888;
+
+	font-size: 2rem;
+
+	transition:
+		transform 0.2s ease,
+		color 0.2s ease;
+
+	transform: rotate(0deg);
+}
+
+.aum-info-panel[open] .aum-info-chevron {
+	transform: rotate(-90deg);
+
+	color: #db2d2d;
+}
+
+.aum-info-panel[open] .aum-info-summary {
+	border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+
+	background: rgba(219, 45, 45, 0.02);
+	color: #a51f1f;
+}
+
+.aum-info-content {
+	padding: 18px;
+}
+
+.aum-info-content .user-detail-field {
+	padding: 12px 14px;
+
+	border: 1px solid rgba(0, 0, 0, 0.06);
+	border-radius: 8px;
+
+	background: rgba(0, 0, 0, 0.012);
 }
 
 
@@ -376,169 +809,6 @@
 	transform: translateY(-1px);
 }
 
-/* =========================================================
-   DETAIL SECTIONS
-   ========================================================= */
-
-.user-detail-section {
-	padding: 20px;
-
-	border: 1px solid rgba(0, 0, 0, 0.09);
-	border-radius: 10px;
-
-	background: #fff;
-
-	margin-bottom: 20px;
-}
-
-.user-detail-section h3 {
-	margin: 0 0 16px;
-
-	color: #252525;
-
-	font-size: 1rem;
-	font-weight: 700;
-}
-
-
-/* =========================================================
-   DETAIL GRID
-   ========================================================= */
-
-.user-detail-grid {
-	display: grid;
-
-	grid-template-columns:
-		repeat(2, minmax(0, 1fr));
-
-	gap: 16px 24px;
-}
-
-.user-detail-field {
-	display: flex;
-	flex-direction: column;
-	gap: 5px;
-
-	min-width: 0;
-}
-
-.user-detail-field-wide {
-	grid-column: 1 / -1;
-}
-
-.user-detail-field > span {
-	color: #777;
-
-	font-size: 0.7rem;
-	font-weight: 700;
-	letter-spacing: 0.045em;
-	text-transform: uppercase;
-}
-
-.user-detail-field strong {
-	color: #2b2b2b;
-
-	font-size: 0.9rem;
-	font-weight: 600;
-
-	overflow-wrap: anywhere;
-}
-
-/* =========================================================
-   ACCESS TAB - ROLE
-   ========================================================= */
-
-.aum-role-grid {
-	display: grid;
-	grid-template-columns:
-		minmax(180px, 1fr)
-		minmax(220px, 1.5fr)
-		auto;
-
-	align-items: end;
-
-	gap: 18px;
-}
-
-.aum-role-action {
-	display: flex;
-	align-items: flex-end;
-}
-
-.aum-update-button {
-	min-height: 40px;
-
-	padding: 9px 15px;
-
-	border: 1px solid rgba(219, 45, 45, 0.18);
-	border-radius: 8px;
-
-	background: rgba(219, 45, 45, 0.9);
-	color: #fff;
-
-	font: inherit;
-	font-size: 0.82rem;
-	font-weight: 700;
-
-	cursor: pointer;
-
-	transition:
-		background 0.2s ease,
-		transform 0.2s ease,
-		opacity 0.2s ease;
-}
-
-.aum-update-button:hover:not(:disabled) {
-	background: #db2d2d;
-
-	transform: translateY(-1px);
-}
-
-.aum-update-button:disabled {
-	opacity: 0.45;
-
-	cursor: not-allowed;
-	transform: none;
-}
-
-
-/* =========================================================
-   ACCESS TAB MESSAGES
-   ========================================================= */
-
-.aum-access-note {
-	margin: 14px 0 0;
-
-	color: #777;
-
-	font-size: 0.8rem;
-	line-height: 1.45;
-}
-
-.aum-error,
-.aum-success {
-	margin: 14px 0 0;
-	padding: 10px 12px;
-
-	border-radius: 8px;
-
-	font-size: 0.82rem;
-	font-weight: 500;
-}
-
-.aum-error {
-	border: 1px solid rgba(219, 45, 45, 0.2);
-
-	background: rgba(219, 45, 45, 0.055);
-	color: #8f1f1f;
-}
-
-.aum-success {
-	border: 1px solid rgba(36, 145, 74, 0.16);
-
-	background: rgba(36, 145, 74, 0.07);
-	color: #19713a;
-}
 
 /* =========================================================
    RESPONSIVE
@@ -560,33 +830,71 @@
 		padding: 18px;
 	}
 
+	.admin-user-modal-tabs {
+		padding: 0 10px;
+
+		overflow-x: auto;
+	}
+
+	.admin-user-modal-tab {
+		min-width: auto;
+
+		white-space: nowrap;
+	}
+
 	.admin-user-modal-content {
 		padding: 14px;
 	}
 
-	.admin-user-detail-section {
+	.user-detail-section {
 		padding: 16px;
 	}
 
-	.admin-user-detail-grid {
+	.user-detail-grid {
 		grid-template-columns: 1fr;
 	}
 
-	.admin-user-detail-field-wide {
+	.user-detail-field-wide {
 		grid-column: auto;
 	}
-}
 
-/* =========================================================
-   ACCESS TAB RESPONSIVE
-   ========================================================= */
-
-@media screen and (max-width: 700px) {
 	.aum-role-grid {
 		grid-template-columns: 1fr;
 	}
 
+	.aum-access-entry {
+		max-width: none;
+	}
+
+	.aum-access-save-row {
+		align-items: stretch;
+		flex-direction: column;
+	}
+
 	.aum-update-button {
 		width: 100%;
+	}
+
+	.aum-info-content {
+		padding: 14px;
+	}
+}
+
+@media screen and (max-width: 520px) {
+	.aum-access-entry {
+		align-items: stretch;
+		flex-direction: column;
+	}
+
+	.aum-access-entry button {
+		width: 100%;
+	}
+
+	.aum-access-chip {
+		max-width: 100%;
+	}
+
+	.aum-info-summary {
+		padding: 13px 14px;
 	}
 }
