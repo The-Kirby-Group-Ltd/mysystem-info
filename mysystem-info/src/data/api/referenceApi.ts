@@ -1,9 +1,10 @@
 import { httpClient } from "./httpClient";
-import type {
-	EngineerReference,
-	PagedReferenceResponse,
-	ReferenceQuery,
-	SystemTypeReference,
+import {
+	type FailedToRespondReason,
+	type EngineerReference,
+	type PagedReferenceResponse,
+	type ReferenceQuery,
+	type SystemTypeReference,
 } from "../types/referenceTypes";
 
 const createReferenceParams = (
@@ -60,6 +61,25 @@ export const referenceApi = {
 			PagedReferenceResponse<EngineerReference>
 		>(
 			`/api/portal/reference/engineers?${params.toString()}`
+		);
+	},
+
+	getFailedToRespondReason: (
+		code: string
+	) => {
+		const cleanCode =
+			code
+				.trim()
+				.toUpperCase();
+
+		if (!cleanCode) {
+			throw new Error(
+				"Failed-to-respond reason code is required."
+			);
+		}
+
+		return httpClient<FailedToRespondReason>(
+			`/api/portal/reference/failed-to-respond-reasons/${encodeURIComponent(cleanCode)}`
 		);
 	},
 };

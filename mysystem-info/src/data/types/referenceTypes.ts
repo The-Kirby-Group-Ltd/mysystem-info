@@ -25,3 +25,8 @@ export type PagedReferenceResponse<T> = {
 	total: number;
 	hasMore: boolean;
 };
+
+export type FailedToRespondReason = {
+	code: string;
+	description: string;
+}

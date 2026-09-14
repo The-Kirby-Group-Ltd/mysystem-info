@@ -13,6 +13,8 @@ export type Call = {
 	loggedRemarks: string;
 	previousMaintenanceDate: string | null;
 	nextMaintenanceDate: string | null;
+	failedToRespond_YN: string | null;
+	failedToRespondReason: string | null;
 };
 
 export type CallFilters = {
