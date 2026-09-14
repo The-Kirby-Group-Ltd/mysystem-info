@@ -453,6 +453,68 @@ button.dashboard-chart-key-item:disabled {
 	cursor: default;
 }
 
+/* =========================================================
+   SLA DASHBOARD
+   ========================================================= */
+
+.dashboard-kpi-grid-two {
+	grid-template-columns:
+		repeat(2, minmax(0, 1fr));
+}
+
+.dashboard-charts-grid-single {
+	grid-template-columns:
+		minmax(0, 1fr);
+
+	width: 100%;
+	max-width: none;
+}
+
+.dashboard-charts-grid-single .dashboard-chart-card {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.dashboard-kpi-secondary {
+	display: block;
+
+	margin-top: 4px;
+
+	color: #777;
+
+	font-size: 0.72rem;
+	font-weight: 600;
+}
+
+.dashboard-empty-state {
+	padding: 34px 22px;
+
+	border: 1px solid rgba(0, 0, 0, 0.07);
+	border-radius: 10px;
+
+	background: rgba(0, 0, 0, 0.015);
+}
+
+.dashboard-empty-state p {
+	margin: 0;
+
+	color: #777;
+
+	font-size: 0.84rem;
+	text-align: center;
+}
+
+/* =========================================================
+   MAINTENANCE CHARTS PANEL
+   ========================================================= */
+
+
+.dashboard-charts-grid-two {
+	grid-template-columns:
+		repeat(2, minmax(0, 1fr));
+
+	width: 100%;
+}
 
 /* =========================================================
    RESPONSIVE
@@ -471,5 +533,13 @@ button.dashboard-chart-key-item:disabled {
 
 	.dashboard-board-controls {
 		flex-wrap: wrap;
+	}
+
+	.dashboard-kpi-grid-two {
+		grid-template-columns: 1fr;
+	}
+
+	.dashboard-charts-grid-single {
+		max-width: none;
 	}
 }

@@ -1,18 +1,27 @@
-import type { DashboardSelect } from "../../../data/types/dashboardTypes";
+import type {
+	DashboardSelect,
+} from "../../../data/types/dashboardTypes";
 
 type DashboardSelectorProps = {
 	selectedDashboard: DashboardSelect;
-	onSelect: (dashboard: DashboardSelect) => void;
+	slaAvailable: boolean;
+
+	onSelect: (
+		dashboard: DashboardSelect
+	) => void;
 };
 
 const DashboardSelector = ({
 	selectedDashboard,
+	slaAvailable,
 	onSelect,
 }: DashboardSelectorProps) => {
 	return (
 		<aside className="dashboard-board-select-area">
 			<div className="dashboard-selector-heading">
-				<span>Dashboard View</span>
+				<span>
+					Dashboard View
+				</span>
 
 				<p>
 					Select the information you want to
@@ -21,6 +30,10 @@ const DashboardSelector = ({
 			</div>
 
 			<div className="dashboard-selector-buttons">
+				{/* =================================================
+				    Calls
+				================================================= */}
+
 				<button
 					className={
 						selectedDashboard === "calls"
@@ -28,28 +41,40 @@ const DashboardSelector = ({
 							: "board-select-button"
 					}
 					type="button"
-					onClick={() => onSelect("calls")}
+					onClick={() =>
+						onSelect("calls")
+					}
 				>
-					<span>Calls</span>
+					<span>
+						Calls
+					</span>
 
 					<small>
 						Call volumes and current statuses
 					</small>
 				</button>
 
+				{/* =================================================
+				    Maintenance
+				================================================= */}
+
 				<button
 					className={
 						selectedDashboard ===
-						"system-maintenance"
+							"system-maintenance"
 							? "board-select-button board-select-button-active"
 							: "board-select-button"
 					}
 					type="button"
 					onClick={() =>
-						onSelect("system-maintenance")
+						onSelect(
+							"system-maintenance"
+						)
 					}
 				>
-					<span>Maintenance</span>
+					<span>
+						Maintenance
+					</span>
 
 					<small>
 						System maintenance and upcoming
@@ -57,21 +82,31 @@ const DashboardSelector = ({
 					</small>
 				</button>
 
-				<button
-					className={
-						selectedDashboard === "sla"
-							? "board-select-button board-select-button-active"
-							: "board-select-button"
-					}
-					type="button"
-					onClick={() => onSelect("sla")}
-				>
-					<span>SLA</span>
+				{/* =================================================
+				    SLA
+				================================================= */}
 
-					<small>
-						Response targets and performance
-					</small>
-				</button>
+				{slaAvailable && (
+					<button
+						className={
+							selectedDashboard === "sla"
+								? "board-select-button board-select-button-active"
+								: "board-select-button"
+						}
+						type="button"
+						onClick={() =>
+							onSelect("sla")
+						}
+					>
+						<span>
+							SLA
+						</span>
+
+						<small>
+							Response targets and performance
+						</small>
+					</button>
+				)}
 			</div>
 		</aside>
 	);

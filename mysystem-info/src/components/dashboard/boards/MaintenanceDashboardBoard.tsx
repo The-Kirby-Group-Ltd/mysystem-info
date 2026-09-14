@@ -386,7 +386,7 @@ const MaintenanceDashboardBoard = ({
 			    Donut charts
 			============================= */}
 
-			<div className="dashboard-charts-grid">
+			<div className="dashboard-charts-grid dashboard-charts-grid-two">
 				<DashboardDonutChart 
 					title="Maintenance Status"
 					data={

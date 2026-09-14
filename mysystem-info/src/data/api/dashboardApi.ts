@@ -5,10 +5,16 @@ import type {
 	CallsDashboardQuery,
 	DashboardCallsItemsQuery,
 	DashboardCallsItemsResponse,
+
 	MaintenanceDashboardQuery,
 	MaintenanceDashboardData,
 	DashboardMaintenanceItemsQuery,
 	DashboardMaintenanceItemsResponse,
+
+	SlaDashboardData,
+	SlaDashboardQuery,
+	DashboardSlaItemsQuery,
+	DashboardSlaItemsResponse,
 } from "../types/dashboardTypes";
 
 export const dashboardApi = {
@@ -19,7 +25,8 @@ export const dashboardApi = {
 	getCallsDashboardData: async (
 		query: CallsDashboardQuery
 	): Promise<CallsDashboardData> => {
-		const params = new URLSearchParams();
+		const params =
+			new URLSearchParams();
 
 		const customerNo =
 			query.customerNo
@@ -165,78 +172,10 @@ export const dashboardApi = {
 	// =====================================================
 
 	getMaintenanceDashboardData: async (
-		query: MaintenanceDashboardQuery,
+		query: MaintenanceDashboardQuery
 	): Promise<MaintenanceDashboardData> => {
-		const params = new URLSearchParams();
-
-		// get customer/site from query
-
-		const customerNo = 
-			query.customerNo
-				.trim()
-				.toUpperCase() ?? "";
-
-		const siteId =
-			query.siteId
-				?.trim()
-				.toUpperCase() ?? "";
-
-		// validate customer/site exist
-
-		if (!customerNo && !siteId) {
-			throw new Error(
-				"Customer No or Site ID is required."
-			);
-		}
-
-		// add to params
-
-		if (customerNo) {
-			params.set(
-				"customerNo",
-				customerNo
-			)
-		}
-		
-		if (siteId) {
-			params.set(
-				"siteId",
-				siteId
-			)
-		}
-
-		// add date range to params
-
-		params.set(
-			"dataMonth",
-			query.dataMonth ?? "ALL"
-		);
-
-		params.set(
-			"dataYear",
-			(
-				query.dataYear ??
-				new Date().getFullYear()
-			).toString()
-		);
-
-		// send request to return data
-
-		return httpClient<MaintenanceDashboardData>(
-			`/api/portal/dashboard/maintenance-dashboard?${params.toString()}`
-		);
-	},
-
-	// =====================================================
-	// Maintenance dashboard support records
-	// =====================================================
-
-	getMaintenanceDashboardItems: async(
-		query: DashboardMaintenanceItemsQuery
-	): Promise<DashboardMaintenanceItemsResponse> => {
-		const params = new URLSearchParams();
-
-		// data check
+		const params =
+			new URLSearchParams();
 
 		const customerNo =
 			query.customerNo
@@ -254,7 +193,63 @@ export const dashboardApi = {
 			);
 		}
 
-		// set parameters
+		if (customerNo) {
+			params.set(
+				"customerNo",
+				customerNo
+			);
+		}
+
+		if (siteId) {
+			params.set(
+				"siteId",
+				siteId
+			);
+		}
+
+		params.set(
+			"dataMonth",
+			query.dataMonth ?? "ALL"
+		);
+
+		params.set(
+			"dataYear",
+			(
+				query.dataYear ??
+				new Date().getFullYear()
+			).toString()
+		);
+
+		return httpClient<MaintenanceDashboardData>(
+			`/api/portal/dashboard/maintenance-dashboard?${params.toString()}`
+		);
+	},
+
+	// =====================================================
+	// Maintenance dashboard support records
+	// =====================================================
+
+	getMaintenanceDashboardItems: async (
+		query: DashboardMaintenanceItemsQuery
+	): Promise<DashboardMaintenanceItemsResponse> => {
+		const params =
+			new URLSearchParams();
+
+		const customerNo =
+			query.customerNo
+				.trim()
+				.toUpperCase();
+
+		const siteId =
+			query.siteId
+				?.trim()
+				.toUpperCase() ?? "";
+
+		if (!customerNo && !siteId) {
+			throw new Error(
+				"Customer No or Site ID is required."
+			);
+		}
 
 		if (customerNo) {
 			params.set(
@@ -285,7 +280,138 @@ export const dashboardApi = {
 			query.filterType
 		);
 
-		// pagination
+		params.set(
+			"page",
+			Math.max(
+				query.page ?? 1,
+				1
+			).toString()
+		);
+
+		params.set(
+			"pageSize",
+			Math.min(
+				Math.max(
+					query.pageSize ?? 30,
+					1
+				),
+				30
+			).toString()
+		);
+
+		return httpClient<DashboardMaintenanceItemsResponse>(
+			`/api/portal/dashboard/maintenance-dashboard/items?${params.toString()}`
+		);
+	},
+
+	// =====================================================
+	// SLA dashboard summary
+	// =====================================================
+
+	getSlaDashboardData: async (
+		query: SlaDashboardQuery
+	): Promise<SlaDashboardData> => {
+		const params =
+			new URLSearchParams();
+
+		const customerNo =
+			query.customerNo
+				.trim()
+				.toUpperCase();
+
+		const siteId =
+			query.siteId
+				?.trim()
+				.toUpperCase() ?? "";
+
+		if (!customerNo) {
+			throw new Error(
+				"Customer No is required for SLA dashboard data."
+			);
+		}
+
+		params.set(
+			"customerNo",
+			customerNo
+		);
+
+		if (siteId) {
+			params.set(
+				"siteId",
+				siteId
+			);
+		}
+
+		params.set(
+			"dataMonth",
+			query.dataMonth ?? "ALL"
+		);
+
+		params.set(
+			"dataYear",
+			(
+				query.dataYear ??
+				new Date().getFullYear()
+			).toString()
+		);
+
+		return httpClient<SlaDashboardData>(
+			`/api/portal/dashboard/sla-dashboard?${params.toString()}`
+		);
+	},
+
+	// =====================================================
+	// SLA dashboard support records
+	// =====================================================
+
+	getSlaDashboardItems: async (
+		query: DashboardSlaItemsQuery
+	): Promise<DashboardSlaItemsResponse> => {
+		const params =
+			new URLSearchParams();
+
+		const customerNo =
+			query.customerNo
+				.trim()
+				.toUpperCase();
+
+		const siteId =
+			query.siteId
+				?.trim()
+				.toUpperCase() ?? "";
+
+		if (!customerNo) {
+			throw new Error(
+				"Customer No is required for SLA dashboard data."
+			);
+		}
+
+		params.set(
+			"customerNo",
+			customerNo
+		);
+
+		if (siteId) {
+			params.set(
+				"siteId",
+				siteId
+			);
+		}
+
+		params.set(
+			"dataMonth",
+			query.dataMonth
+		);
+
+		params.set(
+			"dataYear",
+			query.dataYear.toString()
+		);
+
+		params.set(
+			"filterType",
+			query.filterType
+		);
 
 		params.set(
 			"page",
@@ -306,12 +432,10 @@ export const dashboardApi = {
 			).toString()
 		);
 
-		// send response to return
-
-		return httpClient<DashboardMaintenanceItemsResponse>(
-			`/api/portal/dashboard/maintenance-dashboard/items?${params.toString()}`
+		return httpClient<DashboardSlaItemsResponse>(
+			`/api/portal/dashboard/sla-dashboard/items?${params.toString()}`
 		);
-	}
+	},
 };
 
 export default dashboardApi;

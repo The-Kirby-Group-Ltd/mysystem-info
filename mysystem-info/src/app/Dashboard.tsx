@@ -18,10 +18,15 @@ import {
 	getStoredPreferredDashboard,
 } from "../data/storage/settingsStorage";
 
+import {
+	customerHasSla,
+} from "../data/helpers/slaHelpers";
+
 import type {
 	CallsKpiSelection,
 	DashboardMonth,
 	DashboardSelect,
+	SlaKpiSelection,
 } from "../data/types/dashboardTypes";
 
 import {
@@ -39,6 +44,7 @@ import CallsDashboardBoard from "../components/dashboard/boards/CallsDashboardBo
 import CallsDashboardSupportTable from "../components/dashboard/boards/CallsDashboardSupportTable";
 import MaintenanceDashboardBoard from "../components/dashboard/boards/MaintenanceDashboardBoard";
 import SlaDashboardBoard from "../components/dashboard/boards/SlaDashboardBoard";
+import SlaDashboardSupportTable from "../components/dashboard/boards/SlaDashboardSupportTable";
 
 const Dashboard = () => {
 	const { user, logout } = useAuth();
@@ -113,6 +119,9 @@ const Dashboard = () => {
 	const [selectedCallsKpi, setSelectedCallsKpi] =
 		useState<CallsKpiSelection>(null);
 
+	const [selectedSlaKpi, setSelectedSlaKpi] = 
+		useState<SlaKpiSelection>(null);
+
 	const [error, setError] =
 		useState("");
 
@@ -163,6 +172,31 @@ const Dashboard = () => {
 		navigate,
 		unrestricted,
 		allowedCustomerNos,
+	]);
+
+	// =====================================================
+	// SLA access restriction
+	// =====================================================
+
+	const slaAvailable =
+		customerHasSla(
+			searchedCustomerNo
+		);
+
+	useEffect(() => {
+		if (
+			selectedDashboard === "sla" &&
+			searchedCustomerNo &&
+			!customerHasSla(
+				searchedCustomerNo
+			)
+		) {
+			setSelectedDashboard("calls");
+			setSelectedSlaKpi(null);
+		}
+	}, [
+		searchedCustomerNo,
+		selectedDashboard,
 	]);
 
 	// =====================================================
@@ -279,7 +313,19 @@ const Dashboard = () => {
 				return (
 					<MaintenanceDashboardBoard
 						customerNo={searchedCustomerNo}
-						siteId={searchedSiteId}
+						siteId={searchedSiteId} 
+						selectedMonth={"ALL"} 
+						selectedYear={0} 
+						onMonthChange={function (month: DashboardMonth): void {
+							throw new Error("Function not implemented.");
+						} } 
+						onYearChange={function (year: number): void {
+							throw new Error("Function not implemented.");
+						} } 
+						selectedKpi={null} 
+						onKpiChange={function (value: MaintenanceKpiSelection): void {
+							throw new Error("Function not implemented.");
+						} }					
 					/>
 				);
 
@@ -288,6 +334,18 @@ const Dashboard = () => {
 					<SlaDashboardBoard
 						customerNo={searchedCustomerNo}
 						siteId={searchedSiteId}
+						selectedMonth={selectedMonth}
+						selectedYear={selectedYear}
+						onMonthChange={(month) => {
+							setSelectedMonth(month);
+							setSelectedSlaKpi(null);
+						}}
+						onYearChange={(year) => {
+							setSelectedYear(year);
+							setSelectedSlaKpi(null);
+						}}
+						selectedKpi={selectedSlaKpi}
+						onKpiChange={setSelectedSlaKpi}
 					/>
 				);
 		}
@@ -350,17 +408,21 @@ const Dashboard = () => {
 
 				<DashboardSelector
 					selectedDashboard={selectedDashboard}
+					slaAvailable={slaAvailable}
 					onSelect={(dashboard) => {
 						setSelectedDashboard(dashboard);
 						setSelectedCallsKpi(null);
+						setSelectedSlaKpi(null);
 					}}
 				/>
 			</section>
 
 			<DashboardDataSection
-				title={getDashboardTitle(selectedDashboard)}
+				title={getDashboardTitle(
+					selectedDashboard
+				)}
 			>
-				{selectedDashboard === "calls" ? (
+				{selectedDashboard === "calls" && (
 					<CallsDashboardSupportTable
 						customerNo={searchedCustomerNo}
 						siteId={searchedSiteId}
@@ -368,7 +430,20 @@ const Dashboard = () => {
 						dataYear={selectedYear}
 						selectedKpi={selectedCallsKpi}
 					/>
-				) : (
+				)}
+
+				{selectedDashboard === "sla" && (
+					<SlaDashboardSupportTable
+						customerNo={searchedCustomerNo}
+						siteId={searchedSiteId}
+						dataMonth={selectedMonth}
+						dataYear={selectedYear}
+						selectedKpi={selectedSlaKpi}
+					/>
+				)}
+
+				{selectedDashboard ===
+					"system-maintenance" && (
 					<div className="dashboard-data-placeholder">
 						<p>
 							Detailed supporting records for this
