@@ -1,14 +1,14 @@
-import "../../../styles/app-styles/dashboard/SlaDashboard.css";
-
 import {
 	useEffect,
 	useState,
 } from "react";
 
-import { dashboardApi } from "../../../data/api/dashboardApi";
+import "../../../styles/app-styles/dashboard/DashboardSupportTable.css";
 
 import CallsTable from "../../calls/CallsTable";
 import CallDetailsModal from "../../calls/CallDetailsModal";
+
+import dashboardApi from "../../../data/api/dashboardApi";
 
 import type {
 	Call,
@@ -32,14 +32,12 @@ type SlaDashboardSupportTableProps = {
 const SlaDashboardSupportTable = ({
 	customerNo,
 	siteId = "",
+
 	dataMonth,
 	dataYear,
+
 	selectedKpi,
 }: SlaDashboardSupportTableProps) => {
-	// =====================================================
-	// State
-	// =====================================================
-
 	const [calls, setCalls] =
 		useState<Call[]>([]);
 
@@ -49,11 +47,11 @@ const SlaDashboardSupportTable = ({
 	const [page, setPage] =
 		useState(1);
 
-	const [total, setTotal] =
-		useState(0);
-
 	const [hasMore, setHasMore] =
 		useState(false);
+
+	const [total, setTotal] =
+		useState(0);
 
 	const [isLoading, setIsLoading] =
 		useState(false);
@@ -61,71 +59,95 @@ const SlaDashboardSupportTable = ({
 	const [error, setError] =
 		useState("");
 
-	const pageSize = 30;
-
 	// =====================================================
-	// Load supporting calls
+	// Reset pagination
 	// =====================================================
 
 	useEffect(() => {
 		setPage(1);
 	}, [
+		selectedKpi,
 		customerNo,
 		siteId,
 		dataMonth,
 		dataYear,
-		selectedKpi,
 	]);
 
-	useEffect(() => {
-		const loadCalls = async () => {
-			setError("");
+	// =====================================================
+	// Load supporting SLA calls
+	// =====================================================
 
-			if (
-				!customerNo ||
-				!selectedKpi
-			) {
+	useEffect(() => {
+		let isCancelled = false;
+
+		const loadCalls = async () => {
+			if (!selectedKpi) {
 				setCalls([]);
 				setTotal(0);
 				setHasMore(false);
+
 				return;
 			}
 
-			try {
-				setIsLoading(true);
+			setIsLoading(true);
+			setError("");
 
+			try {
 				const result =
 					await dashboardApi
 						.getSlaDashboardItems({
 							customerNo,
 							siteId,
+
 							dataMonth,
 							dataYear,
+
 							filterType:
 								selectedKpi,
+
 							page,
-							pageSize,
+							pageSize: 30,
 						});
 
-				setCalls(result.items);
-				setTotal(result.total);
-				setHasMore(result.hasMore);
-			} catch (error) {
-				setCalls([]);
-				setTotal(0);
-				setHasMore(false);
+				if (!isCancelled) {
+					setCalls(
+						result.items
+					);
 
-				setError(
-					error instanceof Error
-						? error.message
-						: "Failed to load supporting SLA calls."
-				);
+					setTotal(
+						result.total
+					);
+
+					setHasMore(
+						result.hasMore
+					);
+				}
+			} catch (error) {
+				if (!isCancelled) {
+					setCalls([]);
+					setTotal(0);
+					setHasMore(false);
+
+					setError(
+						error instanceof Error
+							? error.message
+							: "Failed to load supporting SLA calls."
+					);
+				}
 			} finally {
-				setIsLoading(false);
+				if (!isCancelled) {
+					setIsLoading(
+						false
+					);
+				}
 			}
 		};
 
 		void loadCalls();
+
+		return () => {
+			isCancelled = true;
+		};
 	}, [
 		customerNo,
 		siteId,
@@ -136,58 +158,65 @@ const SlaDashboardSupportTable = ({
 	]);
 
 	// =====================================================
-	// No selection
+	// No KPI selected
 	// =====================================================
 
 	if (!selectedKpi) {
 		return (
-			<div className="sla-support-placeholder">
-				Select either Within SLA or Breached SLA
-				to view the supporting calls.
+			<div className="dashboard-data-placeholder">
+				<p>
+					Select a KPI above to view its
+					supporting calls.
+				</p>
 			</div>
 		);
 	}
+
+	const title =
+		selectedKpi === "FAILED"
+			? "Calls Breaching SLA"
+			: "Calls Within SLA";
 
 	// =====================================================
 	// Render
 	// =====================================================
 
 	return (
-		<div className="sla-support-table">
-			<div className="sla-support-heading">
+		<div className="dashboard-support-table">
+			<div className="dashboard-support-table-heading">
 				<div>
-					<p className="sla-dashboard-eyebrow">
-						Supporting Records
-					</p>
+					<strong>
+						{title}
+					</strong>
 
-					<h4>
-						{selectedKpi === "FAILED"
-							? "Calls Breaching SLA"
-							: "Calls Within SLA"}
-					</h4>
+					<span>
+						{total} record
+						{total === 1
+							? ""
+							: "s"}
+					</span>
 				</div>
-
-				<span className="sla-total-badge">
-					{total} records
-				</span>
 			</div>
 
 			{error && (
-				<p className="sla-dashboard-error">
-					{error}
-				</p>
+				<div
+					className="dashboard-error"
+					role="alert"
+				>
+					<p>{error}</p>
+				</div>
 			)}
 
-			<div className="sla-support-table-wrapper">
-				<CallsTable
-					calls={calls}
-					rowsToShow={pageSize}
-					isLoading={isLoading}
-					onCallClick={setSelectedCall}
-				/>
-			</div>
+			<CallsTable
+				calls={calls}
+				rowsToShow={30}
+				isLoading={isLoading}
+				onCallClick={
+					setSelectedCall
+				}
+			/>
 
-			<div className="sla-support-pagination">
+			<div className="dashboard-support-pagination">
 				<button
 					type="button"
 					disabled={
@@ -197,10 +226,7 @@ const SlaDashboardSupportTable = ({
 					onClick={() =>
 						setPage(
 							(current) =>
-								Math.max(
-									current - 1,
-									1
-								)
+								current - 1
 						)
 					}
 				>
@@ -230,9 +256,13 @@ const SlaDashboardSupportTable = ({
 
 			{selectedCall && (
 				<CallDetailsModal
-					call={selectedCall}
+					call={
+						selectedCall
+					}
 					onClose={() =>
-						setSelectedCall(null)
+						setSelectedCall(
+							null
+						)
 					}
 				/>
 			)}
