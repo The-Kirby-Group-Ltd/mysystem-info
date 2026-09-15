@@ -234,8 +234,7 @@ const SiteDetailsModal = ({
 
 							<p className="site-modal-empty">
 								Site and system charge information will
-								appear here once the available API fields
-								and billing rules have been confirmed.
+								be available soon. 
 							</p>
 						</section>
 					)}

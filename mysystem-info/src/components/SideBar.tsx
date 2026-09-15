@@ -56,6 +56,13 @@ const SideBar = () => {
 							<span>Calls</span>
 						</NavLink>
 					</li>
+
+					<li>
+						<NavLink to="/app/calendar">
+							<span className="sidebar-nav-marker" />
+							<span>Events Calendar</span>
+						</NavLink>
+					</li>
 				</ul>
 
 				<p className="sidebar-section-label">

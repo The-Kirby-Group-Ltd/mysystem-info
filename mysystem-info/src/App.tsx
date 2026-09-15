@@ -13,6 +13,7 @@ import Sites from "./app/Sites";
 import Calls from "./app/Calls";
 import Settings from "./app/Settings";
 import Administration from "./app/Administration";
+import EventsCalendar from "./app/EventsCalendar";
 
 const Unauthorized = () => <h1>Unauthorized</h1>;
 
@@ -44,6 +45,7 @@ const App = () => {
 							<Route path="sites" element={<Sites />} />
 							<Route path="calls" element={<Calls />} />
 							<Route path="settings" element={<Settings />} />
+							<Route path="calendar" element={<EventsCalendar />} />
 
 							<Route
 								element={
