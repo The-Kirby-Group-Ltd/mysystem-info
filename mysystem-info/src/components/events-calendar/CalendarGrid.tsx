@@ -27,60 +27,74 @@ const CalendarGrid = ({
 	// =====================================================
 
 	const buildCalendarDays = (): CalendarDay[] => {
-		const firstDay =
-			new Date(
-				year,
-				month,
-				1
-			);
+        const firstDay =
+            new Date(
+                year,
+                month,
+                1
+            );
 
-		/*
-		 * JavaScript:
-		 * Sunday = 0
-		 * Monday = 1
-		 *
-		 * Convert to:
-		 * Monday = 0
-		 * Sunday = 6
-		 */
-		const firstDayIndex =
-			(
-				firstDay.getDay() +
-				6
-			) % 7;
+        const lastDay =
+            new Date(
+                year,
+                month + 1,
+                0
+            );
 
-		const gridStart =
-			new Date(
-				year,
-				month,
-				1 - firstDayIndex
-			);
+        // Monday = 0, Sunday = 6
+        const firstDayIndex =
+            (
+                firstDay.getDay() +
+                6
+            ) % 7;
 
-		return Array.from(
-			{ length: 42 },
-			(_, index) => {
-				const date =
-					new Date(
-						gridStart
-					);
+        const daysInMonth =
+            lastDay.getDate();
 
-				date.setDate(
-					gridStart.getDate() +
-					index
-				);
+        const totalCellsNeeded =
+            firstDayIndex +
+            daysInMonth;
 
-				return {
-					date,
+        const weeksNeeded =
+            Math.ceil(
+                totalCellsNeeded / 7
+            );
 
-					isCurrentMonth:
-						date.getMonth() ===
-							month &&
-						date.getFullYear() ===
-							year,
-				};
-			}
-		);
-	};
+        const totalCells =
+            weeksNeeded * 7;
+
+        const gridStart =
+            new Date(
+                year,
+                month,
+                1 - firstDayIndex
+            );
+
+        return Array.from(
+            { length: totalCells },
+            (_, index) => {
+                const date =
+                    new Date(
+                        gridStart
+                    );
+
+                date.setDate(
+                    gridStart.getDate() +
+                        index
+                );
+
+                return {
+                    date,
+
+                    isCurrentMonth:
+                        date.getMonth() ===
+                            month &&
+                        date.getFullYear() ===
+                            year,
+                };
+            }
+        );
+    };
 
 	const days =
 		buildCalendarDays();
