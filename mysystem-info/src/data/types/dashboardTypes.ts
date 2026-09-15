@@ -114,6 +114,12 @@ export type MaintenanceDashboardQuery = {
 	dataYear?: number;
 };
 
+export type MaintenanceKpiSelection = 
+	| "UP_TO_DATE"
+	| "DUE_SOON"
+	| "OVERDUE"
+	| null;
+
 export type DashboardMaintenanceFilterType =
 	| "UP_TO_DATE"
 	| "DUE_SOON"

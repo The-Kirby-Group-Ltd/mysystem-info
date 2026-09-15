@@ -264,7 +264,7 @@ const MaintenanceDashboardBoard = ({
 
 			{isLoading && (
 				<p className="dashboard-loading">
-					Loading Maintenance Dashboard...
+					Loading maintenance dashboard. For larger datasets, this may take a few minutes...
 				</p>
 			)}
 
