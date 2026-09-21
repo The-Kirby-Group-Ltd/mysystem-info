@@ -34,14 +34,6 @@ const DashboardWelcome = () => {
 					<span>Calls</span>
 					<strong>›</strong>
 				</NavLink>
-
-				<NavLink
-					to="/app/calendar"
-					className="dashboard-route-button"
-				>
-					<span>Events Calendar</span>
-					<strong>›</strong>
-				</NavLink>
 			</div>
 		</section>
 	);
