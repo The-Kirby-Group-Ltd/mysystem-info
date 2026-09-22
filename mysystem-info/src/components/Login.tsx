@@ -95,10 +95,10 @@ const Login = () => {
 								/>
 							</label>
 
-							<div>
+							<div className="forgot-password-wrapper">
 								<button
 									type="button"
-									className="password-reset-button"
+									className="forgot-password-button"
 									onClick={
 										() => setPasswordModalOpen(true)
 									}

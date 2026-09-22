@@ -16,6 +16,7 @@ const ChangePasswordModalNoAuth = ({
     // =========================================
 
     // Form state
+    const [emailAddress, setEmailAddress] = useState(email);
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [verificationCode, setVerificationCode] = useState("");
@@ -57,6 +58,24 @@ const ChangePasswordModalNoAuth = ({
         setError("");
         setSuccess("");
     };
+
+    const validateEmail = (): string | null => {
+        const cleanEmail = emailAddress
+            .trim()
+            .toLowerCase();
+
+        if (!cleanEmail) {
+            setError("Please enter your registered email address.");
+            return null;
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+            setError("Please enter a valid email address.");
+            return null;
+        }
+
+        return cleanEmail;
+    }
 
     const validateForm = (): boolean => {
         if (!newPassword) {
@@ -107,15 +126,21 @@ const ChangePasswordModalNoAuth = ({
     // Send verification code
     // =========================================
 
-    const handleSendCode = async (email: string) => {
+    const handleSendCode = async () => {
         resetMessages();
+
+        const cleanEmail = validateEmail();
+
+        if (!cleanEmail)
+            return;
 
         try {
             setIsSendingCode(true);
 
-            const response = 
-                await authApi
-                    .requestForgotPasswordAuthCode(email);
+            const response =
+                await authApi.requestForgotPasswordAuthCode(
+                    cleanEmail
+                );
 
             setCodeSent(true);
 
@@ -132,7 +157,7 @@ const ChangePasswordModalNoAuth = ({
         } finally {
             setIsSendingCode(false);
         }
-    }
+    };
 
     // =========================================
     // Handle change password
@@ -227,11 +252,31 @@ const ChangePasswordModalNoAuth = ({
 				========================================= */}
 
                 <div className="change-password-modal-content">
-					<div className="change-password-email">
-						<span>Verification email</span>
+					<div className="change-password-field">
+                        <label htmlFor="forgot-password-email">
+                            Registered Email Address
+                        </label>
 
-						<strong>{email}</strong>
-					</div>
+                        <input
+                            id="forgot-password-email"
+                            type="email"
+                            autoComplete="email"
+                            placeholder="name@example.com"
+                            value={emailAddress}
+                            disabled={isSendingCode || codeSent}
+                            onChange={(event) => {
+                                setEmailAddress(event.target.value);
+
+                                if (codeSent)
+                                    setCodeSent(false);
+                            }}
+                        />
+
+                        <p className="change-password-requirements">
+                            Enter the email address registered to your account.
+                            A six-digit verification code will be sent to this address.
+                        </p>
+                    </div>
 
 					<div className="change-password-code-section">
 						<div>
@@ -246,8 +291,11 @@ const ChangePasswordModalNoAuth = ({
 						<button
 							type="button"
 							className="settings-secondary-button"
-							disabled={isSendingCode}
-							onClick={() => handleSendCode(email)}
+							disabled={
+                                isSendingCode ||
+                                !emailAddress.trim()
+                            }
+							onClick={() => void handleSendCode()}
 						>
 							{isSendingCode
 								? "Sending..."
@@ -281,12 +329,6 @@ const ChangePasswordModalNoAuth = ({
 									)
 								}
 							/>
-
-                            <p className="change-password-requirements">
-                                Password must be at least 8 characters and contain 
-                                at least one lowercase letter, one uppercase letter, 
-                                one number, and one special character. 
-                            </p>
 						</div>
 
 						<div className="change-password-field">
@@ -305,6 +347,12 @@ const ChangePasswordModalNoAuth = ({
 									)
 								}
 							/>
+
+                            <p className="change-password-requirements">
+                                Password must be at least 8 characters and contain 
+                                at least one lowercase letter, one uppercase letter, 
+                                one number, and one special character. 
+                            </p>
 						</div>
 
 						<div className="change-password-field">

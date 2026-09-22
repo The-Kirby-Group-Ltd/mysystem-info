@@ -299,6 +299,36 @@
 }
 
 /* =========================================================
+   FORGOT PASSWORD BUTTON
+   ========================================================= */
+
+.forgot-password-wrapper {
+	width: 100%;
+	display: flex;
+	justify-content: right;
+}
+
+.forgot-password-button {
+	margin: none;
+	padding: 2px 8px;
+	text-align: right;
+	
+	font-family: inherit;
+	color: blue;
+	background: none;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+
+	transition: 0.1s;
+}
+
+.forgot-password-button:hover {
+	text-decoration: underline;
+	background: rgba(0, 0, 0, 0.05);
+}
+
+/* =========================================================
    CHANGE PASSWORD MODAL BACKDROP
    ========================================================= */
 

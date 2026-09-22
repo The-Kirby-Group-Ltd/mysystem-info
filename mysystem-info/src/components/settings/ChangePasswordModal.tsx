@@ -147,10 +147,6 @@ const ChangePasswordModal = ({
             setConfirmPassword("");
             setVerificationCode("");
 
-            /*
-			 * The verification code has now been consumed,
-			 * so another password change requires a new code.
-			 */
             setCodeSent(false);
         } catch (error) {
             setError(
