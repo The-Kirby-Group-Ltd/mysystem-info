@@ -40,6 +40,7 @@ export type ChangePasswordRequest = {
 };
 
 export type ForgotPasswordNewRequest = {
+	email: string;
 	newPassword: string;
 	verificationCode: string;
 }

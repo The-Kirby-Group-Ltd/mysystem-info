@@ -174,6 +174,7 @@ const ChangePasswordModalNoAuth = ({
             setIsChangingPassword(true);
             
             const response = await authApi.requestForgotPasswordNew({
+                email,
                 newPassword,
                 verificationCode,
             });
