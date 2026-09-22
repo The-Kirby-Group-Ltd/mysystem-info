@@ -263,12 +263,11 @@ const ChangePasswordModalNoAuth = ({
                             autoComplete="email"
                             placeholder="name@example.com"
                             value={emailAddress}
-                            disabled={isSendingCode || codeSent}
+                            disabled={isSendingCode}
                             onChange={(event) => {
                                 setEmailAddress(event.target.value);
-
-                                if (codeSent)
-                                    setCodeSent(false);
+                                setCodeSent(false);
+                                setVerificationCode("");
                             }}
                         />
 
