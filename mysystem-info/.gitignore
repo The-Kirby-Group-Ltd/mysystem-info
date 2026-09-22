@@ -24,8 +24,8 @@ dist-ssr
 *.sw?
 
 # api
-./src/data/api/*
-./src/data/auth/*
+src/data/api/*
+src/data/auth/*
 
 # extras
 .env

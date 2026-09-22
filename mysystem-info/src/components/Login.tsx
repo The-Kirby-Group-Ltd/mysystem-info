@@ -2,6 +2,7 @@ import { useState } from "react";
 import "../styles/LoginStyles.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../data/auth/useAuth";
+import ChangePasswordModalNoAuth from "./auth/ChangePasswordModalNoAuth";
 
 const Login = () => {
 	const [username, setUsername] = useState("");
@@ -11,6 +12,9 @@ const Login = () => {
 
 	const navigate = useNavigate();
 	const { login } = useAuth();
+
+	// modal state
+	const [passwordModalOpen, setPasswordModalOpen] = useState(false);
 
 	const handleLogin = async (e: React.SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -54,8 +58,6 @@ const Login = () => {
 				<section className="login-box">
 					<div className="login-box-heading">
 						<h2>Log in</h2>
-
-						<p>Enter your portal credentials to continue.</p>
 					</div>
 
 					<form 
@@ -92,6 +94,18 @@ const Login = () => {
 									autoComplete="password"
 								/>
 							</label>
+
+							<div>
+								<button
+									type="button"
+									className="password-reset-button"
+									onClick={
+										() => setPasswordModalOpen(true)
+									}
+								>
+									Forgot Password?
+								</button>
+							</div>
 						</div>
 
 						{error && (
@@ -115,6 +129,19 @@ const Login = () => {
 					</form>
 				</section>
 			</div>
+
+			{passwordModalOpen && (
+				<ChangePasswordModalNoAuth 
+					email={
+						username.includes("@") 
+							? username 
+							: ""
+					}
+					onClose={
+						() => setPasswordModalOpen(false)
+					}
+				/>
+			)}
 		</div>		
 	);
 };

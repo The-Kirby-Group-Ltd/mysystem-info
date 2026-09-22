@@ -4,6 +4,7 @@ import type {
 	LoginRequest,
 	LoginResponse,
 	ChangePasswordRequest,
+	ForgotPasswordNewRequest,
 } from "../auth/authTypes";
 
 export const authApi = {
@@ -42,4 +43,36 @@ export const authApi = {
 				body: JSON.stringify(request)
 			}
 		),
+
+	// ===================================================
+	// Password reset | no auth
+	// ===================================================
+
+	requestForgotPasswordAuthCode: (
+		email: string
+	) => {
+		const cleanEmail = 
+			email.trim().toLowerCase();
+
+		return httpClient<{ message: string }>(
+			"api/forgot-password/code",
+			{
+				method: "POST",
+				body: JSON.stringify(cleanEmail)
+			}
+		)
+	},
+
+	requestForgotPasswordNew: (
+		request: ForgotPasswordNewRequest
+	) => {
+		return httpClient<{ message: string }>(
+			"api/forgot-password/password",
+			{
+				method: "POST",
+				body: JSON.stringify(request)
+			}
+		)
+	},
+	
 };
