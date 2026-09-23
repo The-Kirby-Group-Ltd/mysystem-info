@@ -58,7 +58,9 @@ export const authApi = {
 			"api/forgot-password/code",
 			{
 				method: "POST",
-				body: JSON.stringify(cleanEmail)
+				body: JSON.stringify({
+					email: cleanEmail
+				})
 			}
 		)
 	},
@@ -70,7 +72,11 @@ export const authApi = {
 			"api/forgot-password/password",
 			{
 				method: "POST",
-				body: JSON.stringify(request)
+				body: JSON.stringify({
+					email: request.email,
+					newPassword: request.newPassword,
+					verificationCode: request.verificationCode,
+				})
 			}
 		)
 	},
