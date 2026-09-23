@@ -28,7 +28,6 @@ const CallsTable = ({
 	rowsToShow,
 	isLoading = false,
 	onCallClick,
-	engineerNames = {},
 	showSiteId = true,
 }: CallsTableProps) => {
 	const visibleCalls = calls.slice(0, rowsToShow);
@@ -61,18 +60,8 @@ const CallsTable = ({
 	};
 
 	// ================================
-    // engineer name assignment helper
+    // Load engineers at render
     // ================================
-
-	const getEngineerName = (engineerCode: string): string => {
-		const cleanCode = engineerCode.trim().toUpperCase();
-
-		if (!cleanCode) {
-			return "—";
-		}
-
-		return engineerNames[cleanCode] ?? engineerCode;
-	};
 
 	useEffect(() => {
 		let isCancelled = false;

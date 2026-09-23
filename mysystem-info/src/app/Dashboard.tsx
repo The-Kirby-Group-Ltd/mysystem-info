@@ -24,6 +24,7 @@ import {
 
 import type {
 	CallsKpiSelection,
+	MaintenanceKpiSelection,
 	DashboardMonth,
 	DashboardSelect,
 	SlaKpiSelection,
@@ -316,16 +317,16 @@ const Dashboard = () => {
 						siteId={searchedSiteId} 
 						selectedMonth={"ALL"} 
 						selectedYear={0} 
-						onMonthChange={function (month: DashboardMonth): void {
+						onMonthChange={function (_month: DashboardMonth): void {
 							throw new Error("Function not implemented.");
 						} } 
-						onYearChange={function (year: number): void {
+						onYearChange={function (_year: number): void {
 							throw new Error("Function not implemented.");
 						} } 
 						selectedKpi={null} 
-						onKpiChange={function (value: MaintenanceKpiSelection): void {
+						onKpiChange={function (_value: MaintenanceKpiSelection): void {
 							throw new Error("Function not implemented.");
-						} }					
+						} }		
 					/>
 				);
 
