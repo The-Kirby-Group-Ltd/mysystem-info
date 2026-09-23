@@ -4,6 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../data/auth/useAuth";
 import ChangePasswordModalNoAuth from "./auth/ChangePasswordModalNoAuth";
 
+// documentation
+import privacyNoticePdf 
+	from "../assets/documentation/mysystem-info-privacy-notice.pdf";
+import termsOfUsePdf
+	from "../assets/documentation/mysystem-info-terms-of-use.pdf";
+
 const Login = () => {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
@@ -128,6 +134,24 @@ const Login = () => {
 						</button>
 					</form>
 				</section>
+			</div>
+
+			<div className="login-legal-links">
+				<a 
+					href={termsOfUsePdf}
+					download="mysystem-info-terms-of-use.pdf"
+				>
+					Terms & Conditions
+				</a>
+
+				<span>|</span>
+
+				<a 
+					href={privacyNoticePdf}
+					download="mysystem-info-privacy-notice.pdf"
+				>
+					Privacy Policy
+				</a>
 			</div>
 
 			{passwordModalOpen && (
