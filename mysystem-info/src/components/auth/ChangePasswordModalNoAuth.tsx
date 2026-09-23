@@ -78,23 +78,26 @@ const ChangePasswordModalNoAuth = ({
     }
 
     const validateForm = (): boolean => {
-        if (!newPassword) {
-            setError("Please enter a new password.");
-            return false;
-        }
-
         if (newPassword.length < 8) {
             setError("Your new password must be a minimum of 8 characters.");
             return false;
         }
 
-        var newPasswordIsSecure = checkSecurePassword(newPassword);
+        const newPasswordIsSecure =
+            checkSecurePassword(newPassword);
+
         if (!newPasswordIsSecure) {
             setError("Your password does not meet the security requirements.");
             return false;
         }
 
-        if (verificationCode.length !== 6 || 
+        if (newPassword !== confirmPassword) {
+            setError("The new passwords do not match.");
+            return false;
+        }
+
+        if (
+            verificationCode.length !== 6 ||
             !/^\d{6}$/.test(verificationCode)
         ) {
             setError("Please enter the six-digit verification code.");
@@ -165,16 +168,19 @@ const ChangePasswordModalNoAuth = ({
 
     const handleChangePassword = async () => {
         resetMessages();
+        const cleanEmail = validateEmail();
 
-        if (!validateForm()) {
+        if (!cleanEmail) 
             return;
-        }
+
+        if (!validateForm()) 
+            return;
         
         try {
             setIsChangingPassword(true);
             
             const response = await authApi.requestForgotPasswordNew({
-                email,
+                email: cleanEmail,
                 newPassword,
                 verificationCode,
             });

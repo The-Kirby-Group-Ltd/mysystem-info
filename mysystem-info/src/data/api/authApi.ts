@@ -55,7 +55,7 @@ export const authApi = {
 			email.trim().toLowerCase();
 
 		return httpClient<{ message: string }>(
-			"api/forgot-password/code",
+			"/api/forgot-password/code",
 			{
 				method: "POST",
 				body: JSON.stringify({
@@ -69,7 +69,7 @@ export const authApi = {
 		request: ForgotPasswordNewRequest
 	) => {
 		return httpClient<{ message: string }>(
-			"api/forgot-password/password",
+			"/api/forgot-password/password",
 			{
 				method: "POST",
 				body: JSON.stringify({
