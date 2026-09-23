@@ -233,9 +233,9 @@ const SiteDetailsModal = ({
 							<h3>Charges</h3>
 
 							<p className="site-modal-empty">
-								Site and system charge information will
-								appear here once the available API fields
-								and billing rules have been confirmed.
+								Information of site, systems, 
+								and equipment charges will 
+								be added in future updates. 
 							</p>
 						</section>
 					)}
@@ -249,7 +249,8 @@ const SiteDetailsModal = ({
 							<h3>Book a Call</h3>
 
 							<p className="site-modal-empty">
-								Online call booking will be available soon.
+								Online call booking will be available 
+								in future updates.
 							</p>
 						</section>
 					)}

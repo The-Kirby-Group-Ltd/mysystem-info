@@ -91,6 +91,34 @@ const Settings = () => {
                     <PortalPreferencesCard />
 				</section>
 
+				{/* Legal & Privacy */}
+				<section className="settings-card">
+					<div className="settings-card-heading">
+						<h2>
+							Legal & Privacy
+						</h2>
+					</div>
+
+					<div className="settings-legal-links">
+						<a
+							href={termsOfUsePdf}
+							download="mysystem-info-terms-of-use.pdf"
+							className="settings-secondary-button"
+						>
+							Download Terms & Conditions
+						</a>
+
+						<a
+							href={privacyNoticePdf}
+							download="mysystem-info-privacy-notice.pdf"
+							className="settings-secondary-button"
+						>
+							Download Privacy Policy
+						</a>
+					</div>
+				</section>
+
+				{/* This Session */}
 				<section className="settings-card session-section">
 					<div className="settings-card-heading">
                         <h2>
@@ -127,32 +155,6 @@ const Settings = () => {
 								aria-hidden="true"
 							/>
 						</button>
-					</div>
-				</section>
-
-				<section className="settings-card">
-					<div className="settings-card-heading">
-						<h2>
-							Legal & Privacy
-						</h2>
-					</div>
-
-					<div className="settings-legal-links">
-						<a
-							href={termsOfUsePdf}
-							download="mysystem-info-terms-of-use.pdf"
-							className="settings-secondary-button"
-						>
-							Download Terms & Conditions
-						</a>
-
-						<a
-							href={privacyNoticePdf}
-							download="mysystem-info-privacy-notice.pdf"
-							className="settings-secondary-button"
-						>
-							Download Privacy Policy
-						</a>
 					</div>
 				</section>
 			</div>
