@@ -932,6 +932,20 @@
 	border-top: 1px solid rgba(0, 0, 0, 0.07);
 }
 
+/* =========================================================
+   LEGAL
+   ========================================================= */
+
+.settings-legal-links {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.settings-legal-links a {
+	text-decoration: none;
+}
 
 /* =========================================================
    RESPONSIVE

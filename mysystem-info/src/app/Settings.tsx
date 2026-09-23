@@ -6,6 +6,12 @@ import "../styles/app-styles/settings/Settings.css";
 import PortalPreferencesCard from "../components/settings/PortalPreferencesCard";
 import AccountSettingsCard from "../components/settings/AccountSettingsCard";
 
+// documentation
+import termsOfUsePdf 
+	from "../assets/documentation/mysystem-info-terms-of-use.pdf";
+import privacyNoticePdf 
+	from "../assets/documentation/mysystem-info-privacy-notice.pdf";
+
 const Settings = () => {
 	const { user, logout } = useAuth();
 	const navigate = useNavigate();
@@ -121,6 +127,32 @@ const Settings = () => {
 								aria-hidden="true"
 							/>
 						</button>
+					</div>
+				</section>
+
+				<section className="settings-card">
+					<div className="settings-card-heading">
+						<h2>
+							Legal & Privacy
+						</h2>
+					</div>
+
+					<div className="settings-legal-links">
+						<a
+							href={termsOfUsePdf}
+							download="mysystem-info-terms-of-use.pdf"
+							className="settings-secondary-button"
+						>
+							Download Terms & Conditions
+						</a>
+
+						<a
+							href={privacyNoticePdf}
+							download="mysystem-info-privacy-notice.pdf"
+							className="settings-secondary-button"
+						>
+							Download Privacy Policy
+						</a>
 					</div>
 				</section>
 			</div>
