@@ -34,6 +34,8 @@ import {
 	canAccessCustomer
 } from "../data/auth/accessHelpers";
 
+import CustomerLookupTool from "../components/customer-lookup/CustomerLookupTool";
+
 // =========================================================
 // Defaults
 // =========================================================
@@ -76,6 +78,21 @@ const Sites = () => {
 
 	const [searchedCustomerNo, setSearchedCustomerNo] =
 		useState("");
+
+	// =====================================================
+	// Customer lookup tool data
+	// =====================================================
+
+	const [
+		customerLookupToolOpen, 
+		setCustomerLookupToolOpen
+	] = useState(false);
+
+	const handleCustomerLookupToolSelect = (
+		lookupToolSelectedCustomerNo: string
+	) => {
+		setCustomerNo(lookupToolSelectedCustomerNo);
+	}
 
 	// =====================================================
 	// Filter state
@@ -271,21 +288,31 @@ const Sites = () => {
 	const renderCustomerSelector = () => {
 		if (unrestricted) {
 			return (
-				<input
-					type="text"
-					placeholder="Customer No"
-					value={customerNo}
-					onChange={(event) =>
-						setCustomerNo(
-							event.target.value
-						)
-					}
-					onKeyDown={(event) => {
-						if (event.key === "Enter") {
-							void loadSites(1);
+				<div>
+					<input
+						type="text"
+						placeholder="Customer No"
+						value={customerNo}
+						onChange={(event) =>
+							setCustomerNo(
+								event.target.value
+							)
 						}
-					}}
-				/>
+						onKeyDown={(event) => {
+							if (event.key === "Enter") {
+								void loadSites(1);
+							}
+						}}
+					/>
+
+					<button
+						type="button"
+						className="customer-lookup-button"
+						onClick={() => setCustomerLookupToolOpen(true)}
+					>
+						Customer Lookup Tool
+					</button>
+				</div>
 			);
 		}
 
@@ -490,6 +517,14 @@ const Sites = () => {
 					onClose={() =>
 						setSelectedSite(null)
 					}
+				/>
+			)}
+
+			{customerLookupToolOpen && (
+				<CustomerLookupTool
+					customerNo={customerNo.trim() ?? ""}
+					onCustomerNoSelect={() => handleCustomerLookupToolSelect}
+					onClose={() => setCustomerLookupToolOpen(false)}
 				/>
 			)}
 		</div>
