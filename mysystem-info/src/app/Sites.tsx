@@ -522,7 +522,6 @@ const Sites = () => {
 
 			{customerLookupToolOpen && (
 				<CustomerLookupTool
-					customerNo={customerNo.trim() ?? ""}
 					onCustomerNoSelect={() => handleCustomerLookupToolSelect}
 					onClose={() => setCustomerLookupToolOpen(false)}
 				/>

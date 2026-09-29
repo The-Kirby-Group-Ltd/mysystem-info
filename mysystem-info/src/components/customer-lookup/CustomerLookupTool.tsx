@@ -1,13 +1,13 @@
+import "../../styles/app-styles/customer-lookup/customer-lookup-tool.css";
 import { useState, useEffect } from "react";
 
 type CustomerLookupToolProps = {
-    customerNo: string;
     onCustomerNoSelect: (customerNo: string) => void;
     onClose: () => void;
 }
 
 const CustomerLookupTool = ({
-    customerNo, onCustomerNoSelect, onClose
+    onCustomerNoSelect, onClose
 }: CustomerLookupToolProps) => {
 
     // =================================================
@@ -17,30 +17,40 @@ const CustomerLookupTool = ({
     const [customerNoSearch, setCustomerNoSearch] = useState("");
     const [customerNameSearch, setCustomerNameSearch] = useState("");
 
+    const [siteIdSearch, setSiteIdSearch] = useState("");
+    const [customerFieldsDisabled, setCustomerFieldsDisabled] = useState(false);    
+
     // =================================================
     // Modal behaviour
     // =================================================
 
     useEffect(() => {
-        const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.key === "Escape") {
+        const handleSearchKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "Enter") 
+                loadCustomers();
+        };
+
+        const handleExitKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "Escape") 
                 onClose();
-            }
         };
 
         const previousOverflow = document.body.style.overflow;
 
         document.body.style.overflow = "hidden";
-        window.addEventListener("keydown", handleKeyDown);
+
+        window.addEventListener("keydown", handleSearchKeyDown);
+        window.addEventListener("keydown", handleExitKeyDown);
 
         return () => {
             document.body.style.overflow = previousOverflow;
-            window.removeEventListener("keydown", handleKeyDown);
+            window.removeEventListener("keydown", handleExitKeyDown);
+            window.removeEventListener("keydown", handleSearchKeyDown);
         };
     }, [onClose]);
     
     // =================================================
-    // Customer number selection
+    // Helpers
     // =================================================
 
     const handleCustomerNoSelection = (
@@ -50,11 +60,23 @@ const CustomerLookupTool = ({
         onClose();
     }
 
+    const handleSiteIdStatus = (site: string) => {  
+        setSiteIdSearch(site);
+        
+        if (site.trim()) {
+            setCustomerFieldsDisabled(true);
+            return;
+        }
+
+        setCustomerFieldsDisabled(false);
+    }
+
     // =================================================
     // Customers API
     // =================================================
 
     const loadCustomers = () => {
+        console.log("loadCustomers() was called.")
         return [];
     }
 
@@ -65,43 +87,79 @@ const CustomerLookupTool = ({
     return (
         <div className="clt-backdrop">
             <div className="clt-modal">
-                {/* ================================ 
-                ============   Header   ============
-                ================================ */}
+                {/* =========   Header   ========= */}
 
                 <header className="clt-header">
-                    <h3>Customer Lookup Tool</h3>
+                    <div>
+                        <p className="clt-header-eyebrow">
+                            Search Customers
+                        </p>
+
+                        <h2>Customer Lookup Tool</h2>
+                    </div>
 
                     <button
                         type="button"
                         className="clt-close-button"
                         onClick={() => onClose()}
                     >
-                        X
+                        ×
                     </button>
                 </header>
 
-                {/* ================================ 
-                ============   Filters   ===========
-                ================================ */}
+                {/* =========   Filters   ========= */}
 
                 <section className="clt-filters">
                     <form>
-                        <input 
-                            type="text" 
-                            className="clt-form-field"
-                            value={customerNoSearch}
-                            onChange={(e) => setCustomerNoSearch(e.target.value)}
-                            placeholder="Customer No"
-                        />
+                        <span>Search by Customer Data Fields</span>
 
-                        <input 
-                            type="text" 
-                            className="clt-form-field"
-                            value={customerNameSearch}
-                            onChange={(e) => setCustomerNoSearch(e.target.value)}
-                            placeholder="Name Includes"
-                        />
+                        <div className="clt-customer-filters">
+
+                            <div className="clt-form-field">
+                                <label>Customer No</label>
+                                <input 
+                                    type="text" 
+                                    className={
+                                        customerFieldsDisabled
+                                            ? "clt-input-field clt-input-field-disabled"
+                                            : "clt-input-field"
+                                    }
+                                    value={customerNoSearch}
+                                    disabled={customerFieldsDisabled}
+                                    onChange={(e) => setCustomerNoSearch(e.target.value)}
+                                    placeholder="Customer No"
+                                />
+                            </div>
+
+                            <div className="clt-form-field">
+                                <label>Customer Name</label>
+                                <input 
+                                    type="text" 
+                                    className={
+                                        customerFieldsDisabled
+                                            ? "clt-input-field clt-input-field-disabled"
+                                            : "clt-input-field"
+                                    }
+                                    value={customerNameSearch}
+                                    disabled={customerFieldsDisabled}
+                                    onChange={(e) => setCustomerNameSearch(e.target.value)}
+                                    placeholder="Name Includes"
+                                />
+                            </div>
+                        </div>
+
+                        <span>Or, if you have a Site ID in mind, use that to search.</span>
+
+                        <div className="clt-form-field">
+                            <label>Site ID</label>
+                            <input 
+                                type="text" 
+                                className={"clt-input-field"}
+                                value={siteIdSearch}
+                                onChange={(e) => handleSiteIdStatus(e.target.value)}
+                                placeholder="Site ID"
+                            />
+                        </div>
                     </form>
 
                     <button
@@ -113,24 +171,10 @@ const CustomerLookupTool = ({
                     </button>
                 </section>
 
-                {/* ================================ 
-                =========   Lookup Table   =========
-                ================================ */}
+                {/* =========   Lookup Table   ========= */}
                 
                 <section className="clt-table">
                     {/* table component here */}
-                </section>
-
-                {/* ================================ 
-                ============   Footer   ============
-                ================================ */}
-
-                <section className="clt-footer">
-                    <button
-                        onClick={() => onClose()}
-                    >
-                        Close
-                    </button>
                 </section>
             </div>
         </div>
