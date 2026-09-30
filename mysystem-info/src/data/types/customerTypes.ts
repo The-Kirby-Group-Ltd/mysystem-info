@@ -1,13 +1,35 @@
+// ====================================================
+// Customer data types
+// ====================================================
+
 export type Customer = {
-    customerNo: string;
-    customerName: string;
-}
+	customerNo: string;
+	customerName: string;
+	postCode: string;
+};
 
-export type CustomersRequest = {
-    customerNo: string | null;
-    customerName: string | null;
-}
+// ====================================================
+// Customer query
+// ====================================================
 
-export type CustomerRequestBySiteId = {
-    siteId: string;
-}
+export type CustomerQuery = {
+	customerNo?: string;
+	customerName?: string;
+
+	page?: number;
+	pageSize?: number;
+};
+
+// ====================================================
+// Customer response
+// ====================================================
+
+export type CustomersResponse = {
+	items: Customer[];
+
+	page: number;
+	pageSize: number;
+	total: number;
+
+	hasMore: boolean;
+};
