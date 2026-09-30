@@ -88,10 +88,17 @@ const Sites = () => {
 		setCustomerLookupToolOpen
 	] = useState(false);
 
-	const handleCustomerLookupToolSelect = (
+	const handleCustomerLookupToolSelect = async (
 		lookupToolSelectedCustomerNo: string
 	) => {
-		setCustomerNo(lookupToolSelectedCustomerNo);
+		const cleanCustomerNo = 
+			lookupToolSelectedCustomerNo
+				.trim()
+				.toUpperCase();
+
+		setCustomerNo(cleanCustomerNo);
+
+		await loadSites(1, cleanCustomerNo);
 	}
 
 	// =====================================================
@@ -187,11 +194,16 @@ const Sites = () => {
 	// Load sites
 	// =====================================================
 
-	const loadSites = async (pageToLoad = 1) => {
+	const loadSites = async (
+		pageToLoad = 1,
+		customerNoToLoad = customerNo
+	) => {
 		setError("");
 
 		const cleanCustomerNo =
-			customerNo.trim().toUpperCase();
+			customerNoToLoad
+				.trim()
+				.toUpperCase();
 
 		if (!cleanCustomerNo) {
 			setError("Customer No is required.");
@@ -210,6 +222,7 @@ const Sites = () => {
 			setError(
 				"You do not have access to this customer."
 			);
+
 			return;
 		}
 
@@ -217,6 +230,7 @@ const Sites = () => {
 			setError(
 				"Page number must be 1 or higher."
 			);
+
 			return;
 		}
 
@@ -529,7 +543,11 @@ const Sites = () => {
 				user?.roles.includes("Staff")) && 
 			(
 				<CustomerLookupTool
-					onCustomerNoSelect={() => handleCustomerLookupToolSelect}
+					onCustomerNoSelect={
+						(customerNo: string) => {
+							handleCustomerLookupToolSelect(customerNo)
+						}
+					}
 					onClose={() => setCustomerLookupToolOpen(false)}
 				/>
 			)}

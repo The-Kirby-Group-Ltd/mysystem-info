@@ -5,7 +5,7 @@ import type {
 type CustomerLookupTableProps = {
     customers: Customer[];
     rowsToShow: number;
-    onSelect: (customer: Customer) => void;
+    onSelect: (customerNo: string) => void;
     isLoading?: boolean;
 }
 
@@ -73,14 +73,17 @@ const CustomerLookupTable = ({
 
                 {!isLoading && 
                     visibleCustomers.map((customer) => (
-                        <tr className="customers-table-row">
+                        <tr 
+                            key={customer.customerNo}
+                            className="customers-table-row"
+                        >
                             <td>
                                 <button
                                     type="button"
                                     className="customerno-button"
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        onSelect(customer);
+                                        onSelect(customer.customerNo);
                                     }}
                                 >
                                     {customer.customerNo}
@@ -100,7 +103,7 @@ const CustomerLookupTable = ({
                 {!isLoading && visibleCustomers.length === 0 && (
                     <tr>
                         <td 
-                            colSpan={4} 
+                            colSpan={3} 
                             className="customers-empty-row"
                         >
                             No accessible customers could be found.
