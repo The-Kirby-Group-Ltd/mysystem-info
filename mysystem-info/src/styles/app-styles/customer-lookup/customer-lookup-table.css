@@ -1,0 +1,205 @@
+/* =========================================================
+   CUSTOMERS TABLE
+   ========================================================= */
+
+.customers-table {
+	width: 100%;
+
+	margin: 0;
+
+	border-collapse: collapse;
+	table-layout: auto;
+
+	background: transparent;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.customers-table thead {
+	background: rgba(0, 0, 0, 0.025);
+}
+
+.customers-table thead tr {
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.customers-table thead th {
+	padding: 11px 15px;
+
+	color: #666;
+
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.045em;
+	text-align: left;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+
+.customers-table thead th:first-child {
+	width: 150px;
+}
+
+.customers-table thead th:last-child {
+	width: 170px;
+}
+
+
+/* =========================================================
+   ROWS
+   ========================================================= */
+
+.customers-table tbody tr {
+	border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+
+	transition:
+		background 0.15s ease;
+}
+
+.customers-table tbody tr:last-child {
+	border-bottom: none;
+}
+
+.customers-table tbody tr:nth-child(odd) {
+	background: rgba(219, 45, 45, 0.018);
+}
+
+.customers-table tbody tr:hover {
+	background: rgba(219, 45, 45, 0.045);
+}
+
+.customers-table td {
+	padding: 12px 15px;
+
+	color: #333;
+
+	font-size: 0.86rem;
+	line-height: 1.4;
+	vertical-align: middle;
+}
+
+.customers-table-row {
+	cursor: default;
+}
+
+
+/* =========================================================
+   CUSTOMER NO LINK
+   ========================================================= */
+
+.customerno-button {
+	margin: 0;
+	padding: 0;
+
+	border: none;
+
+	background: transparent;
+	color: #a51f1f;
+
+	font: inherit;
+	font-weight: 600;
+	text-align: left;
+
+	cursor: pointer;
+
+	transition:
+		color 0.15s ease;
+}
+
+.customerno-button:hover {
+	color: #db2d2d;
+
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.customers-empty-row {
+	padding: 34px 16px !important;
+
+	color: #777 !important;
+
+	font-size: 0.86rem !important;
+	text-align: center;
+}
+
+
+/* =========================================================
+   SKELETON ROWS
+   ========================================================= */
+
+.customers-table .sites-skeleton-row td {
+	padding: 12px 15px;
+}
+
+.customers-table .skeleton-block {
+	display: block;
+
+	height: 12px;
+
+	border-radius: 999px;
+
+	background:
+		linear-gradient(
+			90deg,
+			rgba(0, 0, 0, 0.035),
+			rgba(219, 45, 45, 0.09),
+			rgba(0, 0, 0, 0.035)
+		);
+
+	background-size: 200% 100%;
+
+	animation:
+		skeleton-loading 1.2s ease-in-out infinite;
+}
+
+.customers-table .skeleton-short {
+	width: 80px;
+}
+
+.customers-table .skeleton-medium {
+	width: 120px;
+}
+
+.customers-table .skeleton-long {
+	width: min(360px, 80%);
+}
+
+
+/* =========================================================
+   CUSTOMER NAME / POSTCODE
+   ========================================================= */
+
+.customers-table td:nth-child(2) {
+	min-width: 260px;
+
+	font-weight: 500;
+}
+
+.customers-table td:nth-child(3) {
+	white-space: nowrap;
+
+	color: #555;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media screen and (max-width: 800px) {
+	.clt-table-wrapper {
+		overflow-x: auto;
+	}
+
+	.customers-table {
+		min-width: 680px;
+	}
+}

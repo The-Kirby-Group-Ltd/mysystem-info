@@ -1,3 +1,5 @@
+import "../../styles/app-styles/customer-lookup/customer-lookup-table.css";
+
 import type {
     Customer,
 } from "../../data/types/customerTypes";

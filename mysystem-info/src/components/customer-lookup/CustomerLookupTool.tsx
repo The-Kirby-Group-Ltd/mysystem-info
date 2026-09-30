@@ -269,155 +269,165 @@ const CustomerLookupTool = ({
 					</button>
 				</header>
 
-				{/* ========================================
-				    Filters
-				======================================== */}
+                <div className="clt-body">
+                    {/* ========================================
+                        Filters
+                    ======================================== */}
 
-				<section className="clt-filters">
-					<form
-						onSubmit={handleSubmit}
-					>
-						<span>
-							Search by Customer Data Fields
-						</span>
+                    <section className="clt-filters">
+                        <form
+                            onSubmit={handleSubmit}
+                        >
+                            <span>
+                                Search by Customer Data Fields
+                            </span>
 
-						<div className="clt-customer-filters">
-							<div className="clt-form-field">
-								<label
-									htmlFor="clt-customer-no"
-								>
-									Customer No
-								</label>
+                            <div className="clt-customer-filters">
+                                <div className="clt-form-field">
+                                    <label
+                                        htmlFor="clt-customer-no"
+                                    >
+                                        Customer No
+                                    </label>
 
-								<input
-									id="clt-customer-no"
-									type="text"
-									className={
-										customerFieldsDisabled
-											? "clt-input-field clt-input-field-disabled"
-											: "clt-input-field"
-									}
-									value={
-										customerNoSearch
-									}
-									disabled={
-										customerFieldsDisabled
-									}
-									onChange={(event) =>
-										setCustomerNoSearch(
-											event.target.value
-										)
-									}
-									placeholder="Customer No"
-								/>
-							</div>
+                                    <input
+                                        id="clt-customer-no"
+                                        type="text"
+                                        className={
+                                            customerFieldsDisabled
+                                                ? "clt-input-field clt-input-field-disabled"
+                                                : "clt-input-field"
+                                        }
+                                        value={
+                                            customerNoSearch
+                                        }
+                                        disabled={
+                                            customerFieldsDisabled
+                                        }
+                                        onChange={(event) =>
+                                            setCustomerNoSearch(
+                                                event.target.value
+                                            )
+                                        }
+                                        placeholder="Customer No"
+                                    />
+                                </div>
 
-							<div className="clt-form-field">
-								<label
-									htmlFor="clt-customer-name"
-								>
-									Customer Name
-								</label>
+                                <div className="clt-form-field">
+                                    <label
+                                        htmlFor="clt-customer-name"
+                                    >
+                                        Customer Name
+                                    </label>
 
-								<input
-									id="clt-customer-name"
-									type="text"
-									className={
-										customerFieldsDisabled
-											? "clt-input-field clt-input-field-disabled"
-											: "clt-input-field"
-									}
-									value={
-										customerNameSearch
-									}
-									disabled={
-										customerFieldsDisabled
-									}
-									onChange={(event) =>
-										setCustomerNameSearch(
-											event.target.value
-										)
-									}
-									placeholder="Name Includes"
-								/>
-							</div>
-						</div>
+                                    <input
+                                        id="clt-customer-name"
+                                        type="text"
+                                        className={
+                                            customerFieldsDisabled
+                                                ? "clt-input-field clt-input-field-disabled"
+                                                : "clt-input-field"
+                                        }
+                                        value={
+                                            customerNameSearch
+                                        }
+                                        disabled={
+                                            customerFieldsDisabled
+                                        }
+                                        onChange={(event) =>
+                                            setCustomerNameSearch(
+                                                event.target.value
+                                            )
+                                        }
+                                        placeholder="Name Includes"
+                                    />
+                                </div>
+                            </div>
 
-						<span>
-							Or, if you have a Site ID in mind,
-							use that to search.
-						</span>
+                            <span>
+                                Or, if you have a Site ID in mind,
+                                use that to search.
+                            </span>
 
-						<div className="clt-form-field">
-							<label
-								htmlFor="clt-site-id"
-							>
-								Site ID
-							</label>
+                            <div className="clt-form-field">
+                                <label
+                                    htmlFor="clt-site-id"
+                                >
+                                    Site ID
+                                </label>
 
-							<input
-								id="clt-site-id"
-								type="text"
-								className="clt-input-field"
-								value={
-									siteIdSearch
-								}
-								onChange={(event) =>
-									handleSiteIdStatus(
-										event.target.value
-									)
-								}
-								placeholder="Site ID"
-							/>
-						</div>
+                                <input
+                                    id="clt-site-id"
+                                    type="text"
+                                    className="clt-input-field"
+                                    value={
+                                        siteIdSearch
+                                    }
+                                    onChange={(event) =>
+                                        handleSiteIdStatus(
+                                            event.target.value
+                                        )
+                                    }
+                                    placeholder="Site ID"
+                                />
+                            </div>
 
-						<button
-							type="submit"
-							className="clt-form-submit"
-							disabled={
-								isLoadingCustomers
-							}
-						>
-							{isLoadingCustomers
-								? "Searching..."
-								: "Search"}
-						</button>
-					</form>
-				</section>
+                            <button
+                                type="submit"
+                                className="clt-form-submit"
+                                disabled={
+                                    isLoadingCustomers
+                                }
+                            >
+                                {isLoadingCustomers
+                                    ? "Searching..."
+                                    : "Search"}
+                            </button>
+                        </form>
+                    </section>
 
-				{/* ========================================
-				    Error
-				======================================== */}
+                    {/* ========================================
+                        Error
+                    ======================================== */}
 
-				{error && (
-					<div
-						className="clt-error"
-						role="alert"
-					>
-						{error}
-					</div>
-				)}
+                    {error && (
+                        <div
+                            className="clt-error"
+                            role="alert"
+                        >
+                            {error}
+                        </div>
+                    )}
 
-				{/* ========================================
-				    Lookup table
-				======================================== */}
+                    {/* ========================================
+                        Lookup table
+                    ======================================== */}
 
-				<section className="clt-table">
-					<div className="clt-table-wrapper">
-						<CustomerLookupTable
-							customers={customers}
-							rowsToShow={50}
-							onSelect={(customerNo) =>
-								handleCustomerNoSelection(
-									customerNo
-								)
-							}
-							isLoading={
-								isLoadingCustomers
-							}
-						/>
-					</div>
-				</section>
+                    <section className="clt-table-section">
+                        <div className="clt-table-heading">
+                            <div>
+                                <p className="clt-table-eyebrow">Results</p>
+                                <h3>Customer Search Results</h3>
+                            </div>
+                        </div>
+
+                        <div className="clt-table-wrapper">
+                            <CustomerLookupTable
+                                customers={customers}
+                                rowsToShow={50}
+                                onSelect={(customerNo) =>
+                                    handleCustomerNoSelection(
+                                        customerNo
+                                    )
+                                }
+                                isLoading={
+                                    isLoadingCustomers
+                                }
+                            />
+                        </div>
+                    </section>
+                
+                </div>
 			</div>
 		</div>
 	);
