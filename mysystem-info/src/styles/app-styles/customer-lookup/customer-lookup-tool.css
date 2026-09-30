@@ -148,21 +148,31 @@
 
 .clt-input-field {
     width: 95%;
+	box-sizing: border-box;
 	padding: 10px 12px;
 
-    box-sizing: border-box;
 	border: 1px solid rgba(0, 0, 0, 0.14);
 	border-radius: 8px;
 	outline: none;
 
 	background: #fff;
 	color: #333;
+
 	font: inherit;
 	font-size: 0.9rem;
 
-	transition:
-		border-color 0.2s ease,
-		box-shadow 0.2s ease;
+	transition: 0.2s ease;
+}
+
+.clt-input-field:hover {
+	border-color: rgba(0, 0, 0, 0.22);
+}
+
+.clt-input-field:focus {
+	border-color: #db2d2d;
+
+	box-shadow:
+		0 0 0 2px rgba(219, 45, 45, 0.1);
 }
 
 .clt-input-field-disabled {
@@ -195,31 +205,26 @@
 
 .clt-form-submit {
     display: flex;
-    justify-self: right;
-    margin-right: 24px;
+	justify-self: right;
+	margin-right: 24px;
+	padding: 8px 12px;
 
-    padding: 8px 12px; 
-    
-    background: #fff;
-    border: 1px solid rgba(0, 0, 0, 0.18);
-    border-radius: 16px;
+	background: rgba(219, 45, 45, 0.04);
+	color: #000c;
+	
+	border: 1px solid rgba(219, 45, 45, 0.18);
+	border-radius: 16px;
 
-    cursor: pointer;
-    transition: 0.2s ease;
+	cursor: pointer;
+	transition: 0.1s;
 }
 
 .clt-form-submit:hover {
     transform: translateY(-2px);
 
-    background-color: rgba(255, 0, 0, 0.04);
-    border-color: rgba(255, 0, 0, 0.16);
-
-    -webkit-box-shadow: 
-        0px 0px 5px 0px 
-        rgba(255,0,0,0.08); 
-    box-shadow: 
-        0px 0px 5px 0px 
-        rgba(255,0,0,0.08);
+	background: rgba(255, 0, 0, 0.08);
+	color: rgba(127, 0, 0, 0.9);
+	border: 1px solid rgba(255, 0, 0, 0.16);
 }
 
 .clt-form-submit:active {

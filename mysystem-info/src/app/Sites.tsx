@@ -304,14 +304,6 @@ const Sites = () => {
 							}
 						}}
 					/>
-
-					<button
-						type="button"
-						className="customer-lookup-button"
-						onClick={() => setCustomerLookupToolOpen(true)}
-					>
-						Customer Lookup Tool
-					</button>
 				</div>
 			);
 		}
@@ -381,6 +373,7 @@ const Sites = () => {
 
 					<button
 						type="button"
+						className="customer-search-button"
 						disabled={isLoading || !customerNo}
 						onClick={() =>
 							void loadSites(1)
@@ -389,6 +382,16 @@ const Sites = () => {
 						Search
 					</button>
 				</div>
+			</div>
+
+			<div className="customer-lookup-button-wrapper">
+				<button
+					type="button"
+					className="customer-lookup-button"
+					onClick={() => setCustomerLookupToolOpen(true)}
+				>
+					Customer Lookup Tool
+				</button>
 			</div>
 
 			{/* =================================================
@@ -520,7 +523,11 @@ const Sites = () => {
 				/>
 			)}
 
-			{customerLookupToolOpen && (
+			{
+				customerLookupToolOpen && (
+				user?.roles.includes("Administrator") || 
+				user?.roles.includes("Staff")) && 
+			(
 				<CustomerLookupTool
 					onCustomerNoSelect={() => handleCustomerLookupToolSelect}
 					onClose={() => setCustomerLookupToolOpen(false)}
