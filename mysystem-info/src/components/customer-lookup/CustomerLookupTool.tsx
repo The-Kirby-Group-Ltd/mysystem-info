@@ -383,9 +383,6 @@ const CustomerLookupTool = ({
 										: "Search"}
 								</button>
 							</div>
-
-                            
-
                         </form>
                     </section>
 
