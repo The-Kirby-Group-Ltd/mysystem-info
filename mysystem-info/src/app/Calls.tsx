@@ -33,6 +33,7 @@ import {
 	getUserCustomerNos,
 	canAccessCustomer
 } from "../data/auth/accessHelpers";
+import CustomerLookupTool from "../components/customer-lookup/CustomerLookupTool";
 
 // =========================================================
 // Defaults
@@ -76,6 +77,26 @@ const Calls = () => {
 
 	const [searchedCustomerNo, setSearchedCustomerNo] =
 		useState("");
+
+
+	// customer lookup tool
+
+	const [customerLookupToolOpen, setCustomerLookupToolOpen] = 
+		useState(false);
+
+	const handleCustomerLookupToolSelect = async (
+		cltSelectedCustomerNo: string
+	) => {
+		const cleanCustomerNo = 
+			cltSelectedCustomerNo
+				.trim()
+				.toUpperCase();
+
+		setCustomerNo(cleanCustomerNo);
+		setPage(1);
+
+		await loadCalls(page, cleanCustomerNo);
+	}
 
 	// =====================================================
 	// Filter state
@@ -171,11 +192,16 @@ const Calls = () => {
 	// Load calls
 	// =====================================================
 
-	const loadCalls = async (pageToLoad = 1) => {
+	const loadCalls = async (
+		pageToLoad = 1,
+		customerNoToLoad = customerNo
+	) => {
 		setError("");
 
 		const cleanCustomerNo =
-			customerNo.trim().toUpperCase();
+			customerNoToLoad
+				.trim()
+				.toUpperCase();
 
 		if (!cleanCustomerNo) {
 			setError("Customer No is required.");
@@ -372,6 +398,18 @@ const Calls = () => {
 				</div>
 			</div>
 
+			
+
+			<div className="customer-lookup-button-wrapper">
+				<button
+					type="button"
+					className="customer-lookup-button"
+					onClick={() => setCustomerLookupToolOpen(true)}
+				>
+					Customer Lookup Tool
+				</button>
+			</div>
+
 			{/* =================================================
 			    Filters
 			================================================= */}
@@ -512,6 +550,26 @@ const Calls = () => {
 					}
 				/>
 			)}
+
+			{/* =================================================
+			    Customer lookup
+			================================================= */}
+
+			{
+				(
+					customerLookupToolOpen && 
+					user?.roles.includes("Administrator") || 
+					user?.roles.includes("Staff")
+				) && (
+					<CustomerLookupTool 
+						onCustomerNoSelect={
+							(customerNo: string) => 
+								handleCustomerLookupToolSelect(customerNo)		
+						}
+						onClose={() => setCustomerLookupToolOpen(false)}
+					/>
+				)
+			}
 		</div>
 	);
 };

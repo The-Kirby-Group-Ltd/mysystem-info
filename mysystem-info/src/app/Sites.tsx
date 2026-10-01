@@ -97,8 +97,9 @@ const Sites = () => {
 				.toUpperCase();
 
 		setCustomerNo(cleanCustomerNo);
+		setPage(1);
 
-		await loadSites(1, cleanCustomerNo);
+		await loadSites(page, cleanCustomerNo);
 	}
 
 	// =====================================================
