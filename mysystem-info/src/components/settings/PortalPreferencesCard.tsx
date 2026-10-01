@@ -98,11 +98,13 @@ const PortalPreferencesCard = () => {
                                     );
                                 }}
                             >
-                                <option value="calls">Calls Dashboard</option>
+                                <option value="calls">
+                                    Calls Dashboard
+                                </option>
+                                
                                 <option value="system-maintenance">
                                     Maintenance Dashboard
                                 </option>
-                                <option value="sla">SLA Dashboard</option>
                             </select>
 
                             <img

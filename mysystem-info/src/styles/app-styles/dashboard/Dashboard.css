@@ -17,13 +17,16 @@
    HEADER
    ========================================================= */
 
+.dashboard-header-wrapper {
+	margin-bottom: 16px;
+}
+
 .dashboard-header {
 	display: flex;
 	align-items: flex-start;
 	justify-content: space-between;
 	gap: 24px;
 
-	margin-bottom: 24px;
 	padding-left: 1rem;
 }
 
@@ -178,6 +181,11 @@ h1.dashboard-heading {
 	transform: none;
 }
 
+.dashboard-customer-lookup-button {
+	display: flex;
+	justify-self: right;
+	margin-top: 8px;
+}
 
 /* =========================================================
    SPECIFIC SITE FILTER

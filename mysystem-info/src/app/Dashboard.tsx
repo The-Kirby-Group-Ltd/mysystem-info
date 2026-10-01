@@ -47,6 +47,8 @@ import MaintenanceDashboardBoard from "../components/dashboard/boards/Maintenanc
 import SlaDashboardBoard from "../components/dashboard/boards/SlaDashboardBoard";
 import SlaDashboardSupportTable from "../components/dashboard/boards/SlaDashboardSupportTable";
 
+import CustomerLookupTool from "../components/customer-lookup/CustomerLookupTool";
+
 const Dashboard = () => {
 	const { user, logout } = useAuth();
 	const navigate = useNavigate();
@@ -86,6 +88,33 @@ const Dashboard = () => {
 
 	const [searchedSiteId, setSearchedSiteId] =
 		useState("");
+
+	// =====================================================
+	// Customer lookup tool
+	// =====================================================
+
+	const [
+		customerLookupToolOpen,
+		setCustomerLookupToolOpen
+	] = useState(false);
+
+	const handleCustomerLookupToolSelect = async (
+		lookupToolSelectedCustomerNo: string
+	) => {
+		const cleanCustomerNo = 
+			lookupToolSelectedCustomerNo
+				.trim()
+				.toUpperCase();
+
+		setCustomerNo(cleanCustomerNo);
+
+		void renderDashboard(
+			selectedDashboard == "sla"
+				? "calls"
+				: selectedDashboard,
+			cleanCustomerNo
+		);
+	}
 
 	// =====================================================
 	// Dashboard
@@ -288,12 +317,15 @@ const Dashboard = () => {
 	// Dashboard renderer
 	// =====================================================
 
-	const renderDashboard = () => {
-		switch (selectedDashboard) {
+	const renderDashboard = (
+		__dashboardSelection: DashboardSelect,
+		__customerSelection: string
+	) => {
+		switch (__dashboardSelection) {
 			case "calls":
 				return (
 					<CallsDashboardBoard
-						customerNo={searchedCustomerNo}
+						customerNo={__customerSelection}
 						siteId={searchedSiteId}
 						selectedMonth={selectedMonth}
 						selectedYear={selectedYear}
@@ -313,7 +345,7 @@ const Dashboard = () => {
 			case "system-maintenance":
 				return (
 					<MaintenanceDashboardBoard
-						customerNo={searchedCustomerNo}
+						customerNo={__customerSelection}
 						siteId={searchedSiteId} 
 						selectedMonth={"ALL"} 
 						selectedYear={0} 
@@ -333,7 +365,7 @@ const Dashboard = () => {
 			case "sla":
 				return (
 					<SlaDashboardBoard
-						customerNo={searchedCustomerNo}
+						customerNo={__customerSelection}
 						siteId={searchedSiteId}
 						selectedMonth={selectedMonth}
 						selectedYear={selectedYear}
@@ -358,19 +390,31 @@ const Dashboard = () => {
 
 	return (
 		<div className="dashboard-screen">
-			<DashboardHeader
-				customerNo={customerNo}
-				searchedCustomerNo={searchedCustomerNo}
-				specificSite={specificSite}
-				siteId={siteId}
-				searchedSiteId={searchedSiteId}
-				hasUnrestrictedAccess={unrestricted}
-				allowedCustomerNos={allowedCustomerNos}
-				onCustomerNoChange={setCustomerNo}
-				onSpecificSiteChange={setSpecificSite}
-				onSiteIdChange={setSiteId}
-				onSearch={handleCustomerSearch}
-			/>
+			<div className="dashboard-header-wrapper">
+				<DashboardHeader
+					customerNo={customerNo}
+					searchedCustomerNo={searchedCustomerNo}
+					specificSite={specificSite}
+					siteId={siteId}
+					searchedSiteId={searchedSiteId}
+					hasUnrestrictedAccess={unrestricted}
+					allowedCustomerNos={allowedCustomerNos}
+					onCustomerNoChange={setCustomerNo}
+					onSpecificSiteChange={setSpecificSite}
+					onSiteIdChange={setSiteId}
+					onSearch={handleCustomerSearch}
+				/>
+
+				<button
+					type="button"
+					className="
+						customer-lookup-button 
+						dashboard-customer-lookup-button"
+					onClick={() => setCustomerLookupToolOpen(true)}
+				>
+					Customer Lookup Tool
+				</button>
+			</div>
 
 			{error && (
 				<p className="dashboard-error">
@@ -403,7 +447,7 @@ const Dashboard = () => {
 					</div>
 
 					<div className="dashboard-board-content">
-						{renderDashboard()}
+						{renderDashboard(selectedDashboard, customerNo)}
 					</div>
 				</div>
 
@@ -453,6 +497,23 @@ const Dashboard = () => {
 					</div>
 				)}
 			</DashboardDataSection>
+
+			{/* Customer lookup tool */}
+
+			{
+				customerLookupToolOpen && (
+				user?.roles.includes("Administrator") || 
+				user?.roles.includes("Staff")) && 
+			(
+				<CustomerLookupTool
+					onCustomerNoSelect={
+						(customerNo: string) => {
+							handleCustomerLookupToolSelect(customerNo)
+						}
+					}
+					onClose={() => setCustomerLookupToolOpen(false)}
+				/>
+			)}
 		</div>
 	);
 };
