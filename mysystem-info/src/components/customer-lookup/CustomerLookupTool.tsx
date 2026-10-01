@@ -278,111 +278,114 @@ const CustomerLookupTool = ({
                         <form
                             onSubmit={handleSubmit}
                         >
-                            <span>
-                                Search by Customer Data Fields
-                            </span>
+							<div className="clt-filters-grid">
+								<span>
+									Search by customer data fields:
+								</span>
 
-                            <div className="clt-customer-filters">
-                                <div className="clt-form-field">
-                                    <label
-                                        htmlFor="clt-customer-no"
-                                    >
-                                        Customer No
-                                    </label>
+								<div className="clt-form-field">
+									<label
+										htmlFor="clt-customer-no"
+									>
+										Customer No
+									</label>
 
-                                    <input
-                                        id="clt-customer-no"
-                                        type="text"
-                                        className={
-                                            customerFieldsDisabled
-                                                ? "clt-input-field clt-input-field-disabled"
-                                                : "clt-input-field"
-                                        }
-                                        value={
-                                            customerNoSearch
-                                        }
-                                        disabled={
-                                            customerFieldsDisabled
-                                        }
-                                        onChange={(event) =>
-                                            setCustomerNoSearch(
-                                                event.target.value
-                                            )
-                                        }
-                                        placeholder="Customer No"
-                                    />
-                                </div>
+									<input
+										id="clt-customer-no"
+										type="text"
+										className={
+											customerFieldsDisabled
+												? "clt-input-field clt-input-field-disabled"
+												: "clt-input-field"
+										}
+										value={
+											customerNoSearch
+										}
+										disabled={
+											customerFieldsDisabled
+										}
+										onChange={(event) =>
+											setCustomerNoSearch(
+												event.target.value
+											)
+										}
+										placeholder="Customer No"
+									/>
+								</div>
 
-                                <div className="clt-form-field">
-                                    <label
-                                        htmlFor="clt-customer-name"
-                                    >
-                                        Customer Name
-                                    </label>
+								<div className="clt-form-field">
+									<label
+										htmlFor="clt-customer-name"
+									>
+										Customer Name
+									</label>
 
-                                    <input
-                                        id="clt-customer-name"
-                                        type="text"
-                                        className={
-                                            customerFieldsDisabled
-                                                ? "clt-input-field clt-input-field-disabled"
-                                                : "clt-input-field"
-                                        }
-                                        value={
-                                            customerNameSearch
-                                        }
-                                        disabled={
-                                            customerFieldsDisabled
-                                        }
-                                        onChange={(event) =>
-                                            setCustomerNameSearch(
-                                                event.target.value
-                                            )
-                                        }
-                                        placeholder="Name Includes"
-                                    />
-                                </div>
-                            </div>
+									<input
+										id="clt-customer-name"
+										type="text"
+										className={
+											customerFieldsDisabled
+												? "clt-input-field clt-input-field-disabled"
+												: "clt-input-field"
+										}
+										value={
+											customerNameSearch
+										}
+										disabled={
+											customerFieldsDisabled
+										}
+										onChange={(event) =>
+											setCustomerNameSearch(
+												event.target.value
+											)
+										}
+										placeholder="Name Includes"
+									/>
+								</div>
 
-                            <span>
-                                Or, if you have a Site ID in mind,
-                                use that to search.
-                            </span>
+								<span className="clt-siteid-filter-note">
+									Or, if you have a site ID in mind,
+									use that to search:
+								</span>
 
-                            <div className="clt-form-field">
-                                <label
-                                    htmlFor="clt-site-id"
-                                >
-                                    Site ID
-                                </label>
+								<div className="clt-form-field">
+									<label
+										htmlFor="clt-site-id"
+									>
+										Site ID
+									</label>
 
-                                <input
-                                    id="clt-site-id"
-                                    type="text"
-                                    className="clt-input-field"
-                                    value={
-                                        siteIdSearch
-                                    }
-                                    onChange={(event) =>
-                                        handleSiteIdStatus(
-                                            event.target.value
-                                        )
-                                    }
-                                    placeholder="Site ID"
-                                />
-                            </div>
+									<input
+										id="clt-site-id"
+										type="text"
+										className="clt-input-field"
+										value={
+											siteIdSearch
+										}
+										onChange={(event) =>
+											handleSiteIdStatus(
+												event.target.value
+											)
+										}
+										placeholder="Site ID"
+									/>
+								</div>
+								
+								<button
+									type="submit"
+									className="clt-form-submit"
+									disabled={
+										isLoadingCustomers
+									}
+								>
+									{isLoadingCustomers
+										? "Searching..."
+										: "Search"}
+								</button>
+							</div>
 
-                            <button
-                                type="submit"
-                                className="clt-form-submit"
-                                disabled={
-                                    isLoadingCustomers
-                                }
-                            >
-                                {isLoadingCustomers
-                                    ? "Searching..."
-                                    : "Search"}
-                            </button>
+                            
+
                         </form>
                     </section>
 
