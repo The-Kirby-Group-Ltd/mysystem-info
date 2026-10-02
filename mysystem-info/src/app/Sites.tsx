@@ -399,15 +399,26 @@ const Sites = () => {
 				</div>
 			</div>
 
-			<div className="customer-lookup-button-wrapper">
-				<button
-					type="button"
-					className="customer-lookup-button"
-					onClick={() => setCustomerLookupToolOpen(true)}
-				>
-					Customer Lookup Tool
-				</button>
-			</div>
+			{/* =================================================
+				Customer lookup tool button
+			================================================= */}
+
+			{
+				(
+					user?.roles.includes("Administrator") || 
+					user?.roles.includes("Staff")
+				) && (
+					<div className="customer-lookup-button-wrapper">
+						<button
+							type="button"
+							className="customer-lookup-button"
+							onClick={() => setCustomerLookupToolOpen(true)}
+						>
+							Customer Lookup Tool
+						</button>
+					</div>
+				)
+			}
 
 			{/* =================================================
 			    Filters
