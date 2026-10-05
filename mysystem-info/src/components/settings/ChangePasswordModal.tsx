@@ -74,7 +74,7 @@ const ChangePasswordModal = ({
         const lowers        = "abcdefghijklmnopqrstuvwxyz";
         const uppers        = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         const numbers       = "1234567890";
-        const specials      = ".,()[]{}!£$%^&*<>?/";
+        const specials      = ".,()[]{}!£$%^&*<>?/#@";
 
         const hasLower      = lowers.split("").some(c => password.includes(c));
         const hasUpper      = uppers.split("").some(c => password.includes(c));
